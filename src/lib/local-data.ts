@@ -140,6 +140,7 @@ function loadData() {
 
   // Try multiple possible paths for the JSON file
   const possiblePaths = [
+    resolve(process.cwd(), 'data/logistics_master.json'),
     resolve(process.cwd(), '../files/logistics_master.json'),
     resolve(process.cwd(), 'files/logistics_master.json'),
     resolve(process.cwd(), '../../files/logistics_master.json'),
