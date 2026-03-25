@@ -1,0 +1,66 @@
+import { NextResponse } from 'next/server';
+import * as db from '@/lib/local-data';
+
+export const dynamic = 'force-dynamic';
+
+// GET /api/admin/customers — paginated, filterable customer list
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+
+  const segment = url.searchParams.get('segment');
+  const status = url.searchParams.get('status');
+  const day = url.searchParams.get('day');
+  const search = url.searchParams.get('search');
+  const page = parseInt(url.searchParams.get('page') || '1');
+  const limit = parseInt(url.searchParams.get('limit') || '50');
+
+  let customers = search ? db.searchCustomers(search) : db.getAllCustomers();
+
+  if (segment) {
+    customers = customers.filter(c => c.segment === segment);
+  }
+
+  // Enrich with bookings and line items
+  const enriched = customers.map(c => {
+    const booking = db.getBookingByCustomer(c.id);
+    const items = db.getLineItemsByCustomer(c.id);
+    return {
+      ...c,
+      bookings: booking ? [booking] : [],
+      line_items: items,
+    };
+  });
+
+  // Filter by day
+  let filtered = enriched;
+  if (day) {
+    filtered = filtered.filter(c => {
+      const booking = c.bookings[0];
+      return booking?.time_slots?.day === day;
+    });
+  }
+
+  // Filter by status
+  if (status) {
+    filtered = filtered.filter(c => {
+      const booking = c.bookings[0];
+      if (status === 'unscheduled') return !booking && c.segment !== 'D' && c.segment !== 'E';
+      if (status === 'shipping') return c.segment === 'D' || c.segment === 'E';
+      return booking?.status === status;
+    });
+  }
+
+  // Sort by name
+  filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+  const total = filtered.length;
+  const from = (page - 1) * limit;
+  const paginated = filtered.slice(from, from + limit);
+
+  return NextResponse.json({
+    customers: paginated,
+    total,
+    page,
+    limit,
+  });
+}
