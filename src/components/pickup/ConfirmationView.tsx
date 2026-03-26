@@ -7,6 +7,12 @@ import { getVehicleRecommendation } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
 import type { PickupSize } from '@/lib/types';
 
+interface LabelInfo {
+  label: string;
+  prefix: string;
+  stagingZone: string;
+}
+
 interface ConfirmationViewProps {
   customer: Customer;
   booking: Booking & { time_slots: TimeSlot };
@@ -16,6 +22,7 @@ interface ConfirmationViewProps {
   token: string;
   canReschedule: boolean;
   onReschedule: () => void;
+  label?: LabelInfo | null;
 }
 
 export default function ConfirmationView({
@@ -27,6 +34,7 @@ export default function ConfirmationView({
   token,
   canReschedule,
   onReschedule,
+  label,
 }: ConfirmationViewProps) {
   const slot = booking.time_slots;
   const vehicleRec = getVehicleRecommendation(customer.size as PickupSize);
@@ -48,6 +56,24 @@ export default function ConfirmationView({
         <p className="text-muted-foreground mt-1">Your pickup is confirmed</p>
         <p className="text-xs text-muted-foreground mt-2 font-mono tracking-wider">{orderNums}</p>
       </div>
+
+      {/* Warehouse label + QR side by side */}
+      {label && (
+        <div className="bg-card rounded-sm border-2 border-border p-4 flex items-center gap-4">
+          <div className="shrink-0 w-20 h-20 rounded-sm bg-accent flex items-center justify-center">
+            <span className="font-sans text-3xl font-black text-accent-foreground tracking-tight">
+              {label.label}
+            </span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">Your Pickup Code</p>
+            <p className="font-serif text-2xl font-bold">{label.label}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Reference this code when you arrive
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* QR Code — front and center */}
       <div className="bg-card rounded-sm border border-border p-5 text-center">

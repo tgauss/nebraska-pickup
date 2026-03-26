@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { getCustomerLabel } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,10 +25,12 @@ export async function GET(request: Request) {
   const enriched = customers.map(c => {
     const booking = db.getBookingByCustomer(c.id);
     const items = db.getLineItemsByCustomer(c.id);
+    const label = getCustomerLabel(c.id);
     return {
       ...c,
       bookings: booking ? [booking] : [],
       line_items: items,
+      label,
     };
   });
 

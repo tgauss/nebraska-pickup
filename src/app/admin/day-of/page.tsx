@@ -31,6 +31,7 @@ interface StagingBooking {
     token: string;
   };
   items: StagingItem[];
+  label?: { label: string; prefix: string; stagingZone: string } | null;
 }
 
 interface StagingGroup {
@@ -297,6 +298,12 @@ function CustomerRow({
   return (
     <div className={`px-4 py-3 ${b.customer.is_vip ? 'bg-amber-50' : ''} ${b.booking.status === 'completed' ? 'opacity-60' : ''}`}>
       <div className="flex items-start justify-between gap-4">
+        {/* Big label */}
+        {b.label && (
+          <div className="shrink-0 w-14 h-14 rounded-sm bg-accent flex items-center justify-center print:border print:border-black">
+            <span className="font-mono text-lg font-black text-accent-foreground">{b.label.label}</span>
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <p className="font-medium text-sm">

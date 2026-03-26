@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { getCustomerLabel } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,10 +27,12 @@ export async function GET(
       .map(b => {
         const customer = db.getCustomerById(b.customer_id);
         const items = db.getLineItemsByCustomer(b.customer_id).filter(i => i.fulfillment_preference === 'pickup');
+        const label = getCustomerLabel(b.customer_id);
         return {
           booking: b,
           customer,
           items,
+          label,
         };
       })
       .filter(b => b.customer);

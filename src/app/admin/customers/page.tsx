@@ -31,6 +31,7 @@ interface CustomerRow {
     fulfillment_preference: string;
     fulfillment_status: string;
   }>;
+  label?: { label: string; prefix: string; stagingZone: string } | null;
 }
 
 export default function CustomersPage() {
@@ -125,6 +126,7 @@ export default function CustomersPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b bg-gray-50">
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Label</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Customer</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Segment</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Pickup</th>
@@ -136,9 +138,9 @@ export default function CustomersPage() {
           </thead>
           <tbody className="divide-y">
             {loading ? (
-              <tr><td colSpan={7} className="text-center py-8 text-gray-400">Loading...</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-gray-400">Loading...</td></tr>
             ) : customers.length === 0 ? (
-              <tr><td colSpan={7} className="text-center py-8 text-gray-400">No customers found</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-gray-400">No customers found</td></tr>
             ) : customers.map(c => {
               const booking = c.bookings?.[0];
               const slot = booking?.time_slots;
@@ -147,6 +149,15 @@ export default function CustomersPage() {
 
               return (
                 <tr key={c.id} className={`hover:bg-gray-50 ${c.is_vip ? 'bg-amber-50' : ''}`}>
+                  <td className="px-4 py-3">
+                    {c.label ? (
+                      <span className="inline-block bg-accent text-accent-foreground font-mono font-bold text-sm px-2 py-1 rounded-sm min-w-[48px] text-center">
+                        {c.label.label}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-300">—</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div>

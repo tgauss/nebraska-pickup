@@ -23,6 +23,7 @@ interface ScanData {
     id: string; status: string; time_slots: { day: string; time: string };
     checked_in_at: string | null; completed_at: string | null;
   } | null;
+  label?: { label: string; prefix: string; stagingZone: string } | null;
 }
 
 export default function ScanPage() {
@@ -79,7 +80,7 @@ export default function ScanPage() {
     );
   }
 
-  const { customer, orders, pickup_items, ship_items, booking } = data;
+  const { customer, orders, pickup_items, ship_items, booking, label } = data;
   const allPickupItems = [
     ...pickup_items,
     ...ship_items.filter(i => i.fulfillment_preference === 'pickup'),
@@ -106,6 +107,22 @@ export default function ScanPage() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
+        {/* Giant warehouse label */}
+        {label && (
+          <div className="bg-card rounded-sm border-2 border-accent p-5 flex items-center gap-5">
+            <div className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-sm bg-accent flex items-center justify-center">
+              <span className="font-sans text-4xl sm:text-5xl font-black text-accent-foreground tracking-tight">
+                {label.label}
+              </span>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Pickup Code</p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold">{label.label}</p>
+              <p className="text-sm text-muted-foreground mt-1">{label.stagingZone}</p>
+            </div>
+          </div>
+        )}
+
         {/* Customer info */}
         <div className="bg-card rounded-sm border border-border p-4">
           <div className="flex items-start justify-between">

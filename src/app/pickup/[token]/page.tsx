@@ -18,6 +18,7 @@ interface CustomerPageData {
   ship_items: LineItem[];
   booking: (Booking & { time_slots: TimeSlot }) | null;
   time_slots: TimeSlot[];
+  label?: { label: string; prefix: string; stagingZone: string } | null;
 }
 
 export default function PickupPage() {
@@ -184,6 +185,7 @@ export default function PickupPage() {
             token={token}
             canReschedule={booking.reschedule_count < 1}
             onReschedule={() => setIsRescheduling(true)}
+            label={data.label}
           />
         </main>
         <PickupFooter />

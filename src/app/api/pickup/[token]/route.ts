@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { getLabelByToken } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,8 @@ export async function GET(
   const booking = db.getBookingByCustomer(customer.id) || null;
   const time_slots = db.getAllTimeSlots();
 
+  const label = getLabelByToken(token);
+
   return NextResponse.json({
     customer,
     orders,
@@ -36,5 +39,6 @@ export async function GET(
     ship_items,
     booking,
     time_slots,
+    label,
   });
 }
