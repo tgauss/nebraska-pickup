@@ -1,9 +1,10 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
-  MessageCircle, User, Bot, AlertTriangle, CheckCircle, Send,
-  Loader2, RefreshCw, ExternalLink, Calendar, Package
+  MessageCircle, User, AlertTriangle, CheckCircle, Send,
+  Loader2, RefreshCw, ExternalLink, Package
 } from 'lucide-react';
 
 interface Conversation {
@@ -229,7 +230,7 @@ export default function AdminChatPage() {
                               {msg.role === 'admin' ? (
                                 <User className="w-3.5 h-3.5 text-primary" />
                               ) : (
-                                <Bot className="w-3.5 h-3.5 text-gray-500" />
+                                <img src="/husker-helper.webp" alt="AI" className="w-3.5 h-3.5 rounded-full" />
                               )}
                             </div>
                           )}

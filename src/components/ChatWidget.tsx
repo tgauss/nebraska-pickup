@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Loader2, User, Bot, AlertCircle, ExternalLink } from 'lucide-react';
+/* eslint-disable @next/next/no-img-element */
+import { MessageCircle, X, Send, Loader2, User, AlertCircle, ExternalLink } from 'lucide-react';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -172,10 +173,10 @@ export default function ChatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 safe-area-bottom"
+          className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-lg transition-transform hover:scale-110 safe-area-bottom overflow-hidden border-3 border-primary"
           aria-label="Open support chat"
         >
-          <MessageCircle className="w-6 h-6" />
+          <img src="/husker-helper.webp" alt="Husker Helper" className="w-full h-full object-cover" />
         </button>
       )}
 
@@ -185,9 +186,7 @@ export default function ChatWidget() {
           {/* Header */}
           <div className="bg-primary text-white px-4 py-3 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="w-5 h-5" />
-              </div>
+              <img src="/husker-helper.webp" alt="Husker Helper" className="w-9 h-9 rounded-full border-2 border-white/30 object-cover" />
               <div>
                 <h3 className="font-sans font-semibold text-sm">Husker Helper</h3>
                 <p className="text-[10px] text-white/70">Nebraska Rare Goods Support</p>
@@ -201,9 +200,7 @@ export default function ChatWidget() {
           {/* Identify step */}
           {step === 'identify' && (
             <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <MessageCircle className="w-8 h-8 text-primary" />
-              </div>
+              <img src="/husker-helper.webp" alt="Husker Helper" className="w-20 h-20 rounded-full border-4 border-primary/20 object-cover mb-4" />
               <h2 className="font-serif text-xl font-bold mb-2">Hey there, Husker fan! 👋</h2>
               <p className="text-sm text-gray-500 mb-6 leading-relaxed">
                 I&apos;m Husker Helper — I can look up your order, answer questions about pickup, and help you get ready for the big day.
