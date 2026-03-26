@@ -438,12 +438,12 @@ export default function PickupPage() {
                             }}
                             className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
                               allPickup
-                                ? 'bg-primary text-primary-foreground'
-                                : 'border-2 border-border bg-card text-foreground hover:border-primary'
+                                ? 'bg-green-600 text-white'
+                                : 'border-2 border-green-300 bg-green-50 text-green-800 hover:bg-green-100'
                             }`}
                           >
                             <MapPin className="w-4 h-4" />
-                            Pick up with my seats
+                            Yes &mdash; Pick up with my seats
                           </button>
                           <button
                             onClick={() => {
@@ -454,11 +454,11 @@ export default function PickupPage() {
                             className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
                               !allPickup
                                 ? 'bg-accent text-accent-foreground'
-                                : 'border-2 border-border bg-card text-foreground hover:border-accent'
+                                : 'border-2 border-border bg-card text-muted-foreground hover:border-accent'
                             }`}
                           >
                             <Truck className="w-4 h-4" />
-                            Ship to me later
+                            No &mdash; Ship to me later
                           </button>
                         </div>
                       </div>
