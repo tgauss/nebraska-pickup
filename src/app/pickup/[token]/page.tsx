@@ -245,17 +245,21 @@ export default function PickupPage() {
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-2">{orderNums}</p>
               <h1 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
-                Hey {firstName},<br />your order is ready!
+                {firstName}, pick up<br />your Devaney order
               </h1>
             </div>
 
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
-              {totalPickupItems > 0 ? (
-                <>We have {totalPickupItems} {totalPickupItems === 1 ? 'item' : 'items'} waiting for you. Choose from 3 pickup days to grab {totalPickupItems === 1 ? 'it' : 'them'}.</>
-              ) : (
-                <>You have items ready. Choose how you&apos;d like to receive them.</>
-              )}
+            <p className="text-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
+              Your {totalPickupItems} {totalPickupItems === 1 ? 'item needs' : 'items need'} to be picked up in person.
+              Choose a time slot below — spots are limited.
             </p>
+
+            <div className="bg-primary/5 border border-primary/20 rounded-sm px-4 py-2.5 inline-block">
+              <p className="text-xs sm:text-sm text-primary font-semibold flex items-center justify-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" />
+                Pickup required — select your time now
+              </p>
+            </div>
 
             {/* Quick info pills */}
             <div className="flex flex-wrap justify-center gap-2">
@@ -285,7 +289,7 @@ export default function PickupPage() {
               }}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 rounded-sm font-sans font-semibold text-base sm:text-lg transition-colors flex items-center justify-center gap-2"
             >
-              Lock In Your Pickup Time
+              Select My Pickup Time
               <ArrowRight className="w-5 h-5" />
             </button>
 
