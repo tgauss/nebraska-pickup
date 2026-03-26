@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft, Mail, Phone, MapPin, Clock, Calendar, Truck, CheckCircle,
-  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode, Navigation
+  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode, Navigation, Eye
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -222,6 +222,14 @@ export default function CustomerDetailPage() {
                 className="flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-sm font-medium hover:bg-secondary"
               >
                 <QrCode className="w-4 h-4" /> Scan View
+              </a>
+              <a
+                href={`/admin/preview/${customer.token}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-sm font-medium hover:bg-secondary"
+              >
+                <Eye className="w-4 h-4" /> Preview Receipt
               </a>
             </div>
           </div>
