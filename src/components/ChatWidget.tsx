@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Loader2, User, Bot, AlertCircle } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, User, Bot, AlertCircle, ExternalLink } from 'lucide-react';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -34,6 +34,10 @@ export default function ChatWidget() {
     conversationId: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   });
   const [step, setStep] = useState<'identify' | 'chat'>('identify');
+  const [showSlotPicker, setShowSlotPicker] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState<Array<{ id: string; day: string; time: string; available: number }>>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [rescheduling, setRescheduling] = useState(false);
   const [identifyInput, setIdentifyInput] = useState('');
   const [identifyError, setIdentifyError] = useState<string | null>(null);
   const [identifying, setIdentifying] = useState(false);
@@ -136,6 +140,20 @@ export default function ChatWidget() {
 
       if (data.needsHuman) {
         setContext(prev => ({ ...prev, needsHuman: true }));
+      }
+
+      // Show reschedule slot picker if AI triggered it
+      if (data.showReschedule) {
+        setSlotsLoading(true);
+        setShowSlotPicker(true);
+        const slotsRes = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'get_slots' }),
+        });
+        const slotsData = await slotsRes.json();
+        setAvailableSlots(slotsData.slots || []);
+        setSlotsLoading(false);
       }
     } catch {
       setMessages(prev => [...prev, {
@@ -250,10 +268,94 @@ export default function ChatWidget() {
                         ? 'bg-primary text-white rounded-2xl rounded-br-md'
                         : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md'
                     } px-4 py-2.5`}>
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                      <ChatMessageContent content={msg.content} />
                     </div>
                   </div>
                 ))}
+
+                {/* Quick action buttons after first AI message if not booked */}
+                {messages.length === 1 && messages[0].role === 'assistant' && context.customerToken && (
+                  <div className="flex flex-wrap gap-2 pl-2">
+                    <QuickButton
+                      label={context.needsHuman ? "View My Receipt" : "Schedule Pickup"}
+                      href={`/pickup/${context.customerToken}`}
+                    />
+                    <QuickButton
+                      label="Get Directions"
+                      href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430"
+                      external
+                    />
+                    <QuickButton
+                      label="What should I bring?"
+                      onClick={() => { setInput('What vehicle do I need for my items?'); }}
+                    />
+                  </div>
+                )}
+
+                {/* In-chat slot picker for rescheduling */}
+                {showSlotPicker && (
+                  <div className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
+                    {slotsLoading ? (
+                      <div className="text-center py-4">
+                        <Loader2 className="w-5 h-5 animate-spin text-gray-400 mx-auto" />
+                        <p className="text-xs text-gray-400 mt-2">Loading available times...</p>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-xs font-semibold text-gray-600 px-1">Pick a new time:</p>
+                        {['Thursday', 'Friday', 'Saturday'].map(day => {
+                          const daySlots = availableSlots.filter(s => s.day === day);
+                          if (daySlots.length === 0) return null;
+                          return (
+                            <div key={day}>
+                              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-1 mb-1">{day}</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {daySlots.map(slot => (
+                                  <button
+                                    key={slot.id}
+                                    disabled={rescheduling}
+                                    onClick={async () => {
+                                      setRescheduling(true);
+                                      const res = await fetch('/api/chat', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                          action: 'reschedule',
+                                          customerId: context.customerId,
+                                          slotId: slot.id,
+                                        }),
+                                      });
+                                      const data = await res.json();
+                                      setShowSlotPicker(false);
+                                      setRescheduling(false);
+                                      if (data.success) {
+                                        setMessages(prev => [...prev, {
+                                          role: 'assistant' as const,
+                                          content: `Done! You're now booked for ${data.day} at ${data.time}. See you there! 🎉\n\n[button:View Updated Receipt|/pickup/${context.customerToken}]`,
+                                          timestamp: new Date().toISOString(),
+                                        }]);
+                                      } else {
+                                        setMessages(prev => [...prev, {
+                                          role: 'assistant' as const,
+                                          content: data.error || 'Sorry, that slot is no longer available. Try another one!',
+                                          timestamp: new Date().toISOString(),
+                                        }]);
+                                      }
+                                    }}
+                                    className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+                                  >
+                                    {slot.time}
+                                    <span className="text-[9px] text-gray-400 ml-1">({slot.available})</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
+                )}
 
                 {loading && (
                   <div className="flex justify-start">
@@ -297,5 +399,85 @@ export default function ChatWidget() {
         </div>
       )}
     </>
+  );
+}
+
+/**
+ * Parse message content for [button:Label|URL] syntax and render inline buttons
+ */
+function ChatMessageContent({ content }: { content: string }) {
+  const buttonRegex = /\[button:([^|]+)\|([^\]]+)\]/g;
+  const parts: Array<{ type: 'text'; value: string } | { type: 'button'; label: string; url: string }> = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = buttonRegex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', value: content.slice(lastIndex, match.index) });
+    }
+    parts.push({ type: 'button', label: match[1], url: match[2] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < content.length) {
+    parts.push({ type: 'text', value: content.slice(lastIndex) });
+  }
+
+  // If no buttons found, render plain text
+  if (parts.length === 1 && parts[0].type === 'text') {
+    return <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>;
+  }
+
+  return (
+    <div>
+      {parts.map((part, i) => {
+        if (part.type === 'text') {
+          const trimmed = part.value.trim();
+          if (!trimmed) return null;
+          return <p key={i} className="text-sm leading-relaxed whitespace-pre-wrap">{trimmed}</p>;
+        }
+        const isExternal = part.url.startsWith('http') || part.url.startsWith('mailto:');
+        return (
+          <a
+            key={i}
+            href={part.url}
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noopener noreferrer' : undefined}
+            className="inline-flex items-center gap-1.5 mt-2 mr-2 px-4 py-2 bg-white text-primary border border-primary/30 rounded-full text-xs font-semibold hover:bg-primary hover:text-white transition-colors"
+          >
+            {part.label}
+            {isExternal && <ExternalLink className="w-3 h-3" />}
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+function QuickButton({ label, href, external, onClick }: {
+  label: string;
+  href?: string;
+  external?: boolean;
+  onClick?: () => void;
+}) {
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors"
+      >
+        {label}
+        {external && <ExternalLink className="w-3 h-3" />}
+      </a>
+    );
+  }
+  return (
+    <button
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors"
+    >
+      {label}
+    </button>
   );
 }

@@ -146,9 +146,9 @@ ${customerContext}
 - Direct them to their pickup page to schedule or reschedule
 - Answer general questions about the products, the event, directions
 - Help with shipping vs pickup decisions for iron/chair back items
+- **Reschedule their pickup** — if they ask to change their time, say something like "Sure, let me pull up the available times!" and include [SHOW_RESCHEDULE] at the end of your message. This will show them an interactive slot picker right in the chat. Only offer this if they currently have a booking AND haven't already used their one reschedule.
 
 ## WHAT YOU CANNOT DO
-- Actually change their booking (direct them to their pickup page or escalate)
 - Process refunds or cancellations
 - Access other customers' information
 - Make promises about specific item conditions
@@ -165,7 +165,24 @@ Say something like "Let me connect you with our team for that" and set needsHuma
 ## RESPONSE FORMAT
 Keep it conversational and helpful. Don't use markdown headers or bullet lists unless listing multiple items. Be a friendly Husker fan helping another fan.
 
-IMPORTANT: In your response, if the customer needs human help, end your message with [NEEDS_HUMAN] on its own line. Do not show this tag to the customer in your visible message — it's a system signal only.`;
+## ACTION BUTTONS
+You can include clickable buttons in your responses using this syntax:
+[button:Label Text|URL or action]
+
+Available buttons you should use when relevant:
+- [button:Schedule My Pickup|/pickup/CUSTOMER_TOKEN] — link to their pickup scheduling page (replace CUSTOMER_TOKEN with their actual token)
+- [button:View My Receipt|/pickup/CUSTOMER_TOKEN] — same link, but use this label when they already have a booking
+- [button:Get Directions|https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430] — directions to warehouse
+- [button:Reschedule My Time|/pickup/CUSTOMER_TOKEN] — when they want to change their slot
+- [button:Contact Support|mailto:support@raregoods.com] — email the team
+
+Use buttons whenever you reference a link or suggest an action. Place them at the end of your message, each on its own line. Use 1-2 buttons max per response — don't overwhelm them. Always replace CUSTOMER_TOKEN with the actual customer token from the context.
+
+IMPORTANT SIGNALS (place at the end of your message, each on its own line):
+- [NEEDS_HUMAN] — when the customer needs human help
+- [SHOW_RESCHEDULE] — when the customer wants to change their pickup time (only if they have a booking and haven't used their reschedule)
+
+Do not show these tags in your visible message — they're system signals only.`;
 }
 
 /**
@@ -174,7 +191,7 @@ IMPORTANT: In your response, if the customer needs human help, end your message 
 export async function chatWithAI(
   messages: ChatMessage[],
   context: ChatContext
-): Promise<{ reply: string; needsHuman: boolean }> {
+): Promise<{ reply: string; needsHuman: boolean; showReschedule: boolean }> {
   const ai = getAnthropic();
   const systemPrompt = buildSystemPrompt(context);
 
@@ -196,11 +213,12 @@ export async function chatWithAI(
 
   let reply = response.content[0].type === 'text' ? response.content[0].text : '';
 
-  // Check for human escalation signal
+  // Check for signals
   const needsHuman = reply.includes('[NEEDS_HUMAN]');
-  reply = reply.replace(/\[NEEDS_HUMAN\]\s*/g, '').trim();
+  const showReschedule = reply.includes('[SHOW_RESCHEDULE]');
+  reply = reply.replace(/\[NEEDS_HUMAN\]\s*/g, '').replace(/\[SHOW_RESCHEDULE\]\s*/g, '').trim();
 
-  return { reply, needsHuman };
+  return { reply, needsHuman, showReschedule };
 }
 
 /**

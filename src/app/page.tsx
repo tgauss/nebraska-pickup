@@ -31,13 +31,10 @@ export default function Home() {
             >
               Find My Order
             </Link>
-            <Link
-              href="/admin"
-              className="bg-accent text-accent-foreground px-8 py-3 rounded-sm font-sans font-medium hover:bg-accent/90 transition-colors"
-            >
-              Admin Dashboard
-            </Link>
           </div>
+          <p className="text-xs text-muted-foreground mt-6">
+            Need help? Tap the chat button in the corner — we&apos;re here for you.
+          </p>
         </div>
       </div>
 
