@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pickup Flow Test Guide — Nebraska Rare Goods</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, 'Times New Roman', serif; background: #f5f1e7; color: #1a1a1a; line-height: 1.7; }
+    .header { background: #1a1a1a; color: white; padding: 24px 32px; text-align: center; }
+    .header h1 { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .header p { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 32px 24px; }
+    .card { background: white; border-radius: 8px; border: 1px solid #e5e5e5; padding: 28px; margin-bottom: 24px; }
+    .card h2 { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #d00000; margin-bottom: 16px; border-bottom: 2px solid #f5f1e7; padding-bottom: 8px; }
+    .card h3 { font-size: 16px; font-weight: 700; margin: 20px 0 8px; }
+    .step { display: flex; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f5f1e7; }
+    .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .step-num { background: #d00000; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .step-content { flex: 1; }
+    .step-content strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .step-content p { font-size: 14px; color: #444; }
+    a.btn { display: inline-block; background: #d00000; color: white; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; }
+    a.btn:hover { background: #b00000; }
+    a.link { color: #d00000; text-decoration: underline; word-break: break-all; }
+    .info-box { background: #f5f1e7; border-left: 4px solid #d00000; padding: 12px 16px; margin: 12px 0; border-radius: 0 4px 4px 0; font-size: 14px; }
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before { content: '☐'; font-size: 16px; flex-shrink: 0; }
+    .role-tag { display: inline-block; font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 3px; margin-bottom: 8px; }
+    .role-customer { background: #dbeafe; color: #1e40af; }
+    .role-admin { background: #fef3c7; color: #92400e; }
+    .role-staff { background: #d1fae5; color: #065f46; }
+    .order-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    .order-table th, .order-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e5e5; font-size: 14px; }
+    .order-table th { background: #f5f1e7; font-family: Arial, sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+    .footer { text-align: center; padding: 32px; font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Pickup Flow Test Guide</h1>
+  <p>Internal Team Testing — Nebraska Rare Goods</p>
+</div>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <div class="card">
+    <h2>What You're Testing</h2>
+    <p>This guide walks through the complete pickup experience from a customer's perspective, then the admin/staff side. Use the test links below to simulate the full flow.</p>
+
+    <h3>Test Customer: Jacob Williams</h3>
+    <table class="order-table">
+      <tr><th>Detail</th><th>Value</th></tr>
+      <tr><td>Name</td><td>Jacob Williams</td></tr>
+      <tr><td>City</td><td>Benedict, NE</td></tr>
+      <tr><td>Segment</td><td>A — Pickup Only</td></tr>
+      <tr><td>Vehicle Needed</td><td>Full-size truck or trailer</td></tr>
+      <tr><td>Orders</td><td>#NEB3117847, #NEB3118157</td></tr>
+    </table>
+    <table class="order-table">
+      <tr><th>Pickup Item</th><th>Qty</th></tr>
+      <tr><td>Legacy Bench (with Feet)</td><td>1</td></tr>
+      <tr><td>Premium Black Wall Mount Seat Pair – With N</td><td>1</td></tr>
+      <tr><td>Premium End-Row Seat Pair</td><td>1</td></tr>
+    </table>
+  </div>
+
+  <!-- STEP 1: EMAIL -->
+  <div class="card">
+    <h2>Part 1 — Customer Gets the Email</h2>
+    <span class="role-tag role-customer">Customer Experience</span>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>Customer receives the scheduling email</strong>
+        <p>The email arrives with subject: "Jacob, your Devaney seats are ready — schedule your pickup". It includes their items, pickup dates, warehouse location, and a big red button to schedule.</p>
+        <div class="info-box">
+          <strong>Test it:</strong> Go to <a class="link" href="https://huskerpickup.raregoods.com/admin/email">huskerpickup.raregoods.com/admin/email</a>, find Jacob Williams, and send a test to your email.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>Customer clicks "Select My Pickup Time"</strong>
+        <p>The link takes them to their personalized pickup page.</p>
+        <a class="btn" href="https://huskerpickup.raregoods.com/pickup/c88ec1b7ca1a">Open Test Pickup Page →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PICKUP FLOW -->
+  <div class="card">
+    <h2>Part 2 — Customer Schedules Pickup</h2>
+    <span class="role-tag role-customer">Customer Experience</span>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>Welcome screen</strong>
+        <p>Shows "Good News, Jacob!" with their order number, a product preview image, and pickup dates (Apr 16–18). They tap "Select My Pickup Time".</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>Time slot selection</strong>
+        <p>Grid shows Thursday, Friday, Saturday with 30-minute slots. Color-coded: green (open), yellow (filling), red (full). Customer picks a slot and confirms.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>Confirmation / Receipt card</strong>
+        <p>After confirming, the page becomes their pickup receipt:</p>
+        <ul style="margin: 8px 0 0 20px; font-size: 14px; color: #444;">
+          <li>Warehouse label (e.g. "B01") — big black box at top</li>
+          <li>QR code — for staff to scan at check-in</li>
+          <li>Their name + order number</li>
+          <li>Pickup date/time</li>
+          <li>Directions button → opens Google Maps</li>
+          <li>Add to Calendar button → downloads .ics file</li>
+          <li>Map of warehouse location</li>
+          <li>Their items list</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: ADMIN -->
+  <div class="card">
+    <h2>Part 3 — Admin Views</h2>
+    <span class="role-tag role-admin">Admin Experience</span>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <strong>Dashboard</strong>
+        <p>See overall scheduling rate, time slot heatmap, segment breakdown.</p>
+        <a class="btn" href="https://huskerpickup.raregoods.com/admin">Open Dashboard →</a>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <strong>Customer detail page</strong>
+        <p>Search for "Jacob Williams" in the Customers tab. Click to see their full detail: booking status, items, label, staging zone, contact info, notes.</p>
+        <a class="btn" href="https://huskerpickup.raregoods.com/admin/customers">Open Customers →</a>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <strong>Preview their receipt</strong>
+        <p>On the customer detail page, click "Preview Receipt" to see exactly what the customer sees on their phone.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: DAY OF -->
+  <div class="card">
+    <h2>Part 4 — Day-of Operations</h2>
+    <span class="role-tag role-staff">Staff Experience</span>
+
+    <div class="step">
+      <div class="step-num">9</div>
+      <div class="step-content">
+        <strong>Customer arrives at warehouse</strong>
+        <p>They show their phone with the QR code on the receipt page.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">10</div>
+      <div class="step-content">
+        <strong>Staff scans QR code</strong>
+        <p>Opens the scan page on your phone. Shows the customer's label, name, items, and a big "Check In" button. Tap to check them in.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">11</div>
+      <div class="step-content">
+        <strong>Staging team pulls items</strong>
+        <p>Use the warehouse label (e.g. "B01") to locate pre-staged items. The label tells you the staging zone (Dock for benches, Floor for seats, etc.)</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">12</div>
+      <div class="step-content">
+        <strong>Load and complete</strong>
+        <p>Help customer load. Tap "Mark Complete" on the scan page. Done!</p>
+        <a class="btn" href="https://huskerpickup.raregoods.com/admin/day-of">Open Day-of Ops →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTING CHECKLIST -->
+  <div class="card">
+    <h2>Testing Checklist</h2>
+    <p style="font-size: 14px; color: #666; margin-bottom: 16px;">Please verify each of these and report any issues.</p>
+
+    <h3>Email</h3>
+    <ul class="checklist">
+      <li>Email arrives with correct subject line and preview text</li>
+      <li>Customer name is personalized ("Hey Jacob,")</li>
+      <li>Items table shows correct items and quantities</li>
+      <li>Red "Select My Pickup Time" button links to correct page</li>
+      <li>Pickup dates and location are correct (Apr 16–18, Unit 4, Roca)</li>
+      <li>Email renders well on mobile (check on your phone)</li>
+    </ul>
+
+    <h3>Customer Pickup Flow</h3>
+    <ul class="checklist">
+      <li>Welcome page loads with customer name and order number</li>
+      <li>Time slot grid shows all days with correct hours</li>
+      <li>Can select a time slot and confirm</li>
+      <li>Confirmation page shows label, QR code, name, order number</li>
+      <li>Directions button opens Google Maps to correct address</li>
+      <li>Add to Calendar downloads valid .ics file</li>
+      <li>QR code is scannable (try with phone camera)</li>
+      <li>Page looks good on mobile — receipt card is above the fold</li>
+    </ul>
+
+    <h3>Admin</h3>
+    <ul class="checklist">
+      <li>Dashboard shows time slot heatmap with all extended hours</li>
+      <li>Customer detail page loads correctly for any customer</li>
+      <li>Preview Receipt shows phone-frame mockup</li>
+      <li>Scan page loads when QR code is scanned</li>
+      <li>Check In and Mark Complete buttons work</li>
+      <li>Day-of Ops shows staging groups by time slot</li>
+    </ul>
+
+    <h3>Additional Test Links</h3>
+    <table class="order-table">
+      <tr><th>Customer</th><th>Type</th><th>Link</th></tr>
+      <tr>
+        <td>Jacob Williams</td>
+        <td>Seg A — Bench + Seats</td>
+        <td><a class="link" href="https://huskerpickup.raregoods.com/pickup/c88ec1b7ca1a">Pickup Page</a></td>
+      </tr>
+      <tr>
+        <td>Bill Beckler</td>
+        <td>Seg A — Bench + 2 Seats</td>
+        <td><a class="link" href="https://huskerpickup.raregoods.com/pickup/824708a3f087">Pickup Page</a></td>
+      </tr>
+      <tr>
+        <td>Aaron Asay</td>
+        <td>Seg C — Ship/Pickup Choice</td>
+        <td><a class="link" href="https://huskerpickup.raregoods.com/pickup/7227e0152dfe">Pickup Page</a></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div class="card">
+    <h2>Admin Access</h2>
+    <div class="info-box">
+      <strong>URL:</strong> <a class="link" href="https://huskerpickup.raregoods.com/admin">huskerpickup.raregoods.com/admin</a><br>
+      <strong>Password:</strong> devaney2026
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Nebraska Rare Goods — Internal Testing Document</p>
+  <p>2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</div>
+
+</body>
+</html>
