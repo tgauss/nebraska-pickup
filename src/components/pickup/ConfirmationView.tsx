@@ -67,6 +67,14 @@ export default function ConfirmationView({
   return (
     <div className="space-y-5">
 
+      {/* Save/screenshot notice */}
+      <div className="bg-amber-50 border border-amber-200 rounded-sm px-4 py-3 text-center">
+        <p className="text-sm font-medium text-amber-800">
+          Save or screenshot this page to show the team at pickup to get your order.
+        </p>
+        <p className="text-xs text-amber-600 mt-1">It will be emailed to you as well.</p>
+      </div>
+
       {/* ========== RECEIPT CARD — above the fold ========== */}
       <div className="bg-card rounded-sm border-2 border-border overflow-hidden">
         {/* Status bar at top of card */}

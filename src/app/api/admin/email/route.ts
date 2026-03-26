@@ -1,13 +1,75 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
-import { ensureHydrated } from '@/lib/local-data';
+import { ensureHydrated, flushWrites } from '@/lib/local-data';
 import { sendPickupEmail, generatePickupEmail } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
-import { recordEvent, getStatusByEmail, getEventSummary } from '@/lib/email-tracking';
+import { createAdminClient } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Load email engagement data from Supabase activity_log.
+ * Returns a map of email → { sent, opened, clicked, bounced, sentAt, openedAt, clickedAt }
+ */
+async function getEmailEngagement(): Promise<Map<string, {
+  sent: boolean; sentAt: string | null;
+  opened: boolean; openedAt: string | null;
+  clicked: boolean; clickedAt: string | null;
+  bounced: boolean;
+}>> {
+  const map = new Map<string, {
+    sent: boolean; sentAt: string | null;
+    opened: boolean; openedAt: string | null;
+    clicked: boolean; clickedAt: string | null;
+    bounced: boolean;
+  }>();
+
+  const sb = createAdminClient();
+  if (!sb) return map;
+
+  // Query activity log for email events
+  const { data: logs } = await sb
+    .from('activity_log')
+    .select('action, details, created_at, customers(email)')
+    .in('action', ['email_sent', 'email_opened', 'email_clicked', 'email_bounced'])
+    .order('created_at', { ascending: true });
+
+  if (!logs) return map;
+
+  for (const log of logs) {
+    const email = (log.customers as unknown as { email: string } | { email: string }[] | null);
+    const emailAddr = Array.isArray(email) ? email[0]?.email : email?.email;
+    if (!emailAddr) continue;
+
+    const key = emailAddr.toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, { sent: false, sentAt: null, opened: false, openedAt: null, clicked: false, clickedAt: null, bounced: false });
+    }
+    const status = map.get(key)!;
+
+    switch (log.action) {
+      case 'email_sent':
+        status.sent = true;
+        if (!status.sentAt) status.sentAt = log.created_at;
+        break;
+      case 'email_opened':
+        status.opened = true;
+        if (!status.openedAt) status.openedAt = log.created_at;
+        break;
+      case 'email_clicked':
+        status.clicked = true;
+        if (!status.clickedAt) status.clickedAt = log.created_at;
+        break;
+      case 'email_bounced':
+        status.bounced = true;
+        break;
+    }
+  }
+
+  return map;
+}
 
 // GET /api/admin/email — get eligible recipients + stats + engagement
 export async function GET() {
@@ -15,6 +77,9 @@ export async function GET() {
   const customers = db.getAllCustomers();
   const allBookings = db.getAllBookings();
   const bookedIds = new Set(allBookings.map(b => b.customer_id));
+
+  // Load engagement from Supabase
+  const engagement = await getEmailEngagement();
 
   // Build full recipient list with engagement data
   const allRecipients = customers
@@ -29,7 +94,10 @@ export async function GET() {
       const pickupItems = items.filter(i => i.item_type === 'pickup');
       const pickupRequired = pickupItems.reduce((s, i) => s + i.qty, 0);
       const shipItems = items.filter(i => i.item_type === 'ship');
-      const emailStatus = getStatusByEmail(c.email);
+      const emailStatus = engagement.get(c.email.toLowerCase()) || {
+        sent: false, sentAt: null, opened: false, openedAt: null,
+        clicked: false, clickedAt: null, bounced: false,
+      };
 
       return {
         id: c.id,
@@ -55,19 +123,21 @@ export async function GET() {
       };
     });
 
-  const pickupRequired = allRecipients.filter(r => r.pickupRequired);
-  const pickupOptional = allRecipients.filter(r => !r.pickupRequired);
-
-  const engagement = getEventSummary();
+  const engSummary = {
+    sent: allRecipients.filter(r => r.emailSent).length,
+    opened: allRecipients.filter(r => r.emailOpened).length,
+    clicked: allRecipients.filter(r => r.emailClicked).length,
+    bounced: allRecipients.filter(r => r.emailBounced).length,
+  };
 
   return NextResponse.json({
     total: allRecipients.length,
-    pickup_required_count: pickupRequired.length,
-    pickup_optional_count: pickupOptional.length,
+    pickup_required_count: allRecipients.filter(r => r.pickupRequired).length,
+    pickup_optional_count: allRecipients.filter(r => !r.pickupRequired).length,
     booked_count: allRecipients.filter(r => r.hasBooked).length,
     not_booked_count: allRecipients.filter(r => !r.hasBooked).length,
     all_recipients: allRecipients,
-    engagement,
+    engagement: engSummary,
   });
 }
 
@@ -176,15 +246,7 @@ export async function POST(request: Request) {
         ...result,
       });
 
-      // Track the send
-      recordEvent({
-        customerId: customer.id,
-        email: customer.email.toLowerCase(),
-        token: customer.token,
-        event: 'sent',
-        timestamp: new Date().toISOString(),
-      });
-
+      // Log the send to activity_log (persists to Supabase)
       db.addActivityLog(customer.id, 'email_sent', {
         type: 'pickup_scheduling',
         success: result.success,
@@ -195,6 +257,7 @@ export async function POST(request: Request) {
     const sent = results.filter(r => r.success).length;
     const failed = results.filter(r => !r.success).length;
 
+    await flushWrites();
     return NextResponse.json({ sent, failed, results });
   }
 
