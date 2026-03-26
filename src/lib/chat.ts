@@ -178,9 +178,10 @@ export async function chatWithAI(
   const ai = getAnthropic();
   const systemPrompt = buildSystemPrompt(context);
 
-  // Convert to Anthropic format (only user and assistant messages)
+  // Convert to Anthropic format — only keep last 10 messages to limit token usage
   const apiMessages = messages
     .filter(m => m.role === 'user' || m.role === 'assistant')
+    .slice(-10)
     .map(m => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,
@@ -188,7 +189,7 @@ export async function chatWithAI(
 
   const response = await ai.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 500,
+    max_tokens: 300,
     system: systemPrompt,
     messages: apiMessages,
   });
