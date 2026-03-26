@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Oswald, Source_Serif_4, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ChatWidget from "@/components/ChatWidget";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${oswald.variable} ${sourceSerif.variable} ${geistMono.variable} scroll-smooth`}>
       <body className="font-sans antialiased min-h-[100svh] bg-background text-foreground">
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut, ClipboardList, Mail } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut, ClipboardList, Mail, MessageCircle } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
@@ -76,6 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/map', label: 'Map', icon: MapIcon },
     { href: '/admin/prep', label: 'Prep', icon: ClipboardList },
     { href: '/admin/email', label: 'Email', icon: Mail },
+    { href: '/admin/chat', label: 'Chat', icon: MessageCircle },
   ];
 
   return (
