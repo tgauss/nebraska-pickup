@@ -45,6 +45,31 @@ export default function ChatWidget() {
   const [identifying, setIdentifying] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastPollRef = useRef<string>(new Date().toISOString());
+
+  // Poll for admin replies every 5 seconds
+  useEffect(() => {
+    if (step !== 'chat' || !context.conversationId || !isOpen) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'poll',
+            conversationId: context.conversationId,
+            lastTimestamp: lastPollRef.current,
+          }),
+        });
+        const data = await res.json();
+        if (data.messages && data.messages.length > 0) {
+          setMessages(prev => [...prev, ...data.messages]);
+          lastPollRef.current = data.messages[data.messages.length - 1].timestamp;
+        }
+      } catch { /* silent */ }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [step, context.conversationId, isOpen]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -265,8 +290,13 @@ export default function ChatWidget() {
                     <div className={`max-w-[85%] ${
                       msg.role === 'user'
                         ? 'bg-primary text-white rounded-2xl rounded-br-md'
-                        : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md'
+                        : msg.role === 'admin'
+                          ? 'bg-primary/10 text-gray-800 rounded-2xl rounded-bl-md border border-primary/20'
+                          : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md'
                     } px-4 py-2.5`}>
+                      {msg.role === 'admin' && (
+                        <p className="text-[10px] font-semibold text-primary mb-1">Nebraska Rare Goods Team</p>
+                      )}
                       <ChatMessageContent content={msg.content} />
                     </div>
                   </div>

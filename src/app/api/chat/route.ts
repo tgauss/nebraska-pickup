@@ -101,6 +101,35 @@ export async function POST(request: Request) {
     }
   }
 
+  // POLL: check for new admin replies
+  if (action === 'poll') {
+    const { conversationId, lastTimestamp } = body;
+    if (!conversationId) {
+      return NextResponse.json({ messages: [] });
+    }
+    const sb = createAdminClient();
+    if (!sb) return NextResponse.json({ messages: [] });
+
+    const { data: logs } = await sb.from('activity_log')
+      .select('details, created_at')
+      .eq('action', 'chat_message')
+      .gt('created_at', lastTimestamp || '2000-01-01')
+      .order('created_at', { ascending: true });
+
+    const adminMessages = (logs || [])
+      .filter(log => {
+        const d = log.details as Record<string, unknown>;
+        return d.conversationId === conversationId && d.role === 'admin';
+      })
+      .map(log => ({
+        role: 'admin' as const,
+        content: (log.details as Record<string, unknown>).content as string,
+        timestamp: log.created_at,
+      }));
+
+    return NextResponse.json({ messages: adminMessages });
+  }
+
   // GET AVAILABLE SLOTS: for in-chat rescheduling
   if (action === 'get_slots') {
     const allSlots = db.getAllTimeSlots();
