@@ -25,6 +25,19 @@ export async function POST(request: Request) {
   return NextResponse.json({ success: true });
 }
 
+// DELETE /api/admin/auth — logout (clear httpOnly cookie server-side)
+export async function DELETE() {
+  const cookieStore = await cookies();
+  cookieStore.set('admin_session', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/',
+  });
+  return NextResponse.json({ success: true });
+}
+
 // GET /api/admin/auth — check if authenticated
 export async function GET() {
   const cookieStore = await cookies();

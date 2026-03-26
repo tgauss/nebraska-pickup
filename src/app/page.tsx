@@ -43,7 +43,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-accent text-accent-foreground/60 py-6 text-center">
-        <p className="text-xs">2410 Production Drive, Unit 6, Roca, NE 68430</p>
+        <p className="text-xs">2410 Production Drive, Unit 4, Roca, NE 68430</p>
       </footer>
     </div>
   );

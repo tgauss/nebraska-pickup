@@ -4,7 +4,7 @@
  * (lost on server restart). Supabase can be connected later for persistence.
  */
 
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, statSync } from 'fs';
 import { resolve } from 'path';
 import { randomUUID, createHash } from 'crypto';
 
@@ -144,11 +144,28 @@ let timeSlots: DBTimeSlot[] = [];
 let bookings: DBBooking[] = [];
 let activityLog: DBActivityLog[] = [];
 let initialized = false;
+let loadedFilePath = '';
+let loadedFileMtime = 0;
 
 const JACOB_EMAIL = 'jacob.williams199743@gmail.com';
 
+// Check if the source JSON has changed since last load and auto-reload if so
+function checkForReload() {
+  if (!loadedFilePath) return;
+  try {
+    const mtime = statSync(loadedFilePath).mtimeMs;
+    if (mtime > loadedFileMtime) {
+      initialized = false;
+      loadData();
+    }
+  } catch { /* file gone — keep using cached data */ }
+}
+
 function loadData() {
-  if (initialized) return;
+  if (initialized) {
+    checkForReload();
+    if (initialized) return; // still valid after check
+  }
 
   // Try multiple possible paths for the JSON file
   const possiblePaths = [
@@ -162,6 +179,8 @@ function loadData() {
   for (const p of possiblePaths) {
     if (existsSync(p)) {
       raw = readFileSync(p, 'utf-8');
+      loadedFilePath = p;
+      loadedFileMtime = statSync(p).mtimeMs;
       break;
     }
   }
@@ -300,8 +319,19 @@ export function getAllTimeSlots(): DBTimeSlot[] {
   return [...timeSlots].sort((a, b) => {
     const dayOrder: Record<string, number> = { Thursday: 0, Friday: 1, Saturday: 2 };
     if (dayOrder[a.day] !== dayOrder[b.day]) return dayOrder[a.day] - dayOrder[b.day];
-    return a.time.localeCompare(b.time);
+    return timeToMinutes(a.time) - timeToMinutes(b.time);
   });
+}
+
+function timeToMinutes(time: string): number {
+  const match = time.match(/^(\d{1,2}):(\d{2})(am|pm)$/i);
+  if (!match) return 0;
+  let hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const ampm = match[3].toLowerCase();
+  if (ampm === 'pm' && hours !== 12) hours += 12;
+  if (ampm === 'am' && hours === 12) hours = 0;
+  return hours * 60 + minutes;
 }
 
 export function getTimeSlotById(id: string): DBTimeSlot | undefined {

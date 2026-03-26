@@ -60,6 +60,7 @@ export async function GET(
     endDate: getSlotEndDate(slot.day, slot.time),
     url: ROCA_MAPS_URL,
     geo: ROCA_GEO,
+    uid: booking.id,
   });
 
   return new NextResponse(ics, {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut, ClipboardList, Mail } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
@@ -74,6 +74,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/customers', label: 'Customers', icon: Users },
     { href: '/admin/day-of', label: 'Day-of Ops', icon: CalendarCheck },
     { href: '/admin/map', label: 'Map', icon: MapIcon },
+    { href: '/admin/prep', label: 'Prep', icon: ClipboardList },
+    { href: '/admin/email', label: 'Email', icon: Mail },
   ];
 
   return (
@@ -104,8 +106,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               })}
             </div>
             <button
-              onClick={() => {
-                document.cookie = 'admin_session=; Max-Age=0; path=/';
+              onClick={async () => {
+                await fetch('/api/admin/auth', { method: 'DELETE' });
                 setAuthenticated(false);
               }}
               className="text-gray-400 hover:text-gray-600 p-2"

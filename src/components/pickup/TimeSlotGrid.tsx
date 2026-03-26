@@ -22,7 +22,7 @@ function timeToMinutes(time: string): number {
 }
 
 const DAY_ORDER: Record<string, number> = { Thursday: 0, Friday: 1, Saturday: 2 };
-const DAY_DATES: Record<string, string> = { Thursday: 'Apr 2', Friday: 'Apr 3', Saturday: 'Apr 4' };
+const DAY_DATES: Record<string, string> = { Thursday: 'Apr 16', Friday: 'Apr 17', Saturday: 'Apr 18' };
 
 function sortSlots(slots: TimeSlot[]): TimeSlot[] {
   return [...slots].sort((a, b) => {

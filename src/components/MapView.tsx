@@ -75,7 +75,7 @@ export default function MapView({
       el.innerHTML = `<div style="width:32px;height:32px;background:#d00000;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.3);">W</div>`;
       new mapboxgl.Marker({ element: el })
         .setLngLat([WAREHOUSE.lng, WAREHOUSE.lat])
-        .setPopup(new mapboxgl.Popup().setHTML('<strong>Pickup Location</strong><br>2410 Production Drive, Unit 6<br>Roca, NE 68430'))
+        .setPopup(new mapboxgl.Popup().setHTML('<strong>Pickup Location</strong><br>2410 Production Drive, Unit 4<br>Roca, NE 68430'))
         .addTo(map.current);
     }
 

@@ -8,6 +8,7 @@ interface ICSEvent {
   endDate: Date;
   url?: string;
   geo?: { lat: number; lng: number };
+  uid?: string;
 }
 
 function escapeICS(text: string): string {
@@ -18,7 +19,8 @@ function escapeICS(text: string): string {
     .replace(/\n/g, '\\n');
 }
 
-export function generateICS(event: ICSEvent): string {
+export function generateICS(event: ICSEvent & { uid?: string }): string {
+  const { uid } = event;
   const formatDate = (d: Date) =>
     d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 
@@ -36,7 +38,7 @@ export function generateICS(event: ICSEvent): string {
     `DESCRIPTION:${escapeICS(event.description)}`,
     `LOCATION:${escapeICS(event.location)}`,
     'STATUS:CONFIRMED',
-    `UID:${crypto.randomUUID()}@devaney-pickup`,
+    `UID:${uid || crypto.randomUUID()}@devaney-pickup`,
     `DTSTAMP:${formatDate(new Date())}`,
   ];
 
@@ -74,16 +76,16 @@ export function generateICS(event: ICSEvent): string {
 }
 
 // Roca warehouse coordinates
-export const ROCA_GEO = { lat: 40.6414, lng: -96.6614 };
-export const ROCA_ADDRESS = '2410 Production Drive, Unit 6, Roca, NE 68430';
-export const ROCA_MAPS_URL = 'https://maps.google.com/?q=2410+Production+Drive+Unit+6+Roca+NE+68430';
+export const ROCA_GEO = { lat: 40.6753, lng: -96.6197 };
+export const ROCA_ADDRESS = '2410 Production Drive, Unit 4, Roca, NE 68430';
+export const ROCA_MAPS_URL = 'https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430';
 
 // Convert day + time string to a Date object
 export function getSlotDate(day: string, time: string): Date {
   const dayMap: Record<string, string> = {
-    Thursday: '2026-04-02',
-    Friday: '2026-04-03',
-    Saturday: '2026-04-04',
+    Thursday: '2026-04-16',
+    Friday: '2026-04-17',
+    Saturday: '2026-04-18',
   };
 
   const dateStr = dayMap[day];

@@ -8,7 +8,7 @@ export const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.eyJ1Ijoi
 export const WAREHOUSE = {
   lng: -96.6197,
   lat: 40.6753,
-  address: '2410 Production Drive, Unit 6, Roca, NE 68430',
+  address: '2410 Production Drive, Unit 4, Roca, NE 68430',
 };
 
 export interface DriveTimeResult {

@@ -5,6 +5,17 @@ import { Users, CalendarCheck, TrendingUp, AlertTriangle, Package, Truck } from 
 import { SEGMENT_LABELS } from '@/lib/types';
 import type { TimeSlot } from '@/lib/types';
 
+function timeToMinutes(time: string): number {
+  const match = time.match(/^(\d{1,2}):(\d{2})(am|pm)$/i);
+  if (!match) return 0;
+  let hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const ampm = match[3].toLowerCase();
+  if (ampm === 'pm' && hours !== 12) hours += 12;
+  if (ampm === 'am' && hours === 12) hours = 0;
+  return hours * 60 + minutes;
+}
+
 interface DashboardData {
   total_customers: number;
   segments: Record<string, { count: number; confirmed: number; pending: number }>;
@@ -110,7 +121,9 @@ export default function AdminDashboard() {
         <h2 className="text-lg font-semibold mb-4">Time Slot Heatmap</h2>
         <div className="space-y-6">
           {['Thursday', 'Friday', 'Saturday'].map(day => {
-            const daySlots = data.time_slot_fill.filter(s => s.day === day);
+            const daySlots = data.time_slot_fill
+              .filter(s => s.day === day)
+              .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
             return (
               <div key={day}>
                 <h3 className="text-sm font-medium text-gray-700 mb-2">{day}</h3>

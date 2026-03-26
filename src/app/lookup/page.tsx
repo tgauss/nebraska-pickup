@@ -161,7 +161,7 @@ export default function LookupPage() {
           />
           <p className="text-xs">Nebraska Stadium Collectibles</p>
           <p className="text-[10px] mt-1 text-accent-foreground/40">
-            2410 Production Drive, Unit 6, Roca, NE 68430
+            2410 Production Drive, Unit 4, Roca, NE 68430
           </p>
         </div>
       </footer>
