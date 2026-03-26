@@ -388,11 +388,23 @@ function getSb() {
   }
 }
 
-// Fire-and-forget Supabase writes — don't block the response
+// Collect Supabase write promises so they can be flushed before response ends
+const pendingWrites: Promise<unknown>[] = [];
+
 function sbWrite(fn: (sb: ReturnType<typeof createAdminClient>) => Promise<unknown>): void {
   const sb = getSb();
   if (!sb) return;
-  fn(sb).catch(err => console.error('[supabase write-through]', err));
+  pendingWrites.push(fn(sb).catch(err => console.error('[supabase write-through]', err)));
+}
+
+/**
+ * Await all pending Supabase writes. Call this in API routes before returning the response
+ * to ensure writes complete before serverless function freezes.
+ */
+export async function flushWrites(): Promise<void> {
+  if (pendingWrites.length === 0) return;
+  await Promise.allSettled(pendingWrites);
+  pendingWrites.length = 0;
 }
 
 // ============================================================

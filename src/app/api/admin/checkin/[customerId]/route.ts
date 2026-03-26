@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { flushWrites } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,5 +26,6 @@ export async function POST(
   db.updateLineItemsStatus(customerId, { fulfillment_preference: 'pickup' as const }, 'staged');
   db.addActivityLog(customerId, 'checked_in', { booking_id: booking.id });
 
+  await flushWrites();
   return NextResponse.json({ success: true, booking: updated });
 }

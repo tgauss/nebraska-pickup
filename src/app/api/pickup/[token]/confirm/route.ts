@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { flushWrites } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +40,7 @@ export async function POST(
   if (customer.segment === 'C' && body.convert_to_pickup === false) {
     db.updateLineItemsStatus(customer.id, { item_type: 'ship' as const }, 'ship_queued');
     db.addActivityLog(customer.id, 'seg_c_declined', { message: 'Customer declined pickup' });
+    await flushWrites();
     return NextResponse.json({ success: true, action: 'declined_pickup' });
   }
 
@@ -95,6 +97,8 @@ export async function POST(
     day: slot.day,
     time: slot.time,
   });
+
+  await flushWrites();
 
   return NextResponse.json({
     success: true,
