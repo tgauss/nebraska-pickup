@@ -234,25 +234,26 @@ function HomeChat() {
 
         {/* Chat step */}
         {step === 'chat' && (
-          <>
-            {/* Customer bar */}
-            {context.customerName && (
-              <div className="px-5 py-2.5 bg-secondary border-b flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <img src="/husker-helper.webp" alt="Husker Helper" className="w-7 h-7 rounded-full object-cover" />
-                  <div>
-                    <span className="text-xs font-medium text-foreground">Chatting with Husker Helper</span>
-                    <span className="text-[10px] text-muted-foreground ml-2">({context.customerName})</span>
+          <div className="flex-1 flex flex-col px-4 py-6">
+            <div className="flex-1 flex flex-col border-2 border-border rounded-xl overflow-hidden bg-white shadow-sm max-h-[calc(100vh-160px)]">
+              {/* Customer bar */}
+              {context.customerName && (
+                <div className="px-5 py-2.5 bg-secondary border-b flex items-center justify-between shrink-0">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/husker-helper.webp" alt="Husker Helper" className="w-7 h-7 rounded-full object-cover" />
+                    <div>
+                      <span className="text-xs font-medium text-foreground">Chatting with Husker Helper</span>
+                      <span className="text-[10px] text-muted-foreground ml-2">({context.customerName})</span>
+                    </div>
                   </div>
+                  {context.needsHuman && (
+                    <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Team notified</span>
+                  )}
                 </div>
-                {context.needsHuman && (
-                  <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Team notified</span>
-                )}
-              </div>
-            )}
+              )}
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4">
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto px-5 py-6 space-y-4 min-h-[200px]">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} gap-2.5`}>
                   {msg.role === 'assistant' && (
@@ -360,7 +361,7 @@ function HomeChat() {
             </div>
 
             {/* Input */}
-            <div className="px-5 py-4 border-t bg-background safe-area-bottom">
+            <div className="px-5 py-4 border-t bg-white shrink-0 safe-area-bottom">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
@@ -381,7 +382,8 @@ function HomeChat() {
                 </button>
               </div>
             </div>
-          </>
+            </div>
+          </div>
         )}
       </main>
 
