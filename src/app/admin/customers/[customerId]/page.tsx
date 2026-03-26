@@ -6,8 +6,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft, Mail, Phone, MapPin, Clock, Calendar, Truck, CheckCircle,
-  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode
+  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode, Navigation
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 import { getVehicleRecommendation, SEGMENT_LABELS, SEGMENT_COLORS } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
@@ -54,6 +57,8 @@ export default function CustomerDetailPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [newNote, setNewNote] = useState('');
+  const [realDrive, setRealDrive] = useState<{ minutes: number; miles: number } | null>(null);
+  const [customerCoords, setCustomerCoords] = useState<{ lng: number; lat: number } | null>(null);
 
   const fetchData = useCallback(async () => {
     const [custRes, notesRes] = await Promise.all([
@@ -69,6 +74,22 @@ export default function CustomerDetailPage() {
   }, [customerId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  // Fetch real drive time from Mapbox
+  useEffect(() => {
+    if (!data) return;
+    const { city, state } = data.customer;
+    if (!city) return;
+    fetch(`/api/admin/drivetime?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d) {
+          setRealDrive({ minutes: d.duration_minutes, miles: d.distance_miles });
+          setCustomerCoords({ lng: d.lng, lat: d.lat });
+        }
+      })
+      .catch(() => {});
+  }, [data]);
 
   const handleAction = async (action: 'checkin' | 'complete' | 'noshow') => {
     setActionLoading(action);
@@ -315,17 +336,40 @@ export default function CustomerDetailPage() {
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="w-4 h-4 shrink-0" /> {customer.city}{customer.state ? `, ${customer.state}` : ''}
               </div>
-              {customer.drive_minutes && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="w-4 h-4 shrink-0" />
-                  {Math.floor(customer.drive_minutes / 60) > 0 ? `${Math.floor(customer.drive_minutes / 60)}h ` : ''}{customer.drive_minutes % 60}m drive to Roca
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Navigation className="w-4 h-4 shrink-0" />
+                {realDrive ? (
+                  <span>{Math.floor(realDrive.minutes / 60) > 0 ? `${Math.floor(realDrive.minutes / 60)}h ` : ''}{realDrive.minutes % 60}m drive ({realDrive.miles} mi)</span>
+                ) : customer.drive_minutes ? (
+                  <span className="italic">~{Math.floor(customer.drive_minutes / 60) > 0 ? `${Math.floor(customer.drive_minutes / 60)}h ` : ''}{customer.drive_minutes % 60}m (est)</span>
+                ) : (
+                  <span className="italic">Calculating...</span>
+                )}
+              </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Truck className="w-4 h-4 shrink-0" /> {vehicleRec}
               </div>
             </div>
           </div>
+
+          {/* Map */}
+          {customerCoords && (
+            <div className="bg-card rounded-sm border border-border overflow-hidden">
+              <MapView
+                markers={[{
+                  lng: customerCoords.lng,
+                  lat: customerCoords.lat,
+                  label: customer.segment,
+                  color: '#1a1a1a',
+                  popup: `<strong>${customer.name}</strong><br>${customer.city}, ${customer.state}`,
+                }]}
+                showWarehouse
+                showRoute
+                routeFrom={customerCoords}
+                className="w-full h-48"
+              />
+            </div>
+          )}
 
           {/* Staging */}
           {label && (

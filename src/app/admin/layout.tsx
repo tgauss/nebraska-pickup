@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Users, CalendarCheck, Loader2, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
@@ -73,6 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/customers', label: 'Customers', icon: Users },
     { href: '/admin/day-of', label: 'Day-of Ops', icon: CalendarCheck },
+    { href: '/admin/map', label: 'Map', icon: MapIcon },
   ];
 
   return (

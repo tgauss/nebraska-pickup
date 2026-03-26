@@ -114,15 +114,22 @@ export default function ConfirmationView({
           <Car className="w-5 h-5 text-primary shrink-0" />
           <p className="text-sm">{vehicleRec}</p>
         </div>
-        <a
-          href="https://maps.google.com/?q=2410+Production+Drive+Unit+6+Roca+NE+68430"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block text-xs text-primary hover:underline font-medium ml-8"
-        >
-          Open in Maps
-        </a>
       </div>
+
+      {/* Static map image — lightweight for mobile */}
+      <a
+        href="https://maps.google.com/?q=2410+Production+Drive+Unit+6+Roca+NE+68430"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block rounded-sm overflow-hidden border border-border"
+      >
+        <img
+          src={`https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-l+d00000(-96.6197,40.6753)/-96.6197,40.6753,13,0/600x200@2x?access_token=pk.eyJ1IjoidGdhdXNzIiwiYSI6ImUxelFyZWsifQ.ewANL0BvfdZa9RRcOIQSVA`}
+          alt="Pickup location map"
+          className="w-full h-auto"
+          loading="lazy"
+        />
+      </a>
 
       {/* Add to Calendar */}
       <div className="grid grid-cols-2 gap-3">
