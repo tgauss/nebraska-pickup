@@ -37,6 +37,7 @@ export default function PickupPage() {
   const [shipPreferences, setShipPreferences] = useState<Record<string, 'ship' | 'pickup'>>({});
   const [confirming, setConfirming] = useState(false);
   const [isRescheduling, setIsRescheduling] = useState(false);
+  const [shipChoiceMade, setShipChoiceMade] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
@@ -217,7 +218,6 @@ export default function PickupPage() {
   }
 
   // Does Seg C have any items toggled to pickup?
-  const [shipChoiceMade, setShipChoiceMade] = useState(false);
   const segCHasPickupItems = customer.segment === 'C' &&
     Object.values(shipPreferences).some(p => p === 'pickup');
 
