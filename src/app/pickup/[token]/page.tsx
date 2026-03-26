@@ -448,7 +448,7 @@ function PickupHeader() {
             height={28}
             className="opacity-80"
           />
-          <span className="text-xs uppercase tracking-[0.15em] font-medium text-accent-foreground/70">Nebraska Devaney</span>
+          <span className="text-xs uppercase tracking-[0.15em] font-medium text-accent-foreground/70">Nebraska Rare Goods</span>
         </div>
       </div>
     </header>
