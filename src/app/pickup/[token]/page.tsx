@@ -217,6 +217,7 @@ export default function PickupPage() {
   }
 
   // Does Seg C have any items toggled to pickup?
+  const [shipChoiceMade, setShipChoiceMade] = useState(false);
   const segCHasPickupItems = customer.segment === 'C' &&
     Object.values(shipPreferences).some(p => p === 'pickup');
 
@@ -429,38 +430,45 @@ export default function PickupPage() {
                         <p className="text-xs text-muted-foreground mb-4">
                           Since you&apos;re already coming for your seats, grab these items at the same time — no shipping wait!
                         </p>
-                        <div className="flex gap-3">
+                        <div className="space-y-2">
                           <button
                             onClick={() => {
                               const prefs: Record<string, 'ship' | 'pickup'> = {};
                               ship_items.forEach(i => { prefs[i.id] = 'pickup'; });
                               setShipPreferences(prefs);
+                              setShipChoiceMade(true);
                             }}
-                            className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
-                              allPickup
-                                ? 'bg-green-600 text-white'
-                                : 'border-2 border-green-300 bg-green-50 text-green-800 hover:bg-green-100'
+                            className={`w-full py-4 rounded-sm font-sans font-semibold text-base transition-all flex items-center justify-center gap-3 shadow-sm ${
+                              allPickup && shipChoiceMade
+                                ? 'bg-green-600 text-white shadow-green-200 ring-2 ring-green-400'
+                                : 'border-2 border-green-400 bg-green-50 text-green-800 hover:bg-green-100 hover:shadow-md'
                             }`}
                           >
-                            <MapPin className="w-4 h-4" />
-                            Yes &mdash; Pick up with my seats
+                            <MapPin className="w-5 h-5" />
+                            Yes — Pick up with my seats
                           </button>
                           <button
                             onClick={() => {
                               const prefs: Record<string, 'ship' | 'pickup'> = {};
                               ship_items.forEach(i => { prefs[i.id] = 'ship'; });
                               setShipPreferences(prefs);
+                              setShipChoiceMade(true);
                             }}
-                            className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
-                              !allPickup
-                                ? 'bg-accent text-accent-foreground'
-                                : 'border-2 border-border bg-card text-muted-foreground hover:border-accent'
+                            className={`w-full py-4 rounded-sm font-sans font-semibold text-base transition-all flex items-center justify-center gap-3 shadow-sm ${
+                              !allPickup && shipChoiceMade
+                                ? 'bg-accent text-accent-foreground ring-2 ring-accent'
+                                : 'border-2 border-border bg-card text-muted-foreground hover:bg-secondary hover:shadow-md'
                             }`}
                           >
-                            <Truck className="w-4 h-4" />
-                            No &mdash; Ship to me later
+                            <Truck className="w-5 h-5" />
+                            No — Ship to me later
                           </button>
                         </div>
+                        {!shipChoiceMade && (
+                          <p className="text-xs text-primary font-medium text-center mt-2">
+                            Please select an option above to continue
+                          </p>
+                        )}
                       </div>
                     </div>
                   );
@@ -481,7 +489,8 @@ export default function PickupPage() {
               <div className="max-w-lg mx-auto">
                 <button
                   onClick={() => { setStep('timeslot'); scrollToTop(); }}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 rounded-sm font-sans font-semibold text-base transition-colors flex items-center justify-center gap-2"
+                  disabled={customer.segment === 'B' && ship_items.length > 0 && !shipChoiceMade}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 rounded-sm font-sans font-semibold text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   Choose Your Time
                   <ArrowRight className="w-5 h-5" />
