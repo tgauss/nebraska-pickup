@@ -99,15 +99,22 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
               <p style="margin: 0 0 16px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
                 Hey ${firstName},
               </p>
-              <p style="margin: 0 0 24px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
+              <p style="margin: 0 0 20px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
                 Pickup scheduling for your Devaney Center legacy seating order is now live.
               </p>
 
-              <!-- CTA BUTTON -->
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+              <!-- REQUIRED ACTION BOX -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
                 <tr>
-                  <td align="center" style="padding: 8px 0 24px;">
-                    <a href="${pickupUrl}" style="display: inline-block; background-color: #d00000; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 16px; font-weight: 600; text-decoration: none; padding: 16px 40px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase;">
+                  <td style="background-color: #d00000; border-radius: 8px; padding: 24px; text-align: center;">
+                    <p style="margin: 0 0 4px; font-family: 'Oswald', Arial, sans-serif; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px;">
+                      &#9888; Action Required
+                    </p>
+                    <p style="margin: 0 0 16px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #ffffff; line-height: 1.4;">
+                      You must schedule a pickup time.<br />Spots are limited and filling up.
+                    </p>
+                    <p style="margin: 0 0 12px; font-size: 28px; color: rgba(255,255,255,0.8);">&#9660;</p>
+                    <a href="${pickupUrl}" style="display: inline-block; background-color: #ffffff; color: #d00000; font-family: 'Oswald', Arial, sans-serif; font-size: 16px; font-weight: 700; text-decoration: none; padding: 16px 44px; border-radius: 50px; letter-spacing: 0.5px; text-transform: uppercase;">
                       Select My Pickup Time
                     </a>
                   </td>
