@@ -278,7 +278,7 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
                     <p style="margin: 0 0 8px; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666;">
                       Have questions? Need to make changes?
                     </p>
-                    <a href="${APP_URL}/support" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 32px; border-radius: 4px; letter-spacing: 0.5px;">
+                    <a href="${APP_URL}/support?email=${encodeURIComponent(recipient.email)}" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 32px; border-radius: 4px; letter-spacing: 0.5px;">
                       Chat with Husker Helper
                     </a>
                   </td>

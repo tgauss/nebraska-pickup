@@ -5,6 +5,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Loader2, User, AlertCircle, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -23,6 +25,14 @@ interface ChatContext {
 }
 
 export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+      <HomeChat />
+    </Suspense>
+  );
+}
+
+function HomeChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,8 +56,49 @@ export default function Home() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
+  const searchParams = useSearchParams();
+
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
   useEffect(() => { if (step === 'chat') inputRef.current?.focus(); }, [step]);
+
+  // Auto-identify from URL param: /support?email=joe@raregoods.com
+  const autoIdentified = useRef(false);
+  useEffect(() => {
+    if (autoIdentified.current) return;
+    const email = searchParams.get('email');
+    if (email) {
+      autoIdentified.current = true;
+      setIdentifyInput(email);
+      // Auto-submit after a tick
+      setTimeout(async () => {
+        setIdentifying(true);
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'identify', identifier: email.trim() }),
+          });
+          const data = await res.json();
+          if (data.found) {
+            setContext(prev => ({
+              ...prev, customerId: data.customerId, customerName: data.customerName,
+              customerEmail: data.customerEmail, customerToken: data.customerToken, identified: true,
+            }));
+            setStep('chat');
+            const firstName = data.customerName.split(' ')[0];
+            let welcome = `Hey ${firstName}! 👋 Great to have you here. I can see your order`;
+            if (data.hasBooked) {
+              welcome += ` — you're booked for ${data.bookingDay} at ${data.bookingTime}. How can I help you today?`;
+            } else {
+              welcome += ` with ${data.pickupItemCount} item${data.pickupItemCount !== 1 ? 's' : ''} for pickup. How can I help you today?`;
+            }
+            setMessages([{ role: 'assistant', content: welcome, timestamp: new Date().toISOString() }]);
+          }
+        } catch { /* fallback to manual */ }
+        setIdentifying(false);
+      }, 100);
+    }
+  }, [searchParams]);
 
   const handleIdentify = async () => {
     if (!identifyInput.trim()) return;
