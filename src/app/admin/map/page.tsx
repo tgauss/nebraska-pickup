@@ -92,8 +92,9 @@ export default function AdminMapPage() {
       el.className = 'customer-marker';
       el.innerHTML = `<div style="width:${c.is_vip ? 20 : 14}px;height:${c.is_vip ? 20 : 14}px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);cursor:pointer;"></div>`;
 
-      const driveStr = c.drive_minutes
-        ? `${Math.floor(c.drive_minutes / 60) > 0 ? Math.floor(c.drive_minutes / 60) + 'h ' : ''}${c.drive_minutes % 60}m drive`
+      const dm = c.drive_minutes;
+      const driveStr = dm
+        ? (dm >= 60 ? `${Math.floor(dm / 60)}h ${dm % 60}m` : `${dm} min`) + ' drive'
         : 'Drive time unknown';
 
       const popup = new mapboxgl.Popup({ offset: 10 }).setHTML(`

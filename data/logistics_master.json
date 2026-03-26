@@ -232,7 +232,7 @@
       "phone": "+14023063575",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "L",
       "orders": [
         "#NEB3118213"
@@ -253,7 +253,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -267,7 +267,7 @@
       "phone": "",
       "city": "Kansas City",
       "state": "MO",
-      "drive_minutes": 180,
+      "drive_minutes": 179,
       "size": "M",
       "orders": [
         "#NEB3117856"
@@ -288,7 +288,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -302,7 +302,7 @@
       "phone": "",
       "city": "York",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 62,
       "size": "S",
       "orders": [
         "#NEB3117854"
@@ -323,7 +323,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -337,7 +337,7 @@
       "phone": "",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "S",
       "orders": [
         "#NEB3117901",
@@ -365,7 +365,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -379,7 +379,7 @@
       "phone": "",
       "city": "Friend",
       "state": "NE",
-      "drive_minutes": 50,
+      "drive_minutes": 45,
       "size": "M",
       "orders": [
         "#NEB3118170",
@@ -407,7 +407,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -421,7 +421,7 @@
       "phone": "+13107159725",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117880"
@@ -442,7 +442,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -456,7 +456,7 @@
       "phone": "+14026417983",
       "city": "Seward",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 41,
       "size": "S",
       "orders": [
         "#NEB3117964"
@@ -477,7 +477,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -491,7 +491,7 @@
       "phone": "+14029901094",
       "city": "Gretna",
       "state": "NE",
-      "drive_minutes": 65,
+      "drive_minutes": 54,
       "size": "M",
       "orders": [
         "#NEB3118182"
@@ -512,7 +512,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -526,7 +526,7 @@
       "phone": "+14024996688",
       "city": "Pinellas Park",
       "state": "FL",
-      "drive_minutes": null,
+      "drive_minutes": 1339,
       "size": "M",
       "orders": [
         "#NEB3117858"
@@ -547,7 +547,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -561,7 +561,7 @@
       "phone": "+13089910208",
       "city": "Holdrege",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 153,
       "size": "M",
       "orders": [
         "#NEB3117953"
@@ -582,7 +582,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -596,7 +596,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118163"
@@ -617,7 +617,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -631,7 +631,7 @@
       "phone": "+14026416405",
       "city": "Seward",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 41,
       "size": "M",
       "orders": [
         "#NEB3118196"
@@ -652,7 +652,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -666,7 +666,7 @@
       "phone": "+14029908683",
       "city": "La Vista",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 68,
       "size": "M",
       "orders": [
         "#NEB3118173"
@@ -687,7 +687,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -701,7 +701,7 @@
       "phone": "+14023220227",
       "city": "Hastings",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 110,
       "size": "M",
       "orders": [
         "#NEB3118191"
@@ -722,7 +722,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -736,7 +736,7 @@
       "phone": "+14022134438",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118158"
@@ -757,7 +757,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -771,7 +771,7 @@
       "phone": "+14022166938",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "L",
       "orders": [
         "#NEB3118245"
@@ -792,7 +792,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -806,7 +806,7 @@
       "phone": "",
       "city": "Holdrege",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 153,
       "size": "M",
       "orders": [
         "#NEB3117868"
@@ -827,7 +827,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -841,7 +841,7 @@
       "phone": "",
       "city": "Pierce",
       "state": "NE",
-      "drive_minutes": 160,
+      "drive_minutes": 158,
       "size": "M",
       "orders": [
         "#NEB3118159"
@@ -862,7 +862,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -876,7 +876,7 @@
       "phone": "+14029830488",
       "city": "La Vista",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 68,
       "size": "M",
       "orders": [
         "#NEB3118201"
@@ -897,7 +897,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -911,7 +911,7 @@
       "phone": "",
       "city": "Eudora",
       "state": "KS",
-      "drive_minutes": 160,
+      "drive_minutes": 193,
       "size": "M",
       "orders": [
         "#NEB3118156"
@@ -932,7 +932,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -946,7 +946,7 @@
       "phone": "+13088301916",
       "city": "Kansas City",
       "state": "MO",
-      "drive_minutes": 180,
+      "drive_minutes": 179,
       "size": "S",
       "orders": [
         "#NEB3117853"
@@ -967,7 +967,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -981,7 +981,7 @@
       "phone": "",
       "city": "Ord",
       "state": "NE",
-      "drive_minutes": 180,
+      "drive_minutes": 168,
       "size": "M",
       "orders": [
         "#NEB3118179"
@@ -1002,7 +1002,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1016,7 +1016,7 @@
       "phone": "",
       "city": "Brule",
       "state": "NE",
-      "drive_minutes": 220,
+      "drive_minutes": 262,
       "size": "S",
       "orders": [
         "#NEB3117943"
@@ -1037,7 +1037,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1051,7 +1051,7 @@
       "phone": "",
       "city": "Papillion",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 64,
       "size": "M",
       "orders": [
         "#NEB3118211"
@@ -1072,7 +1072,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1086,7 +1086,7 @@
       "phone": "",
       "city": "Gothenburg",
       "state": "NE",
-      "drive_minutes": 180,
+      "drive_minutes": 181,
       "size": "S",
       "orders": [
         "#NEB3117882"
@@ -1107,7 +1107,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1121,7 +1121,7 @@
       "phone": "+13087500309",
       "city": "Ord",
       "state": "NE",
-      "drive_minutes": 180,
+      "drive_minutes": 168,
       "size": "M",
       "orders": [
         "#NEB3118221"
@@ -1142,7 +1142,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1156,7 +1156,7 @@
       "phone": "+14029320600",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118207"
@@ -1177,7 +1177,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1191,7 +1191,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3117861"
@@ -1212,7 +1212,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1226,7 +1226,7 @@
       "phone": "(308) 325-0677",
       "city": "COZAD",
       "state": "NE",
-      "drive_minutes": 170,
+      "drive_minutes": 171,
       "size": "M",
       "orders": [
         "#NEB3118212"
@@ -1247,7 +1247,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1261,7 +1261,7 @@
       "phone": "",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "S",
       "orders": [
         "#NEB3117895"
@@ -1282,7 +1282,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1296,7 +1296,7 @@
       "phone": "",
       "city": "Grand Island",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 102,
       "size": "S",
       "orders": [
         "#NEB3117886"
@@ -1317,7 +1317,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1331,7 +1331,7 @@
       "phone": "+14022031704",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3118195"
@@ -1352,7 +1352,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1366,7 +1366,7 @@
       "phone": "+17122510097",
       "city": "Dakota Dunes",
       "state": "SD",
-      "drive_minutes": 200,
+      "drive_minutes": 157,
       "size": "M",
       "orders": [
         "#NEB3117846"
@@ -1387,7 +1387,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1401,7 +1401,7 @@
       "phone": "",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "M",
       "orders": [
         "#NEB3118175"
@@ -1422,7 +1422,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1436,7 +1436,7 @@
       "phone": "",
       "city": "Polk",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 85,
       "size": "M",
       "orders": [
         "#NEB3118229"
@@ -1457,7 +1457,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1471,7 +1471,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118222"
@@ -1492,7 +1492,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1506,7 +1506,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3117873"
@@ -1527,7 +1527,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1541,7 +1541,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117897"
@@ -1562,7 +1562,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1576,7 +1576,7 @@
       "phone": "",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3117955"
@@ -1597,7 +1597,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1611,7 +1611,7 @@
       "phone": "+14023328977",
       "city": "Gettysburg",
       "state": "PA",
-      "drive_minutes": null,
+      "drive_minutes": 1106,
       "size": "L",
       "orders": [
         "#NEB3118241",
@@ -1639,7 +1639,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1653,7 +1653,7 @@
       "phone": "+14024167130",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118210"
@@ -1674,7 +1674,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1688,7 +1688,7 @@
       "phone": "",
       "city": "Hastings",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 110,
       "size": "M",
       "orders": [
         "#NEB3118165"
@@ -1709,7 +1709,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1723,7 +1723,7 @@
       "phone": "+14147047562",
       "city": "Milwaukee",
       "state": "WI",
-      "drive_minutes": 480,
+      "drive_minutes": 526,
       "size": "S",
       "orders": [
         "#NEB3117931"
@@ -1744,7 +1744,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1758,7 +1758,7 @@
       "phone": "",
       "city": "Portsmouth",
       "state": "RI",
-      "drive_minutes": null,
+      "drive_minutes": 1424,
       "size": "M",
       "orders": [
         "#NEB3118174"
@@ -1779,7 +1779,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1793,7 +1793,7 @@
       "phone": "",
       "city": "NORFOLK",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 143,
       "size": "XL",
       "orders": [
         "#NEB3118184"
@@ -1814,7 +1814,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1828,7 +1828,7 @@
       "phone": "+14022396220",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117930"
@@ -1849,7 +1849,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1863,7 +1863,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117870"
@@ -1884,7 +1884,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1898,7 +1898,7 @@
       "phone": "+14022704640",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3118244"
@@ -1919,7 +1919,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1933,7 +1933,7 @@
       "phone": "",
       "city": "Benedict",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 73,
       "size": "M",
       "orders": [
         "#NEB3118157"
@@ -1954,7 +1954,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -1968,7 +1968,7 @@
       "phone": "+14026137960",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3117851"
@@ -1989,7 +1989,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2003,7 +2003,7 @@
       "phone": "+13039576069",
       "city": "Erie",
       "state": "CO",
-      "drive_minutes": 430,
+      "drive_minutes": 438,
       "size": "M",
       "orders": [
         "#NEB3117849"
@@ -2024,7 +2024,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2038,7 +2038,7 @@
       "phone": "+17128983740",
       "city": "Vermillion",
       "state": "SD",
-      "drive_minutes": 200,
+      "drive_minutes": 187,
       "size": "M",
       "orders": [
         "#NEB3117877"
@@ -2059,7 +2059,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2073,7 +2073,7 @@
       "phone": "+13083804524",
       "city": "Grand Island",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 102,
       "size": "M",
       "orders": [
         "#NEB3118205"
@@ -2094,7 +2094,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2108,7 +2108,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118171"
@@ -2129,7 +2129,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2143,7 +2143,7 @@
       "phone": "",
       "city": "ONeill",
       "state": "NE",
-      "drive_minutes": 200,
+      "drive_minutes": 211,
       "size": "L",
       "orders": [
         "#NEB3118152"
@@ -2164,7 +2164,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2178,7 +2178,7 @@
       "phone": "",
       "city": "Phillips",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 91,
       "size": "M",
       "orders": [
         "#NEB3117866"
@@ -2199,7 +2199,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2213,7 +2213,7 @@
       "phone": "",
       "city": "Bellevue",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 75,
       "size": "M",
       "orders": [
         "#NEB3117852"
@@ -2234,7 +2234,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2248,7 +2248,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3117867"
@@ -2269,7 +2269,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2283,7 +2283,7 @@
       "phone": "+14026994600",
       "city": "Fordyce",
       "state": "NE",
-      "drive_minutes": 170,
+      "drive_minutes": 197,
       "size": "S",
       "orders": [
         "#NEB3117934"
@@ -2304,7 +2304,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2318,7 +2318,7 @@
       "phone": "+14026101222",
       "city": "Longmont",
       "state": "CO",
-      "drive_minutes": 420,
+      "drive_minutes": 445,
       "size": "M",
       "orders": [
         "#NEB3117864"
@@ -2339,7 +2339,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2353,7 +2353,7 @@
       "phone": "+14025583302",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3117862"
@@ -2374,7 +2374,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2388,7 +2388,7 @@
       "phone": "+14025757640",
       "city": "Springfield",
       "state": "NE",
-      "drive_minutes": 65,
+      "drive_minutes": 58,
       "size": "M",
       "orders": [
         "#NEB3118164",
@@ -2416,7 +2416,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2430,7 +2430,7 @@
       "phone": "",
       "city": "Papillion",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 64,
       "size": "S",
       "orders": [
         "#NEB3117947"
@@ -2451,7 +2451,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2465,7 +2465,7 @@
       "phone": "+14025789647",
       "city": "Gretna",
       "state": "NE",
-      "drive_minutes": 65,
+      "drive_minutes": 54,
       "size": "S",
       "orders": [
         "#NEB3117860"
@@ -2486,7 +2486,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2500,7 +2500,7 @@
       "phone": "",
       "city": "Fairborn",
       "state": "OH",
-      "drive_minutes": 600,
+      "drive_minutes": 702,
       "size": "M",
       "orders": [
         "#NEB3118206"
@@ -2521,7 +2521,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2535,7 +2535,7 @@
       "phone": "+14027822760",
       "city": "Bennet",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 12,
       "size": "M",
       "orders": [
         "#NEB3118177"
@@ -2556,7 +2556,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2570,7 +2570,7 @@
       "phone": "",
       "city": "Papillion",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 64,
       "size": "M",
       "orders": [
         "#NEB3118181"
@@ -2591,7 +2591,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2605,7 +2605,7 @@
       "phone": "+12175536708",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118226"
@@ -2626,7 +2626,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2640,7 +2640,7 @@
       "phone": "",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3117878"
@@ -2661,7 +2661,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2675,7 +2675,7 @@
       "phone": "",
       "city": "Red Oak",
       "state": "IA",
-      "drive_minutes": 160,
+      "drive_minutes": 107,
       "size": "M",
       "orders": [
         "#NEB3118197"
@@ -2696,7 +2696,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2710,7 +2710,7 @@
       "phone": "+14029814136",
       "city": "Sanibel",
       "state": "FL",
-      "drive_minutes": null,
+      "drive_minutes": 1464,
       "size": "L",
       "orders": [
         "#NEB3118223"
@@ -2731,7 +2731,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2745,7 +2745,7 @@
       "phone": "+14029201930",
       "city": "Humphrey",
       "state": "NE",
-      "drive_minutes": 130,
+      "drive_minutes": 117,
       "size": "L",
       "orders": [
         "#NEB3118169"
@@ -2766,7 +2766,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2780,7 +2780,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118172"
@@ -2801,7 +2801,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2815,7 +2815,7 @@
       "phone": "+14024695156",
       "city": "Shoreline",
       "state": "WA",
-      "drive_minutes": null,
+      "drive_minutes": 1546,
       "size": "M",
       "orders": [
         "#NEB3118232"
@@ -2836,7 +2836,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2850,7 +2850,7 @@
       "phone": "",
       "city": "Norfolk",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 143,
       "size": "M",
       "orders": [
         "#NEB3118186"
@@ -2871,7 +2871,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2885,7 +2885,7 @@
       "phone": "+14022103277",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "XL",
       "orders": [
         "#NEB3118178"
@@ -2906,7 +2906,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2920,7 +2920,7 @@
       "phone": "+15712944904",
       "city": "Alexandria",
       "state": "VA",
-      "drive_minutes": null,
+      "drive_minutes": 1150,
       "size": "M",
       "orders": [
         "#NEB3118215"
@@ -2941,7 +2941,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2955,7 +2955,7 @@
       "phone": "+17122595232",
       "city": "Homer",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 137,
       "size": "M",
       "orders": [
         "#NEB3118167"
@@ -2976,7 +2976,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -2990,7 +2990,7 @@
       "phone": "",
       "city": "Gaithersburg",
       "state": "MD",
-      "drive_minutes": null,
+      "drive_minutes": 1115,
       "size": "S",
       "orders": [
         "#NEB3117958"
@@ -3011,7 +3011,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3025,7 +3025,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118188"
@@ -3046,7 +3046,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3060,7 +3060,7 @@
       "phone": "+13082932100",
       "city": "Elm Creek",
       "state": "NE",
-      "drive_minutes": 160,
+      "drive_minutes": 142,
       "size": "L",
       "orders": [
         "#NEB3118236"
@@ -3081,7 +3081,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3095,7 +3095,7 @@
       "phone": "+14028715809",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118155"
@@ -3116,7 +3116,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3130,7 +3130,7 @@
       "phone": "",
       "city": "Pender",
       "state": "NE",
-      "drive_minutes": 140,
+      "drive_minutes": 125,
       "size": "S",
       "orders": [
         "#NEB3118011"
@@ -3151,7 +3151,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3165,7 +3165,7 @@
       "phone": "+18167199602",
       "city": "Holt",
       "state": "MO",
-      "drive_minutes": 190,
+      "drive_minutes": 175,
       "size": "M",
       "orders": [
         "#NEB3118202"
@@ -3186,7 +3186,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3200,7 +3200,7 @@
       "phone": "+14028501053",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118198"
@@ -3221,7 +3221,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3235,7 +3235,7 @@
       "phone": "",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "M",
       "orders": [
         "#NEB3118242"
@@ -3256,7 +3256,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3270,7 +3270,7 @@
       "phone": "(402) 730-9375",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118237",
@@ -3292,7 +3292,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3306,7 +3306,7 @@
       "phone": "",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3118204"
@@ -3327,7 +3327,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3341,7 +3341,7 @@
       "phone": "",
       "city": "Bennington",
       "state": "NE",
-      "drive_minutes": 85,
+      "drive_minutes": 75,
       "size": "M",
       "orders": [
         "#NEB3118160"
@@ -3362,7 +3362,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3376,7 +3376,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117905"
@@ -3397,7 +3397,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3411,7 +3411,7 @@
       "phone": "+14028795950",
       "city": "Superior",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 125,
       "size": "L",
       "orders": [
         "#NEB3118209"
@@ -3432,7 +3432,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3446,7 +3446,7 @@
       "phone": "",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3118235"
@@ -3467,7 +3467,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3481,7 +3481,7 @@
       "phone": "+13086410410",
       "city": "Gering",
       "state": "NE",
-      "drive_minutes": 300,
+      "drive_minutes": 377,
       "size": "S",
       "orders": [
         "#NEB3117937"
@@ -3502,7 +3502,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3516,7 +3516,7 @@
       "phone": "",
       "city": "Beatrice",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 38,
       "size": "XL",
       "orders": [
         "#NEB3117879"
@@ -3537,7 +3537,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3551,7 +3551,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118199"
@@ -3572,7 +3572,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3586,7 +3586,7 @@
       "phone": "",
       "city": "LINCOLN",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3117844"
@@ -3607,7 +3607,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3621,7 +3621,7 @@
       "phone": "",
       "city": "O'Fallon",
       "state": "MO",
-      "drive_minutes": 200,
+      "drive_minutes": 379,
       "size": "M",
       "orders": [
         "#NEB3118233"
@@ -3642,7 +3642,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3656,7 +3656,7 @@
       "phone": "+13082187724",
       "city": "Culbertson",
       "state": "NE",
-      "drive_minutes": 250,
+      "drive_minutes": 245,
       "size": "M",
       "orders": [
         "#NEB3118162"
@@ -3677,7 +3677,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3691,7 +3691,7 @@
       "phone": "+14025403584",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118230"
@@ -3712,7 +3712,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3726,7 +3726,7 @@
       "phone": "",
       "city": "Shawnee",
       "state": "KS",
-      "drive_minutes": 180,
+      "drive_minutes": 182,
       "size": "M",
       "orders": [
         "#NEB3118176"
@@ -3747,7 +3747,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3761,7 +3761,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118008"
@@ -3782,7 +3782,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3796,7 +3796,7 @@
       "phone": "",
       "city": "Wahoo",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 48,
       "size": "S",
       "orders": [
         "#NEB3118007"
@@ -3817,7 +3817,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3831,7 +3831,7 @@
       "phone": "",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "S",
       "orders": [
         "#NEB3117903"
@@ -3852,7 +3852,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3866,7 +3866,7 @@
       "phone": "+14026819598",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117941"
@@ -3887,7 +3887,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3901,7 +3901,7 @@
       "phone": "+14027412176",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3117978",
@@ -3929,7 +3929,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3943,7 +3943,7 @@
       "phone": "+14025634711",
       "city": "ELKHORN",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "M",
       "orders": [
         "#NEB3118180"
@@ -3964,7 +3964,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": true,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -3978,7 +3978,7 @@
       "phone": "",
       "city": "TRYON",
       "state": "NE",
-      "drive_minutes": 240,
+      "drive_minutes": 249,
       "size": "L",
       "orders": [
         "#NEB3118194",
@@ -4021,7 +4021,7 @@
       "phone": "",
       "city": "Ayr",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 121,
       "size": "L",
       "orders": [
         "#NEB3118208"
@@ -4063,7 +4063,7 @@
       "phone": "",
       "city": "Osmond",
       "state": "NE",
-      "drive_minutes": 180,
+      "drive_minutes": 178,
       "size": "M",
       "orders": [
         "#NEB3118234",
@@ -4106,7 +4106,7 @@
       "phone": "+13086314190",
       "city": "Scottsbluff",
       "state": "NE",
-      "drive_minutes": 300,
+      "drive_minutes": 381,
       "size": "S",
       "orders": [
         "#NEB3117938"
@@ -4148,7 +4148,7 @@
       "phone": "",
       "city": "Cozad",
       "state": "NE",
-      "drive_minutes": 170,
+      "drive_minutes": 171,
       "size": "S",
       "orders": [
         "#NEB3117975"
@@ -4190,7 +4190,7 @@
       "phone": "+13083257637",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3117908",
@@ -4233,7 +4233,7 @@
       "phone": "+14022014673",
       "city": "Gretna",
       "state": "NE",
-      "drive_minutes": 65,
+      "drive_minutes": 54,
       "size": "S",
       "orders": [
         "#NEB3117918"
@@ -4324,7 +4324,7 @@
       "phone": "+14026997603",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "M",
       "orders": [
         "#NEB3118216",
@@ -4380,7 +4380,7 @@
       "phone": "+14026184404",
       "city": "Blue Rapids",
       "state": "KS",
-      "drive_minutes": 120,
+      "drive_minutes": 89,
       "size": "S",
       "orders": [
         "#NEB3118004"
@@ -4422,7 +4422,7 @@
       "phone": "",
       "city": "West Fargo",
       "state": "ND",
-      "drive_minutes": 420,
+      "drive_minutes": 428,
       "size": "S",
       "orders": [
         "#NEB3117935"
@@ -4470,7 +4470,7 @@
       "phone": "+14027102439",
       "city": "Benedict",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 73,
       "size": "XL",
       "orders": [
         "#NEB3118238",
@@ -4755,7 +4755,7 @@
       "phone": "+14028851997",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117968",
@@ -4798,7 +4798,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117974"
@@ -4840,7 +4840,7 @@
       "phone": "+14028500916",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3117902"
@@ -4882,7 +4882,7 @@
       "phone": "",
       "city": "Nebraska City",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 46,
       "size": "M",
       "orders": [
         "#NEB3118246",
@@ -4931,7 +4931,7 @@
       "phone": "+16059402593",
       "city": "Canistota",
       "state": "SD",
-      "drive_minutes": 240,
+      "drive_minutes": 255,
       "size": "S",
       "orders": [
         "#NEB3117990",
@@ -5023,7 +5023,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118057",
@@ -5066,7 +5066,7 @@
       "phone": "+14029101948",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "L",
       "orders": [
         "#NEB3118247",
@@ -5115,7 +5115,7 @@
       "phone": "+14024167333",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "M",
       "orders": [
         "#NEB3118248",
@@ -5158,7 +5158,7 @@
       "phone": "",
       "city": "Onaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117984",
@@ -5201,7 +5201,7 @@
       "phone": "+14022502645",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117951"
@@ -5236,7 +5236,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117914"
@@ -5271,7 +5271,7 @@
       "phone": "(308) 746-2626",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117909"
@@ -5306,7 +5306,7 @@
       "phone": "+14027391469",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118225"
@@ -5341,7 +5341,7 @@
       "phone": "+14022690718",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117995"
@@ -5376,7 +5376,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118217"
@@ -5411,7 +5411,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118094",
@@ -5453,7 +5453,7 @@
       "phone": "+12176201651",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118220"
@@ -5488,7 +5488,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118030"
@@ -5523,7 +5523,7 @@
       "phone": "+14029905564",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118105"
@@ -5564,7 +5564,7 @@
       "phone": "+14022974263",
       "city": "Plattsmouth",
       "state": "NE",
-      "drive_minutes": 55,
+      "drive_minutes": 67,
       "size": "S",
       "orders": [
         "#NEB3117965"
@@ -5599,7 +5599,7 @@
       "phone": "",
       "city": "Bellevue",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 75,
       "size": "S",
       "orders": [
         "#NEB3118064"
@@ -5634,7 +5634,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117919"
@@ -5669,7 +5669,7 @@
       "phone": "+14028908023",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117966"
@@ -5704,7 +5704,7 @@
       "phone": "+14024322662",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117863"
@@ -5739,7 +5739,7 @@
       "phone": "+14027096497",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118035"
@@ -5766,7 +5766,7 @@
       "iron_qty": 2,
       "chairback_qty": 2,
       "ornament_qty": 0,
-      "shipping_paid": 98.0,
+      "shipping_paid": 98,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": true,
       "offer_ship_to_pickup": false,
@@ -5780,7 +5780,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118053"
@@ -5815,7 +5815,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118098"
@@ -5856,7 +5856,7 @@
       "phone": "",
       "city": "Bellevue",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 75,
       "size": "S",
       "orders": [
         "#NEB3118089"
@@ -5891,7 +5891,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117970"
@@ -5932,7 +5932,7 @@
       "phone": "",
       "city": "Bennington",
       "state": "NE",
-      "drive_minutes": 85,
+      "drive_minutes": 75,
       "size": "S",
       "orders": [
         "#NEB3117983"
@@ -5967,7 +5967,7 @@
       "phone": "+14027205891",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3118071"
@@ -6002,7 +6002,7 @@
       "phone": "",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3118018"
@@ -6037,7 +6037,7 @@
       "phone": "+14024322052",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118101"
@@ -6072,7 +6072,7 @@
       "phone": "+14022069636",
       "city": "Blair",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 86,
       "size": "S",
       "orders": [
         "#NEB3118055",
@@ -6132,7 +6132,7 @@
       "phone": "+14026415276",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117940"
@@ -6167,7 +6167,7 @@
       "phone": "+14028803738",
       "city": "Blair",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 86,
       "size": "S",
       "orders": [
         "#NEB3117874"
@@ -6202,7 +6202,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118049"
@@ -6237,7 +6237,7 @@
       "phone": "+14025153746",
       "city": "La Vista",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 68,
       "size": "S",
       "orders": [
         "#NEB3118072"
@@ -6272,7 +6272,7 @@
       "phone": "",
       "city": "Hickman",
       "state": "NE",
-      "drive_minutes": 10,
+      "drive_minutes": 7,
       "size": "S",
       "orders": [
         "#NEB3118087"
@@ -6307,7 +6307,7 @@
       "phone": "",
       "city": "Wahoo",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 48,
       "size": "S",
       "orders": [
         "#NEB3118084"
@@ -6348,7 +6348,7 @@
       "phone": "+14029683611",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117960"
@@ -6383,7 +6383,7 @@
       "phone": "+14026040222",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118096"
@@ -6418,7 +6418,7 @@
       "phone": "+14024906590",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3117875"
@@ -6453,7 +6453,7 @@
       "phone": "+14026411229",
       "city": "Seward",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 41,
       "size": "S",
       "orders": [
         "#NEB3117956"
@@ -6488,7 +6488,7 @@
       "phone": "",
       "city": "Hickman",
       "state": "NE",
-      "drive_minutes": 10,
+      "drive_minutes": 7,
       "size": "S",
       "orders": [
         "#NEB3117929"
@@ -6523,7 +6523,7 @@
       "phone": "(402) 981-8753",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117885"
@@ -6558,7 +6558,7 @@
       "phone": "",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3118014"
@@ -6585,7 +6585,7 @@
       "iron_qty": 2,
       "chairback_qty": 2,
       "ornament_qty": 0,
-      "shipping_paid": 98.0,
+      "shipping_paid": 98,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": true,
       "offer_ship_to_pickup": false,
@@ -6599,7 +6599,7 @@
       "phone": "",
       "city": "LINCOLN",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117926"
@@ -6634,7 +6634,7 @@
       "phone": "+14028897431",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118161"
@@ -6669,7 +6669,7 @@
       "phone": "+14022172434",
       "city": "Hickman",
       "state": "NE",
-      "drive_minutes": 10,
+      "drive_minutes": 7,
       "size": "S",
       "orders": [
         "#NEB3118139"
@@ -6704,7 +6704,7 @@
       "phone": "+16198861955",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118104",
@@ -6746,7 +6746,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118075"
@@ -6787,7 +6787,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118068"
@@ -6828,7 +6828,7 @@
       "phone": "+18583862138",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118017"
@@ -6863,7 +6863,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117987"
@@ -6898,7 +6898,7 @@
       "phone": "+14022023588",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118219"
@@ -6933,7 +6933,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118080"
@@ -6968,7 +6968,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3118183"
@@ -7003,7 +7003,7 @@
       "phone": "+14024805467",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118168"
@@ -7038,7 +7038,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3118073"
@@ -7073,7 +7073,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117899"
@@ -7108,7 +7108,7 @@
       "phone": "+14023265663",
       "city": "Falls City",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 98,
       "size": "S",
       "orders": [
         "#NEB3117977"
@@ -7143,7 +7143,7 @@
       "phone": "+14028027227",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117921"
@@ -7178,7 +7178,7 @@
       "phone": "",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3118024"
@@ -7213,7 +7213,7 @@
       "phone": "+14026193118",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117872"
@@ -7240,7 +7240,7 @@
       "iron_qty": 2,
       "chairback_qty": 2,
       "ornament_qty": 0,
-      "shipping_paid": 98.0,
+      "shipping_paid": 98,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": true,
       "offer_ship_to_pickup": false,
@@ -7254,7 +7254,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117933"
@@ -7289,7 +7289,7 @@
       "phone": "+14022090891",
       "city": "Nebraska City",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 46,
       "size": "S",
       "orders": [
         "#NEB3117991"
@@ -7324,7 +7324,7 @@
       "phone": "+14026697624",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117916"
@@ -7359,7 +7359,7 @@
       "phone": "",
       "city": "Beatrice",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 38,
       "size": "S",
       "orders": [
         "#NEB3118027"
@@ -7394,7 +7394,7 @@
       "phone": "+14024991030",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117850"
@@ -7429,7 +7429,7 @@
       "phone": "",
       "city": "Seward",
       "state": "NE",
-      "drive_minutes": 45,
+      "drive_minutes": 41,
       "size": "S",
       "orders": [
         "#NEB3118127"
@@ -7464,7 +7464,7 @@
       "phone": "+14029683315",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "S",
       "orders": [
         "#NEB3118142"
@@ -7499,7 +7499,7 @@
       "phone": "",
       "city": "Hickman",
       "state": "NE",
-      "drive_minutes": 10,
+      "drive_minutes": 7,
       "size": "S",
       "orders": [
         "#NEB3118067"
@@ -7534,7 +7534,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "S",
       "orders": [
         "#NEB3117945"
@@ -7569,7 +7569,7 @@
       "phone": "+14022124100",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "S",
       "orders": [
         "#NEB3117954"
@@ -7604,7 +7604,7 @@
       "phone": "",
       "city": "Glendale",
       "state": "AZ",
-      "drive_minutes": 150,
+      "drive_minutes": 1188,
       "size": "N/A",
       "orders": [
         "#NEB3118031"
@@ -7639,7 +7639,7 @@
       "phone": "+14025256886",
       "city": "Newport News",
       "state": "VA",
-      "drive_minutes": 150,
+      "drive_minutes": 1230,
       "size": "N/A",
       "orders": [
         "#NEB3117996"
@@ -7674,7 +7674,7 @@
       "phone": "+13083805752",
       "city": "Wood River",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 107,
       "size": "N/A",
       "orders": [
         "#NEB3118116"
@@ -7709,7 +7709,7 @@
       "phone": "+12064230971",
       "city": "Seattle",
       "state": "WA",
-      "drive_minutes": 150,
+      "drive_minutes": 1529,
       "size": "N/A",
       "orders": [
         "#NEB3118083"
@@ -7744,7 +7744,7 @@
       "phone": "",
       "city": "Centennial",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 447,
       "size": "N/A",
       "orders": [
         "#NEB3118239"
@@ -7779,7 +7779,7 @@
       "phone": "+14024504297",
       "city": "Ceresco",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 36,
       "size": "N/A",
       "orders": [
         "#NEB3118001"
@@ -7820,7 +7820,7 @@
       "phone": "+14024327091",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "N/A",
       "orders": [
         "#NEB3117887"
@@ -7855,7 +7855,7 @@
       "phone": "",
       "city": "Medicine Lodge",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 320,
       "size": "N/A",
       "orders": [
         "#NEB3118135"
@@ -7896,7 +7896,7 @@
       "phone": "+19792924383",
       "city": "Ash Grove",
       "state": "MO",
-      "drive_minutes": 150,
+      "drive_minutes": 336,
       "size": "N/A",
       "orders": [
         "#NEB3118118",
@@ -7938,7 +7938,7 @@
       "phone": "",
       "city": "McCordsville",
       "state": "IN",
-      "drive_minutes": 150,
+      "drive_minutes": 607,
       "size": "N/A",
       "orders": [
         "#NEB3117944"
@@ -7973,7 +7973,7 @@
       "phone": "",
       "city": "Trophy Club",
       "state": "TX",
-      "drive_minutes": 150,
+      "drive_minutes": 546,
       "size": "N/A",
       "orders": [
         "#NEB3117936"
@@ -8008,7 +8008,7 @@
       "phone": "+12084736520",
       "city": "Kuna",
       "state": "ID",
-      "drive_minutes": 150,
+      "drive_minutes": 1072,
       "size": "N/A",
       "orders": [
         "#NEB3118149"
@@ -8049,7 +8049,7 @@
       "phone": "+17128984420",
       "city": "Sioux City",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 152,
       "size": "N/A",
       "orders": [
         "#NEB3118003"
@@ -8084,7 +8084,7 @@
       "phone": "+13034359545",
       "city": "Parker",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 442,
       "size": "N/A",
       "orders": [
         "#NEB3118058"
@@ -8119,7 +8119,7 @@
       "phone": "",
       "city": "Hastings",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 110,
       "size": "N/A",
       "orders": [
         "#NEB3118133"
@@ -8154,7 +8154,7 @@
       "phone": "+14026999160",
       "city": "Treynor",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 86,
       "size": "N/A",
       "orders": [
         "#NEB3118026"
@@ -8189,7 +8189,7 @@
       "phone": "+14023403508",
       "city": "Minden",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 133,
       "size": "N/A",
       "orders": [
         "#NEB3117924"
@@ -8224,7 +8224,7 @@
       "phone": "",
       "city": "Kansas City",
       "state": "MO",
-      "drive_minutes": 180,
+      "drive_minutes": 179,
       "size": "N/A",
       "orders": [
         "#NEB3118070"
@@ -8259,7 +8259,7 @@
       "phone": "+17126608787",
       "city": "Sac City",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 198,
       "size": "N/A",
       "orders": [
         "#NEB3118114"
@@ -8294,7 +8294,7 @@
       "phone": "+16057899866",
       "city": "Alcester",
       "state": "SD",
-      "drive_minutes": 150,
+      "drive_minutes": 201,
       "size": "N/A",
       "orders": [
         "#NEB3118095"
@@ -8335,7 +8335,7 @@
       "phone": "",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "N/A",
       "orders": [
         "#NEB3118044"
@@ -8370,7 +8370,7 @@
       "phone": "+17122532276",
       "city": "Sergeant Bluff",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 145,
       "size": "N/A",
       "orders": [
         "#NEB3117881"
@@ -8405,7 +8405,7 @@
       "phone": "+14022970357",
       "city": "YORK",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 62,
       "size": "N/A",
       "orders": [
         "#NEB3118224"
@@ -8440,7 +8440,7 @@
       "phone": "+13193294362",
       "city": "Cedar Rapids",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 301,
       "size": "N/A",
       "orders": [
         "#NEB3118002"
@@ -8475,7 +8475,7 @@
       "phone": "+13088506758",
       "city": "Lakewood",
       "state": "OH",
-      "drive_minutes": 150,
+      "drive_minutes": 797,
       "size": "N/A",
       "orders": [
         "#NEB3118148"
@@ -8510,7 +8510,7 @@
       "phone": "+14024179433",
       "city": "Mission",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 183,
       "size": "N/A",
       "orders": [
         "#NEB3118021"
@@ -8545,7 +8545,7 @@
       "phone": "+17855331033",
       "city": "Phillipsburg",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 203,
       "size": "N/A",
       "orders": [
         "#NEB3118045"
@@ -8580,7 +8580,7 @@
       "phone": "+14028417159",
       "city": "Groesbeck",
       "state": "TX",
-      "drive_minutes": 150,
+      "drive_minutes": 661,
       "size": "N/A",
       "orders": [
         "#NEB3118086"
@@ -8615,7 +8615,7 @@
       "phone": "+14026132157",
       "city": "Estes Park",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 483,
       "size": "N/A",
       "orders": [
         "#NEB3117859"
@@ -8650,7 +8650,7 @@
       "phone": "+14026497885",
       "city": "Norfolk",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 143,
       "size": "N/A",
       "orders": [
         "#NEB3118037"
@@ -8685,7 +8685,7 @@
       "phone": "",
       "city": "Bladen",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 139,
       "size": "N/A",
       "orders": [
         "#NEB3117927"
@@ -8720,7 +8720,7 @@
       "phone": "",
       "city": "Fairfield",
       "state": "CA",
-      "drive_minutes": 150,
+      "drive_minutes": 1420,
       "size": "N/A",
       "orders": [
         "#NEB3118028"
@@ -8755,7 +8755,7 @@
       "phone": "+13084409179",
       "city": "Gibbon",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 120,
       "size": "N/A",
       "orders": [
         "#NEB3118061"
@@ -8790,7 +8790,7 @@
       "phone": "+14024904237",
       "city": "Cortland",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 18,
       "size": "N/A",
       "orders": [
         "#NEB3117855"
@@ -8831,7 +8831,7 @@
       "phone": "+14027412116",
       "city": "Albion",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 134,
       "size": "N/A",
       "orders": [
         "#NEB3118000"
@@ -8872,7 +8872,7 @@
       "phone": "",
       "city": "Cornwall",
       "state": "NY",
-      "drive_minutes": 150,
+      "drive_minutes": 1239,
       "size": "N/A",
       "orders": [
         "#NEB3118145"
@@ -8907,7 +8907,7 @@
       "phone": "",
       "city": "Anna",
       "state": "TX",
-      "drive_minutes": 150,
+      "drive_minutes": 571,
       "size": "N/A",
       "orders": [
         "#NEB3117993"
@@ -8942,7 +8942,7 @@
       "phone": "",
       "city": "Nicholasville",
       "state": "KY",
-      "drive_minutes": 150,
+      "drive_minutes": 733,
       "size": "N/A",
       "orders": [
         "#NEB3118106"
@@ -8977,7 +8977,7 @@
       "phone": "+14026499792",
       "city": "Clarkson",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 109,
       "size": "N/A",
       "orders": [
         "#NEB3118130",
@@ -9019,7 +9019,7 @@
       "phone": "+17123898805",
       "city": "Primghar",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 217,
       "size": "N/A",
       "orders": [
         "#NEB3117946"
@@ -9054,7 +9054,7 @@
       "phone": "",
       "city": "STRASBURG",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 430,
       "size": "N/A",
       "orders": [
         "#NEB3118228"
@@ -9089,7 +9089,7 @@
       "phone": "",
       "city": "Valparaiso",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 41,
       "size": "N/A",
       "orders": [
         "#NEB3117986"
@@ -9124,7 +9124,7 @@
       "phone": "+19167049797",
       "city": "Arroyo Grande",
       "state": "CA",
-      "drive_minutes": 150,
+      "drive_minutes": 1496,
       "size": "N/A",
       "orders": [
         "#NEB3117889"
@@ -9159,7 +9159,7 @@
       "phone": "",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "N/A",
       "orders": [
         "#NEB3118042"
@@ -9194,7 +9194,7 @@
       "phone": "+14028338417",
       "city": "Laurel",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 162,
       "size": "N/A",
       "orders": [
         "#NEB3118056"
@@ -9229,7 +9229,7 @@
       "phone": "",
       "city": "Raymond",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 34,
       "size": "N/A",
       "orders": [
         "#NEB3117876"
@@ -9264,7 +9264,7 @@
       "phone": "",
       "city": "Saint Joseph",
       "state": "MO",
-      "drive_minutes": 150,
+      "drive_minutes": 127,
       "size": "N/A",
       "orders": [
         "#NEB3118043"
@@ -9299,7 +9299,7 @@
       "phone": "(402) 413-0190",
       "city": "Reston",
       "state": "VA",
-      "drive_minutes": 150,
+      "drive_minutes": 1140,
       "size": "N/A",
       "orders": [
         "#NEB3118141"
@@ -9334,7 +9334,7 @@
       "phone": "+16207040906",
       "city": "Mapleton",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 253,
       "size": "N/A",
       "orders": [
         "#NEB3118051"
@@ -9369,7 +9369,7 @@
       "phone": "",
       "city": "Parkston",
       "state": "SD",
-      "drive_minutes": 150,
+      "drive_minutes": 273,
       "size": "N/A",
       "orders": [
         "#NEB3118100"
@@ -9404,7 +9404,7 @@
       "phone": "+14028269303",
       "city": "County road J",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 424,
       "size": "N/A",
       "orders": [
         "#NEB3118111"
@@ -9439,7 +9439,7 @@
       "phone": "+17202194992",
       "city": "Castle Pines",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 449,
       "size": "N/A",
       "orders": [
         "#NEB3118076"
@@ -9474,7 +9474,7 @@
       "phone": "",
       "city": "Pleasant Hill",
       "state": "MO",
-      "drive_minutes": 150,
+      "drive_minutes": 218,
       "size": "N/A",
       "orders": [
         "#NEB3118102"
@@ -9509,7 +9509,7 @@
       "phone": "+14027195988",
       "city": "BENNINGTON",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 75,
       "size": "N/A",
       "orders": [
         "#NEB3117980"
@@ -9544,7 +9544,7 @@
       "phone": "+14024696433",
       "city": "Hastings",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 110,
       "size": "N/A",
       "orders": [
         "#NEB3118134"
@@ -9579,7 +9579,7 @@
       "phone": "",
       "city": "Cairo",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 117,
       "size": "N/A",
       "orders": [
         "#NEB3117869"
@@ -9614,7 +9614,7 @@
       "phone": "",
       "city": "ALGONQUIN",
       "state": "IL",
-      "drive_minutes": 150,
+      "drive_minutes": 487,
       "size": "N/A",
       "orders": [
         "#NEB3117928"
@@ -9649,7 +9649,7 @@
       "phone": "",
       "city": "Pittsburgh",
       "state": "PA",
-      "drive_minutes": 150,
+      "drive_minutes": 907,
       "size": "N/A",
       "orders": [
         "#NEB3118032"
@@ -9684,7 +9684,7 @@
       "phone": "",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "N/A",
       "orders": [
         "#NEB3118200"
@@ -9719,7 +9719,7 @@
       "phone": "+14024436575",
       "city": "Cedar Bluffs",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 61,
       "size": "N/A",
       "orders": [
         "#NEB3118047"
@@ -9754,7 +9754,7 @@
       "phone": "+14025706642",
       "city": "Lansing",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 174,
       "size": "N/A",
       "orders": [
         "#NEB3117992"
@@ -9824,7 +9824,7 @@
       "phone": "+14023150921",
       "city": "Ralston",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 67,
       "size": "N/A",
       "orders": [
         "#NEB3118010"
@@ -9859,7 +9859,7 @@
       "phone": "4024172588",
       "city": "Denton",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3117961"
@@ -9894,7 +9894,7 @@
       "phone": "+14023405081",
       "city": "Butte",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 257,
       "size": "N/A",
       "orders": [
         "#NEB3118015"
@@ -9929,7 +9929,7 @@
       "phone": "",
       "city": "Goodland",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 333,
       "size": "N/A",
       "orders": [
         "#NEB3118090"
@@ -9964,7 +9964,7 @@
       "phone": "+16206176151",
       "city": "Great Bend",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 249,
       "size": "N/A",
       "orders": [
         "#NEB3118036"
@@ -10005,7 +10005,7 @@
       "phone": "",
       "city": "Littleton",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 447,
       "size": "N/A",
       "orders": [
         "#NEB3117967"
@@ -10040,7 +10040,7 @@
       "phone": "+15634994931",
       "city": "CLARENCE",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 327,
       "size": "N/A",
       "orders": [
         "#NEB3118079"
@@ -10075,7 +10075,7 @@
       "phone": "+19132287356",
       "city": "Lenexa",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 180,
       "size": "N/A",
       "orders": [
         "#NEB3118052"
@@ -10110,7 +10110,7 @@
       "phone": "",
       "city": "Jacksonville",
       "state": "FL",
-      "drive_minutes": 150,
+      "drive_minutes": 1225,
       "size": "N/A",
       "orders": [
         "#NEB3118131"
@@ -10145,7 +10145,7 @@
       "phone": "+14024190787",
       "city": "Nelson",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 113,
       "size": "N/A",
       "orders": [
         "#NEB3118041"
@@ -10180,7 +10180,7 @@
       "phone": "+14025985920",
       "city": "Leawood",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 194,
       "size": "N/A",
       "orders": [
         "#NEB3118088"
@@ -10215,7 +10215,7 @@
       "phone": "+17852435256",
       "city": "Belleville",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 114,
       "size": "N/A",
       "orders": [
         "#NEB3117997"
@@ -10250,7 +10250,7 @@
       "phone": "+14029842919",
       "city": "Hastings",
       "state": "NE",
-      "drive_minutes": 100,
+      "drive_minutes": 110,
       "size": "N/A",
       "orders": [
         "#NEB3118050"
@@ -10291,7 +10291,7 @@
       "phone": "",
       "city": "Littleton",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 447,
       "size": "N/A",
       "orders": [
         "#NEB3118062"
@@ -10332,7 +10332,7 @@
       "phone": "+14026792770",
       "city": "Dallas",
       "state": "TX",
-      "drive_minutes": 150,
+      "drive_minutes": 568,
       "size": "N/A",
       "orders": [
         "#NEB3118048"
@@ -10367,7 +10367,7 @@
       "phone": "",
       "city": "Fargo",
       "state": "ND",
-      "drive_minutes": 150,
+      "drive_minutes": 429,
       "size": "N/A",
       "orders": [
         "#NEB3118082"
@@ -10402,7 +10402,7 @@
       "phone": "",
       "city": "Cairo",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 117,
       "size": "N/A",
       "orders": [
         "#NEB3117999"
@@ -10437,7 +10437,7 @@
       "phone": "+15155562706",
       "city": "Waukee",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 179,
       "size": "N/A",
       "orders": [
         "#NEB3118108"
@@ -10472,7 +10472,7 @@
       "phone": "+14022909467",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118150"
@@ -10507,7 +10507,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3117925"
@@ -10542,7 +10542,7 @@
       "phone": "",
       "city": "Kansas City",
       "state": "MO",
-      "drive_minutes": 180,
+      "drive_minutes": 179,
       "size": "N/A",
       "orders": [
         "#NEB3118136"
@@ -10556,7 +10556,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -10570,7 +10570,7 @@
       "phone": "4024404936",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3117985"
@@ -10605,7 +10605,7 @@
       "phone": "+14025784913",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118065"
@@ -10640,7 +10640,7 @@
       "phone": "",
       "city": "Papillion",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 64,
       "size": "N/A",
       "orders": [
         "#NEB3117907"
@@ -10675,7 +10675,7 @@
       "phone": "+14025601042",
       "city": "Milford",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 37,
       "size": "N/A",
       "orders": [
         "#NEB3118081"
@@ -10710,7 +10710,7 @@
       "phone": "",
       "city": "UNION",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 50,
       "size": "N/A",
       "orders": [
         "#NEB3117892"
@@ -10745,7 +10745,7 @@
       "phone": "",
       "city": "Blair",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 86,
       "size": "N/A",
       "orders": [
         "#NEB3117898"
@@ -10780,7 +10780,7 @@
       "phone": "+14027307963",
       "city": "Van Buren",
       "state": "AR",
-      "drive_minutes": 150,
+      "drive_minutes": 434,
       "size": "N/A",
       "orders": [
         "#NEB3118138"
@@ -10815,7 +10815,7 @@
       "phone": "(402) 450-3546",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118066"
@@ -10850,7 +10850,7 @@
       "phone": "",
       "city": "Bird Island",
       "state": "MN",
-      "drive_minutes": 150,
+      "drive_minutes": 356,
       "size": "N/A",
       "orders": [
         "#NEB3118143"
@@ -10885,7 +10885,7 @@
       "phone": "",
       "city": "Elkhorn",
       "state": "NE",
-      "drive_minutes": 80,
+      "drive_minutes": 70,
       "size": "N/A",
       "orders": [
         "#NEB3118125"
@@ -10920,7 +10920,7 @@
       "phone": "+14026120990",
       "city": "BELLEVUE",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 75,
       "size": "N/A",
       "orders": [
         "#NEB3118012"
@@ -10955,7 +10955,7 @@
       "phone": "",
       "city": "Bennington",
       "state": "NE",
-      "drive_minutes": 85,
+      "drive_minutes": 75,
       "size": "N/A",
       "orders": [
         "#NEB3117969"
@@ -10990,7 +10990,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118033"
@@ -11025,7 +11025,7 @@
       "phone": "+13082332720",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "N/A",
       "orders": [
         "#NEB3118218"
@@ -11060,7 +11060,7 @@
       "phone": "+13086272969",
       "city": "Kearney",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 130,
       "size": "N/A",
       "orders": [
         "#NEB3118060"
@@ -11095,7 +11095,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3117957"
@@ -11130,7 +11130,7 @@
       "phone": "+14026607266",
       "city": "Grand Island",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 102,
       "size": "N/A",
       "orders": [
         "#NEB3117948"
@@ -11165,7 +11165,7 @@
       "phone": "",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "N/A",
       "orders": [
         "#NEB3117979"
@@ -11200,7 +11200,7 @@
       "phone": "+15136678991",
       "city": "Hamilton",
       "state": "OH",
-      "drive_minutes": 150,
+      "drive_minutes": 694,
       "size": "N/A",
       "orders": [
         "#NEB3118025"
@@ -11235,7 +11235,7 @@
       "phone": "+15026032941",
       "city": "Gold Beach",
       "state": "OR",
-      "drive_minutes": 150,
+      "drive_minutes": 1741,
       "size": "N/A",
       "orders": [
         "#NEB3118231"
@@ -11270,7 +11270,7 @@
       "phone": "+14027204987",
       "city": "Fremont",
       "state": "NE",
-      "drive_minutes": 90,
+      "drive_minutes": 70,
       "size": "N/A",
       "orders": [
         "#NEB3117920"
@@ -11305,7 +11305,7 @@
       "phone": "(712) 899-5073",
       "city": "NEWCASTLE",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 177,
       "size": "N/A",
       "orders": [
         "#NEB3117917"
@@ -11340,7 +11340,7 @@
       "phone": "",
       "city": "Cedar Bluffs",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 61,
       "size": "N/A",
       "orders": [
         "#NEB3118243"
@@ -11375,7 +11375,7 @@
       "phone": "+16056911046",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118077"
@@ -11410,7 +11410,7 @@
       "phone": "+18508669077",
       "city": "Panama City",
       "state": "FL",
-      "drive_minutes": 150,
+      "drive_minutes": 1116,
       "size": "N/A",
       "orders": [
         "#NEB3117913"
@@ -11445,7 +11445,7 @@
       "phone": "+14028026181",
       "city": "Waverly",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 30,
       "size": "N/A",
       "orders": [
         "#NEB3118144"
@@ -11480,7 +11480,7 @@
       "phone": "+17122929031",
       "city": "Lake City",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 199,
       "size": "N/A",
       "orders": [
         "#NEB3118129"
@@ -11515,7 +11515,7 @@
       "phone": "",
       "city": "Grafton",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 70,
       "size": "N/A",
       "orders": [
         "#NEB3118059"
@@ -11550,7 +11550,7 @@
       "phone": "+14023713192",
       "city": "Norfolk",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 143,
       "size": "N/A",
       "orders": [
         "#NEB3117922"
@@ -11585,7 +11585,7 @@
       "phone": "",
       "city": "Salina",
       "state": "KS",
-      "drive_minutes": 150,
+      "drive_minutes": 180,
       "size": "N/A",
       "orders": [
         "#NEB3118128"
@@ -11599,7 +11599,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -11613,7 +11613,7 @@
       "phone": "",
       "city": "Swink",
       "state": "CO",
-      "drive_minutes": 150,
+      "drive_minutes": 503,
       "size": "N/A",
       "orders": [
         "#NEB3118113"
@@ -11648,7 +11648,7 @@
       "phone": "",
       "city": "Chadron",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 419,
       "size": "N/A",
       "orders": [
         "#NEB3118034"
@@ -11683,7 +11683,7 @@
       "phone": "+14022090775",
       "city": "Nebraska City",
       "state": "NE",
-      "drive_minutes": 60,
+      "drive_minutes": 46,
       "size": "N/A",
       "orders": [
         "#NEB3118039"
@@ -11718,7 +11718,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3117911"
@@ -11753,7 +11753,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118117"
@@ -11767,7 +11767,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -11781,7 +11781,7 @@
       "phone": "",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118078"
@@ -11816,7 +11816,7 @@
       "phone": "+14026504943",
       "city": "Council Bluffs",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 75,
       "size": "N/A",
       "orders": [
         "#NEB3117848"
@@ -11851,7 +11851,7 @@
       "phone": "",
       "city": "Moline",
       "state": "IL",
-      "drive_minutes": 150,
+      "drive_minutes": 343,
       "size": "N/A",
       "orders": [
         "#NEB3118122"
@@ -11865,7 +11865,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -11879,7 +11879,7 @@
       "phone": "+14028896221",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118046"
@@ -11914,7 +11914,7 @@
       "phone": "+14026588494",
       "city": "Howells",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 103,
       "size": "N/A",
       "orders": [
         "#NEB3117888"
@@ -11949,7 +11949,7 @@
       "phone": "",
       "city": "Evans",
       "state": "GA",
-      "drive_minutes": 150,
+      "drive_minutes": 1049,
       "size": "N/A",
       "orders": [
         "#NEB3118137"
@@ -11963,7 +11963,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -11977,7 +11977,7 @@
       "phone": "+14024994575",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118151"
@@ -11991,7 +11991,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -12005,7 +12005,7 @@
       "phone": "+14023367575",
       "city": "Spencer",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 245,
       "size": "N/A",
       "orders": [
         "#NEB3118140"
@@ -12019,7 +12019,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -12033,7 +12033,7 @@
       "phone": "",
       "city": "Sacramento",
       "state": "CA",
-      "drive_minutes": 150,
+      "drive_minutes": 1381,
       "size": "N/A",
       "orders": [
         "#NEB3117982"
@@ -12103,7 +12103,7 @@
       "phone": "",
       "city": "Central City",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 97,
       "size": "N/A",
       "orders": [
         "#NEB3118099"
@@ -12138,7 +12138,7 @@
       "phone": "+14027209762",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118109"
@@ -12173,7 +12173,7 @@
       "phone": "+16124237983",
       "city": "Chanhassen",
       "state": "MN",
-      "drive_minutes": 150,
+      "drive_minutes": 400,
       "size": "N/A",
       "orders": [
         "#NEB3118092"
@@ -12208,7 +12208,7 @@
       "phone": "",
       "city": "Grand Island",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 102,
       "size": "N/A",
       "orders": [
         "#NEB3118074"
@@ -12243,7 +12243,7 @@
       "phone": "+16146688884",
       "city": "Blacklick",
       "state": "OH",
-      "drive_minutes": 150,
+      "drive_minutes": 767,
       "size": "N/A",
       "orders": [
         "#NEB3117843"
@@ -12278,7 +12278,7 @@
       "phone": "+14023126884",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118123"
@@ -12313,7 +12313,7 @@
       "phone": "+13303402886",
       "city": "Perrysburg",
       "state": "OH",
-      "drive_minutes": 150,
+      "drive_minutes": 708,
       "size": "N/A",
       "orders": [
         "#NEB3118154"
@@ -12348,7 +12348,7 @@
       "phone": "+13129337503",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3118153"
@@ -12383,7 +12383,7 @@
       "phone": "+15034754249",
       "city": "Hood River",
       "state": "OR",
-      "drive_minutes": 150,
+      "drive_minutes": 1399,
       "size": "N/A",
       "orders": [
         "#NEB3118022"
@@ -12418,7 +12418,7 @@
       "phone": "+14022391811",
       "city": "Grand Island",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 102,
       "size": "N/A",
       "orders": [
         "#NEB3117976"
@@ -12453,7 +12453,7 @@
       "phone": "+14025178294",
       "city": "Lincoln",
       "state": "NE",
-      "drive_minutes": 15,
+      "drive_minutes": 20,
       "size": "N/A",
       "orders": [
         "#NEB3118040"
@@ -12488,7 +12488,7 @@
       "phone": "+14026415523",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3117923"
@@ -12523,7 +12523,7 @@
       "phone": "",
       "city": "Gretna",
       "state": "NE",
-      "drive_minutes": 65,
+      "drive_minutes": 54,
       "size": "N/A",
       "orders": [
         "#NEB3118063"
@@ -12558,7 +12558,7 @@
       "phone": "",
       "city": "Omaha",
       "state": "NE",
-      "drive_minutes": 75,
+      "drive_minutes": 71,
       "size": "N/A",
       "orders": [
         "#NEB3117942"
@@ -12593,7 +12593,7 @@
       "phone": "",
       "city": "Columbus",
       "state": "NE",
-      "drive_minutes": 120,
+      "drive_minutes": 96,
       "size": "N/A",
       "orders": [
         "#NEB3118005"
@@ -12628,7 +12628,7 @@
       "phone": "",
       "city": "Portland",
       "state": "OR",
-      "drive_minutes": 150,
+      "drive_minutes": 1464,
       "size": "N/A",
       "orders": [
         "#NEB3118110"
@@ -12642,7 +12642,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -12656,7 +12656,7 @@
       "phone": "",
       "city": "Mankato",
       "state": "MN",
-      "drive_minutes": 150,
+      "drive_minutes": 336,
       "size": "N/A",
       "orders": [
         "#NEB3117950"
@@ -12691,7 +12691,7 @@
       "phone": "",
       "city": "Anacortes",
       "state": "WA",
-      "drive_minutes": 150,
+      "drive_minutes": 1609,
       "size": "N/A",
       "orders": [
         "#NEB3118091"
@@ -12726,7 +12726,7 @@
       "phone": "+14024600233",
       "city": "Sutton",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 78,
       "size": "N/A",
       "orders": [
         "#NEB3118132"
@@ -12740,7 +12740,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
@@ -12754,7 +12754,7 @@
       "phone": "+14028791918",
       "city": "Hebron",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 96,
       "size": "N/A",
       "orders": [
         "#NEB3118115"
@@ -12789,7 +12789,7 @@
       "phone": "+16023495611",
       "city": "Phoenix",
       "state": "AZ",
-      "drive_minutes": 150,
+      "drive_minutes": 1178,
       "size": "N/A",
       "orders": [
         "#NEB3117962"
@@ -12824,7 +12824,7 @@
       "phone": "",
       "city": "Republican City",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 174,
       "size": "N/A",
       "orders": [
         "#NEB3117939"
@@ -12859,7 +12859,7 @@
       "phone": "",
       "city": "Bennington",
       "state": "NE",
-      "drive_minutes": 85,
+      "drive_minutes": 75,
       "size": "N/A",
       "orders": [
         "#NEB3117973"
@@ -12894,7 +12894,7 @@
       "phone": "+17122233662",
       "city": "Sioux City",
       "state": "IA",
-      "drive_minutes": 150,
+      "drive_minutes": 152,
       "size": "N/A",
       "orders": [
         "#NEB3117915"
@@ -12929,7 +12929,7 @@
       "phone": "+16196093846",
       "city": "Cedar Bluffs",
       "state": "NE",
-      "drive_minutes": 150,
+      "drive_minutes": 61,
       "size": "N/A",
       "orders": [
         "#NEB3118112"
@@ -12964,7 +12964,7 @@
       "phone": "+14023603348",
       "city": "Osmond",
       "state": "NE",
-      "drive_minutes": 180,
+      "drive_minutes": 178,
       "size": "N/A",
       "orders": [
         "#NEB3118121"
@@ -12978,7 +12978,7 @@
       "iron_qty": 0,
       "chairback_qty": 0,
       "ornament_qty": 0,
-      "shipping_paid": 0.0,
+      "shipping_paid": 0,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,

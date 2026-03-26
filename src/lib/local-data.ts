@@ -176,22 +176,30 @@ function loadData() {
     const isVip = c.email.toLowerCase() === JACOB_EMAIL;
     const custId = randomUUID();
 
+    // Upgrade local shipping-only customers (D/E within 90 min) to offer pickup
+    // This expands beyond just iron — chair backs, ornaments, everything
+    const isLocalShipOnly = (c.segment === 'D' || c.segment === 'E') &&
+      c.drive_minutes != null && c.drive_minutes <= 90;
+    const effectiveSegment = isLocalShipOnly ? 'C' : c.segment;
+    const effectiveOfferPickup = isLocalShipOnly ? true : c.offer_pickup_conversion;
+    const effectiveShipAsNormal = isLocalShipOnly ? false : c.ship_as_normal;
+
     customers.push({
       id: custId,
       token: c.token,
-      segment: c.segment,
+      segment: effectiveSegment,
       name: c.name,
       email: c.email,
       phone: c.phone || null,
       city: c.city,
       state: c.state,
       drive_minutes: c.drive_minutes,
-      size: c.size,
+      size: c.size || 'S',
       shipping_paid: c.shipping_paid,
       needs_pickup_scheduling: c.needs_pickup_scheduling,
-      offer_pickup_conversion: c.offer_pickup_conversion,
+      offer_pickup_conversion: effectiveOfferPickup,
       offer_ship_to_pickup: c.offer_ship_to_pickup,
-      ship_as_normal: c.ship_as_normal,
+      ship_as_normal: effectiveShipAsNormal,
       is_vip: isVip,
       vip_note: isVip ? 'Bulk buyer: 8 benches, 15+ seats, 3 end-row pairs, ~25 iron. Dedicated Friday 10:00am truck-loading slot.' : null,
       created_at: new Date().toISOString(),
