@@ -13973,6 +13973,178 @@
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
       "ship_as_normal": true
+    },
+    {
+      "token": "7268c3dea231",
+      "segment": "A",
+      "name": "Joe Test",
+      "email": "joe@raregoods.com",
+      "phone": "",
+      "city": "Lincoln",
+      "state": "NE",
+      "drive_minutes": 15,
+      "size": "XL",
+      "orders": [
+        "#TEST-JOE-001"
+      ],
+      "pickup_items": [
+        {
+          "item": "Two Authentic Devaney Seats, Rebuilt as a Collectible Bench - Ready-to-use bench with feet",
+          "qty": 1,
+          "order": "#TEST-JOE-001",
+          "fulfillment": "pickup"
+        },
+        {
+          "item": "Standard Arena Seats",
+          "qty": 2,
+          "order": "#TEST-JOE-001",
+          "fulfillment": "pickup"
+        }
+      ],
+      "ship_items": [],
+      "bench_count": 1,
+      "seat_count": 2,
+      "wall_mount_count": 0,
+      "endrow_count": 0,
+      "iron_qty": 0,
+      "chairback_qty": 0,
+      "ornament_qty": 0,
+      "shipping_paid": 0,
+      "needs_pickup_scheduling": true,
+      "offer_pickup_conversion": false,
+      "offer_ship_to_pickup": false,
+      "ship_as_normal": false
+    },
+    {
+      "token": "14c638a5c9d8",
+      "segment": "A",
+      "name": "Alex Test",
+      "email": "alex@raregoods.com",
+      "phone": "",
+      "city": "Omaha",
+      "state": "NE",
+      "drive_minutes": 15,
+      "size": "L",
+      "orders": [
+        "#TEST-ALEX-001",
+        "#TEST-ALEX-002"
+      ],
+      "pickup_items": [
+        {
+          "item": "Standard Arena Seats",
+          "qty": 4,
+          "order": "#TEST-ALEX-001",
+          "fulfillment": "pickup"
+        },
+        {
+          "item": "Premium End-Row Seat Pairs",
+          "qty": 1,
+          "order": "#TEST-ALEX-002",
+          "fulfillment": "pickup"
+        }
+      ],
+      "ship_items": [],
+      "bench_count": 0,
+      "seat_count": 4,
+      "wall_mount_count": 0,
+      "endrow_count": 1,
+      "iron_qty": 0,
+      "chairback_qty": 0,
+      "ornament_qty": 0,
+      "shipping_paid": 0,
+      "needs_pickup_scheduling": true,
+      "offer_pickup_conversion": false,
+      "offer_ship_to_pickup": false,
+      "ship_as_normal": false
+    },
+    {
+      "token": "bc8d77926544",
+      "segment": "A",
+      "name": "Rudy Test",
+      "email": "rudy@raregoods.com",
+      "phone": "",
+      "city": "Roca",
+      "state": "NE",
+      "drive_minutes": 15,
+      "size": "M",
+      "orders": [
+        "#TEST-RUDY-001"
+      ],
+      "pickup_items": [
+        {
+          "item": "Premium Black \"Wall Mount\" Seat Pair - With N",
+          "qty": 1,
+          "order": "#TEST-RUDY-001",
+          "fulfillment": "pickup"
+        },
+        {
+          "item": "Standard Arena Seats",
+          "qty": 1,
+          "order": "#TEST-RUDY-001",
+          "fulfillment": "pickup"
+        }
+      ],
+      "ship_items": [],
+      "bench_count": 0,
+      "seat_count": 1,
+      "wall_mount_count": 1,
+      "endrow_count": 0,
+      "iron_qty": 0,
+      "chairback_qty": 0,
+      "ornament_qty": 0,
+      "shipping_paid": 0,
+      "needs_pickup_scheduling": true,
+      "offer_pickup_conversion": false,
+      "offer_ship_to_pickup": false,
+      "ship_as_normal": false
+    },
+    {
+      "token": "cf0ac57b3480",
+      "segment": "A",
+      "name": "Taylor Test",
+      "email": "taylor@raregoods.com",
+      "phone": "",
+      "city": "Benedict",
+      "state": "NE",
+      "drive_minutes": 15,
+      "size": "XL",
+      "orders": [
+        "#TEST-TAYLOR-001",
+        "#TEST-TAYLOR-002"
+      ],
+      "pickup_items": [
+        {
+          "item": "Two Authentic Devaney Seats, Rebuilt as a Collectible Bench - Ready-to-use bench with feet",
+          "qty": 2,
+          "order": "#TEST-TAYLOR-001",
+          "fulfillment": "pickup"
+        },
+        {
+          "item": "Premium End-Row Seat Pairs",
+          "qty": 1,
+          "order": "#TEST-TAYLOR-001",
+          "fulfillment": "pickup"
+        },
+        {
+          "item": "Standard Arena Seats",
+          "qty": 3,
+          "order": "#TEST-TAYLOR-002",
+          "fulfillment": "pickup"
+        }
+      ],
+      "ship_items": [],
+      "bench_count": 2,
+      "seat_count": 3,
+      "wall_mount_count": 0,
+      "endrow_count": 1,
+      "iron_qty": 0,
+      "chairback_qty": 0,
+      "ornament_qty": 0,
+      "shipping_paid": 0,
+      "needs_pickup_scheduling": true,
+      "offer_pickup_conversion": false,
+      "offer_ship_to_pickup": false,
+      "ship_as_normal": false
     }
   ]
 }
