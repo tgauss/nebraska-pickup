@@ -18,15 +18,28 @@ interface ItemCardProps {
 export default function ItemCard({ items, title, showToggle, compact, onToggle, preferences }: ItemCardProps) {
   if (items.length === 0) return null;
 
+  // Consolidate duplicate items by name — sum quantities, keep all IDs
+  const consolidated = items.reduce<Array<{ ids: string[]; item_name: string; qty: number; firstItem: typeof items[0] }>>((acc, item) => {
+    const existing = acc.find(a => a.item_name === item.item_name);
+    if (existing) {
+      existing.qty += item.qty;
+      existing.ids.push(item.id);
+    } else {
+      acc.push({ ids: [item.id], item_name: item.item_name, qty: item.qty, firstItem: item });
+    }
+    return acc;
+  }, []);
+
   return (
     <div className="space-y-3">
-      <h3 className="font-serif text-lg font-bold text-foreground">{title}</h3>
-      {items.map(item => {
+      {title && <h3 className="font-serif text-lg font-bold text-foreground">{title}</h3>}
+      {consolidated.map(group => {
+        const item = group.firstItem;
         const product = getProductInfo(item.item_name);
 
         return (
           <article
-            key={item.id}
+            key={group.ids.join('-')}
             className="group bg-card rounded-sm overflow-hidden border border-border hover:border-primary/30 transition-colors"
           >
             <div className="flex items-center gap-3 p-3">
@@ -52,7 +65,7 @@ export default function ItemCard({ items, title, showToggle, compact, onToggle, 
                   {product?.shortName || item.item_name}
                 </h4>
                 <p className="text-xs text-muted-foreground">
-                  Qty: {item.qty}
+                  Qty: {group.qty}
                   {!compact && product && <> &middot; {product.weight}</>}
                 </p>
               </div>
