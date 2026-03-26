@@ -18,6 +18,8 @@ interface CustomerRow {
   shipping_paid: number;
   is_vip: boolean;
   vip_note: string | null;
+  order_count: number;
+  order_numbers: string[];
   bookings: Array<{
     id: string;
     status: string;
@@ -134,7 +136,7 @@ export default function CustomersPage() {
               <th className="text-left px-4 py-3 font-medium text-gray-600">Pickup</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Items</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Shipping</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Orders</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Actions</th>
             </tr>
           </thead>
@@ -203,11 +205,19 @@ export default function CustomersPage() {
                     <BookingStatusBadge status={booking?.status} segment={c.segment} />
                   </td>
                   <td className="px-4 py-3">
-                    {c.shipping_paid > 0 ? (
-                      <span className="text-sm">${c.shipping_paid.toFixed(2)}</span>
-                    ) : (
-                      <span className="text-xs text-gray-400">-</span>
-                    )}
+                    <div>
+                      {c.order_count > 1 ? (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-800">
+                          {c.order_count} orders
+                        </span>
+                      ) : (
+                        <span className="text-xs text-gray-500">1 order</span>
+                      )}
+                      {c.shipping_paid > 0 && (
+                        <p className="text-[10px] text-gray-400 mt-0.5">${c.shipping_paid.toFixed(0)} shipping</p>
+                      )}
+                      <p className="text-[10px] text-gray-400 font-mono">{c.order_numbers?.slice(0, 2).join(', ')}{c.order_count > 2 ? ` +${c.order_count - 2}` : ''}</p>
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <a
