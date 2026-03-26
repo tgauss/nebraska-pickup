@@ -15,7 +15,7 @@ function getClient(): ServerClient {
   return client;
 }
 
-const FROM_EMAIL = process.env.EMAIL_FROM || 'support@raregoods.com';
+const FROM_EMAIL = process.env.EMAIL_FROM || 'Nebraska Rare Goods <support@raregoods.com>';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:2005';
 
 interface EmailRecipient {
