@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant' | 'system' | 'admin';
   content: string;
   timestamp: string;
 }
