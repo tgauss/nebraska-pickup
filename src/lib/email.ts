@@ -87,11 +87,11 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
             <td style="background-color: #ffffff; padding: 32px;">
 
               <!-- Greeting -->
-              <p style="margin: 0 0 8px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
-                Hey ${firstName},
-              </p>
+              <h1 style="margin: 0 0 8px; font-family: 'Oswald', Arial, sans-serif; font-size: 26px; font-weight: 700; color: #1a1a1a;">
+                Good news, ${firstName}!
+              </h1>
               <p style="margin: 0 0 20px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
-                Your Nebraska Devaney Seats order is now ready to schedule pickup.
+                Your Devaney Center seats are ready and it&rsquo;s time to pick your pickup window. We can&rsquo;t wait for you to bring home a piece of Husker history!
               </p>
 
               <!-- REQUIRED ACTION BOX -->
