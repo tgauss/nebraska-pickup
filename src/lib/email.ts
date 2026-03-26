@@ -114,6 +114,16 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
                 </tr>
               </table>
 
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td align="center" style="padding: 0 0 20px;">
+                    <a href="${APP_URL}/support?email=${encodeURIComponent(recipient.email)}" style="font-family: 'Source Serif 4', Georgia, serif; font-size: 13px; color: #1a1a1a; text-decoration: underline;">
+                      Questions? Chat with our Husker Helper &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
               <p style="margin: 0 0 24px; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666; text-align: center; line-height: 1.5;">
                 Or copy this link: <a href="${pickupUrl}" style="color: #d00000; word-break: break-all;">${pickupUrl}</a>
               </p>
@@ -272,14 +282,19 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
 
               <hr style="border: none; border-top: 2px solid #f5f1e7; margin: 24px 0;" />
 
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+              <!-- SUPPORT CTA -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f1e7; border-radius: 8px; overflow: hidden;">
                 <tr>
-                  <td align="center" style="padding: 0;">
-                    <p style="margin: 0 0 8px; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666;">
-                      Have questions? Need to make changes?
+                  <td style="padding: 24px; text-align: center;">
+                    <img src="${APP_URL}/husker-helper.webp" alt="Husker Helper" width="56" height="56" style="display: block; margin: 0 auto 12px; width: 56px; height: 56px; border-radius: 50%; border: 3px solid #d00000;" />
+                    <p style="margin: 0 0 4px; font-family: 'Oswald', Arial, sans-serif; font-size: 16px; font-weight: 700; color: #1a1a1a;">
+                      Questions or Need Help?
                     </p>
-                    <a href="${APP_URL}/support?email=${encodeURIComponent(recipient.email)}" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 32px; border-radius: 4px; letter-spacing: 0.5px;">
-                      Chat with Husker Helper
+                    <p style="margin: 0 0 16px; font-family: 'Source Serif 4', Georgia, serif; font-size: 13px; color: #666;">
+                      Chat with Husker Helper — our AI assistant can look up your order, answer questions, and even reschedule your pickup.
+                    </p>
+                    <a href="${APP_URL}/support?email=${encodeURIComponent(recipient.email)}" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 36px; border-radius: 50px; letter-spacing: 0.5px;">
+                      Chat with Husker Helper &rarr;
                     </a>
                   </td>
                 </tr>
