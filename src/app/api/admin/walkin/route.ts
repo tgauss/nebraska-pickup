@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
-import { flushWrites } from '@/lib/local-data';
+import { flushWrites, ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
 // POST /api/admin/walkin — handle walk-in customer (no prior booking)
 export async function POST(request: Request) {
+  await ensureHydrated();
   const { customer_id, time_slot_id } = await request.json();
 
   if (!customer_id || !time_slot_id) {

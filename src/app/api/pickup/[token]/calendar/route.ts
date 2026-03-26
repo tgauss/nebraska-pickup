@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { generateICS, getSlotDate, getSlotEndDate, ROCA_ADDRESS, ROCA_MAPS_URL, ROCA_GEO } from '@/lib/ics';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -12,6 +13,7 @@ export async function GET(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+  await ensureHydrated();
 
   const customer = db.getCustomerByToken(token);
   if (!customer) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { recordEvent } from '@/lib/email-tracking';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,7 @@ export const dynamic = 'force-dynamic';
  *   Events: Open, Click, Bounce, Delivery
  */
 export async function POST(request: Request) {
+  await ensureHydrated();
   try {
     const body = await request.json();
 

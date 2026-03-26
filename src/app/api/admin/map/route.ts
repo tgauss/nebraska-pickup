@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { geocodeAddress } from '@/lib/mapbox';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +10,7 @@ export const dynamic = 'force-dynamic';
 const geocodeCache = new Map<string, { lng: number; lat: number } | null>();
 
 export async function GET(request: Request) {
+  await ensureHydrated();
   const url = new URL(request.url);
   const segment = url.searchParams.get('segment');
   const maxDrive = url.searchParams.get('maxDrive'); // filter by max drive time

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { sendPickupEmail, generatePickupEmail } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -10,6 +11,7 @@ export const dynamic = 'force-dynamic';
 
 // GET /api/admin/email — get eligible recipients + stats + engagement
 export async function GET() {
+  await ensureHydrated();
   const customers = db.getAllCustomers();
   const allBookings = db.getAllBookings();
   const bookedIds = new Set(allBookings.map(b => b.customer_id));
@@ -71,6 +73,7 @@ export async function GET() {
 
 // POST /api/admin/email — send emails
 export async function POST(request: Request) {
+  await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail } = body;
 

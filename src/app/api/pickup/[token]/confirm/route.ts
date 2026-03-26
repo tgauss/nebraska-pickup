@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
-import { flushWrites } from '@/lib/local-data';
+import { flushWrites, ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +16,7 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+  await ensureHydrated();
   const body: ConfirmBody = await request.json();
 
   const customer = db.getCustomerByToken(token);

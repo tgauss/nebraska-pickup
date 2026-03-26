@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ customerId: string }> }
 ) {
   const { customerId } = await params;
+  await ensureHydrated();
   const { note } = await request.json();
 
   if (!note || !note.trim()) {
@@ -29,6 +31,7 @@ export async function GET(
   { params }: { params: Promise<{ customerId: string }> }
 ) {
   const { customerId } = await params;
+  await ensureHydrated();
   const logs = db.getActivityLogByCustomer(customerId);
 
   return NextResponse.json({ notes: logs });

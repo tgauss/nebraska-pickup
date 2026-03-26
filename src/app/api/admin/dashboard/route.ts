@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/admin/dashboard — aggregate stats
 export async function GET() {
+  await ensureHydrated();
   const customers = db.getAllCustomers();
   const allBookings = db.getAllBookings();
   const time_slots = db.getAllTimeSlots();

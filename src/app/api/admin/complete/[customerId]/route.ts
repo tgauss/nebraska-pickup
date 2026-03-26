@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
-import { flushWrites } from '@/lib/local-data';
+import { flushWrites, ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ customerId: string }> }
 ) {
   const { customerId } = await params;
+  await ensureHydrated();
 
   const booking = db.updateBookingStatus(customerId, 'completed', {
     completed_at: new Date().toISOString(),

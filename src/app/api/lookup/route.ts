@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/lookup?email=xxx — look up customer by email, return their token(s)
 export async function GET(request: Request) {
+  await ensureHydrated();
   const url = new URL(request.url);
   const email = url.searchParams.get('email')?.trim().toLowerCase();
 

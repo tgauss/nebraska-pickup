@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { getLabelByToken } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+  await ensureHydrated();
 
   const customer = db.getCustomerByToken(token);
   if (!customer) {

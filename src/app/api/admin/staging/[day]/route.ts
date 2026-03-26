@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { getCustomerLabel } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ day: string }> }
 ) {
   const { day } = await params;
+  await ensureHydrated();
   const dayName = day.charAt(0).toUpperCase() + day.slice(1).toLowerCase();
 
   const allSlots = db.getAllTimeSlots();

@@ -280,6 +280,132 @@ function loadData() {
 
   initialized = true;
   console.log(`Local data loaded: ${customers.length} customers, ${orders.length} orders, ${lineItems.length} items, ${timeSlots.length} slots`);
+
+  // Kick off async Supabase hydration (bookings, activity, slot counts)
+  hydrateFromSupabase();
+}
+
+// ============================================================
+// Supabase hydration — load persisted state on cold start
+// ============================================================
+let hydrated = false;
+let hydratePromise: Promise<void> | null = null;
+
+function hydrateFromSupabase() {
+  if (hydrated || hydratePromise) return;
+  const sb = getSb();
+  if (!sb) { hydrated = true; return; }
+
+  hydratePromise = (async () => {
+    try {
+      // Load bookings from Supabase, matched to in-memory customers by token
+      const { data: sbBookings } = await sb.from('bookings')
+        .select('*, customers(token), time_slots(day, time)')
+        .order('created_at', { ascending: false });
+
+      if (sbBookings && sbBookings.length > 0) {
+        for (const sbB of sbBookings) {
+          const token = (sbB.customers as { token: string })?.token;
+          if (!token) continue;
+          const customer = customers.find(c => c.token === token);
+          if (!customer) continue;
+
+          // Skip if already have a booking for this customer (shouldn't happen)
+          if (bookings.some(b => b.customer_id === customer.id)) continue;
+
+          const sbSlot = sbB.time_slots as { day: string; time: string } | null;
+          const slot = sbSlot ? timeSlots.find(s => s.day === sbSlot.day && s.time === sbSlot.time) : null;
+
+          if (slot) {
+            const booking: DBBooking = {
+              id: sbB.id,
+              customer_id: customer.id,
+              time_slot_id: slot.id,
+              status: sbB.status,
+              confirmed_at: sbB.confirmed_at,
+              checked_in_at: sbB.checked_in_at,
+              completed_at: sbB.completed_at,
+              reschedule_count: sbB.reschedule_count,
+              created_at: sbB.created_at,
+              time_slots: slot,
+            };
+            bookings.push(booking);
+
+            // Update slot booking count
+            slot.current_bookings++;
+          }
+        }
+        console.log(`Hydrated ${bookings.length} bookings from Supabase`);
+      }
+
+      // Load activity log
+      const { data: sbActivity } = await sb.from('activity_log')
+        .select('*, customers(token)')
+        .order('created_at', { ascending: false })
+        .limit(500);
+
+      if (sbActivity && sbActivity.length > 0) {
+        for (const sbA of sbActivity) {
+          const token = (sbA.customers as { token: string } | null)?.token;
+          let custId: string | null = null;
+          if (token) {
+            const customer = customers.find(c => c.token === token);
+            if (customer) custId = customer.id;
+          }
+          activityLog.push({
+            id: sbA.id,
+            customer_id: custId,
+            action: sbA.action,
+            details: sbA.details,
+            created_at: sbA.created_at,
+          });
+        }
+        console.log(`Hydrated ${sbActivity.length} activity log entries from Supabase`);
+      }
+
+      // Load line item status updates from Supabase
+      const { data: sbItems } = await sb.from('line_items')
+        .select('item_name, qty, fulfillment_preference, fulfillment_status, customers(token)')
+        .in('fulfillment_status', ['confirmed', 'staged', 'picked_up', 'shipped']);
+
+      if (sbItems && sbItems.length > 0) {
+        for (const sbI of sbItems) {
+          const custData = sbI.customers as unknown as { token: string } | { token: string }[] | null;
+          const token = Array.isArray(custData) ? custData[0]?.token : custData?.token;
+          if (!token) continue;
+          const customer = customers.find(c => c.token === token);
+          if (!customer) continue;
+
+          // Find matching in-memory line item and update status
+          const item = lineItems.find(i =>
+            i.customer_id === customer.id &&
+            i.item_name === sbI.item_name &&
+            i.qty === sbI.qty
+          );
+          if (item) {
+            item.fulfillment_preference = sbI.fulfillment_preference as 'ship' | 'pickup';
+            item.fulfillment_status = sbI.fulfillment_status;
+          }
+        }
+      }
+
+      hydrated = true;
+    } catch (err) {
+      console.error('[supabase hydration error]', err);
+      hydrated = true; // Don't retry on error
+    } finally {
+      hydratePromise = null;
+    }
+  })();
+}
+
+/**
+ * Ensure Supabase data is hydrated before reading. Call this in API routes.
+ */
+export async function ensureHydrated(): Promise<void> {
+  loadData();
+  if (hydrated) return;
+  if (hydratePromise) await hydratePromise;
 }
 
 // ============================================================

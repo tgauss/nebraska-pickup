@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
+import { ensureHydrated } from '@/lib/local-data';
 import { getCustomerLabel } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/admin/customers — paginated, filterable customer list
 export async function GET(request: Request) {
+  await ensureHydrated();
   const url = new URL(request.url);
 
   const segment = url.searchParams.get('segment');
