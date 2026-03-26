@@ -91,12 +91,9 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
           <!-- HERO -->
           <tr>
             <td style="background-color: #d00000; padding: 40px 32px; text-align: center;">
-              <h1 style="margin: 0; font-family: 'Oswald', Arial, sans-serif; font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">
-                Your Pickup is Ready
+              <h1 style="margin: 0; font-family: 'Oswald', Arial, sans-serif; font-size: 26px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">
+                Your Nebraska Devaney Seats order is now ready to schedule pickup.
               </h1>
-              <p style="margin: 8px 0 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: rgba(255,255,255,0.9);">
-                Devaney Center Legacy Seating
-              </p>
             </td>
           </tr>
 
