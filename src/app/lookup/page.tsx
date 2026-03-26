@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Search, ArrowRight, Package, Truck, Loader2 } from 'lucide-react';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 
 interface LookupResult {
@@ -46,13 +46,13 @@ export default function LookupPage() {
               Find Your Order
             </h1>
           </div>
-          <Image
+          <img
             src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
             alt="Nebraska N"
             width={36}
             height={36}
             className="opacity-80"
-            unoptimized
+
           />
         </div>
       </header>
@@ -151,13 +151,13 @@ export default function LookupPage() {
       {/* Footer */}
       <footer className="bg-accent text-accent-foreground/60 border-t border-border">
         <div className="max-w-lg mx-auto px-4 sm:px-6 py-6 text-center">
-          <Image
+          <img
             src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
             alt="Nebraska N"
             width={28}
             height={28}
             className="opacity-40 mx-auto mb-3"
-            unoptimized
+
           />
           <p className="text-xs">Nebraska Stadium Collectibles</p>
           <p className="text-[10px] mt-1 text-accent-foreground/40">

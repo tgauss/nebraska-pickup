@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckCircle, Calendar, MapPin, Car, Mail, Download, QrCode } from 'lucide-react';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import type { Customer, Booking, LineItem, TimeSlot, Order } from '@/lib/types';
 import { getVehicleRecommendation } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
@@ -82,12 +82,11 @@ export default function ConfirmationView({
           <h3 className="font-serif font-bold text-sm">Your Check-in QR Code</h3>
         </div>
         <div className="bg-white rounded-sm p-3 inline-block border border-border">
-          <Image
+          <img
             src={`/api/pickup/${token}/qr`}
             alt="Check-in QR Code"
             width={200}
             height={200}
-            unoptimized
           />
         </div>
         <p className="text-xs text-muted-foreground mt-3">
@@ -155,7 +154,7 @@ export default function ConfirmationView({
             <div key={item.id} className="bg-card rounded-sm border border-border flex gap-3 p-3 hover:border-primary/30 transition-colors">
               <div className="shrink-0 w-16 h-16 rounded-sm overflow-hidden bg-muted relative">
                 {product ? (
-                  <Image src={product.image} alt={product.shortName} fill className="object-cover" sizes="64px" unoptimized />
+                  <img src={product.image} alt={product.shortName} className="absolute inset-0 w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-muted" />
                 )}
@@ -184,7 +183,7 @@ export default function ConfirmationView({
               <div key={item.id} className="bg-muted/50 rounded-sm border border-border flex gap-3 p-3">
                 <div className="shrink-0 w-12 h-12 rounded-sm overflow-hidden bg-muted relative">
                   {product ? (
-                    <Image src={product.image} alt={product.shortName} fill className="object-cover" sizes="48px" unoptimized />
+                    <img src={product.image} alt={product.shortName} className="absolute inset-0 w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-muted" />
                   )}

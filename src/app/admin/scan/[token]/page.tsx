@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import { getProductInfo } from '@/lib/products';
 
 interface ScanData {
@@ -213,7 +213,7 @@ export default function ScanPage() {
               <div key={item.id} className={`bg-card rounded-sm border border-border flex gap-3 p-3 ${isDone ? 'opacity-60' : ''}`}>
                 <div className="shrink-0 w-14 h-14 rounded-sm overflow-hidden bg-muted relative">
                   {product ? (
-                    <Image src={product.image} alt={product.shortName} fill className="object-cover" sizes="56px" unoptimized />
+                    <img src={product.image} alt={product.shortName} className="absolute inset-0 w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-muted" />
                   )}

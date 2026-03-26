@@ -3,7 +3,6 @@
 import { Weight, Users, Package, Check } from 'lucide-react';
 import type { LineItem } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
-import Image from 'next/image';
 
 interface ItemCardProps {
   items: LineItem[];
@@ -30,13 +29,11 @@ export default function ItemCard({ items, title, showToggle, onToggle, preferenc
             {/* Product image */}
             <div className="relative aspect-[3/2] bg-muted overflow-hidden">
               {product ? (
-                <Image
+                <img
                   src={product.image}
                   alt={product.shortName}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  unoptimized
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-muted">

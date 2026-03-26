@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { MapPin, Truck, Clock, AlertCircle, Loader2, Package } from 'lucide-react';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import TimeSlotGrid from '@/components/pickup/TimeSlotGrid';
 import ItemCard from '@/components/pickup/ItemCard';
 import ConfirmationView from '@/components/pickup/ConfirmationView';
@@ -340,13 +340,12 @@ function PickupHeader({ name }: { name?: string }) {
             {name ? `Your Pickup, ${name.split(' ')[0]}` : 'Pickup & Fulfillment'}
           </h1>
         </div>
-        <Image
+        <img
           src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
           alt="Nebraska N"
           width={36}
           height={36}
           className="opacity-80"
-          unoptimized
         />
       </div>
     </header>
@@ -357,13 +356,12 @@ function PickupFooter() {
   return (
     <footer className="bg-accent text-accent-foreground/60 border-t border-border">
       <div className="max-w-lg mx-auto px-4 sm:px-6 py-6 text-center">
-        <Image
+        <img
           src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
           alt="Nebraska N"
           width={28}
           height={28}
           className="opacity-40 mx-auto mb-3"
-          unoptimized
         />
         <p className="text-xs">
           Nebraska Stadium Collectibles

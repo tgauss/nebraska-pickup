@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 
 export default function Home() {
   return (
@@ -7,13 +7,12 @@ export default function Home() {
       {/* Hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
         <div className="text-center max-w-lg">
-          <Image
+          <img
             src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
             alt="Nebraska N"
             width={56}
             height={56}
             className="mx-auto mb-6"
-            unoptimized
           />
           <p className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-3">
             Nebraska Devaney
