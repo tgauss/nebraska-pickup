@@ -13,6 +13,7 @@ interface CustomerRow {
   phone: string | null;
   city: string;
   state: string;
+  drive_minutes: number | null;
   size: string;
   shipping_paid: number;
   is_vip: boolean;
@@ -128,6 +129,7 @@ export default function CustomersPage() {
             <tr className="border-b bg-gray-50">
               <th className="text-left px-4 py-3 font-medium text-gray-600">Label</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Customer</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Drive</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Segment</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Pickup</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Items</th>
@@ -138,9 +140,9 @@ export default function CustomersPage() {
           </thead>
           <tbody className="divide-y">
             {loading ? (
-              <tr><td colSpan={8} className="text-center py-8 text-gray-400">Loading...</td></tr>
+              <tr><td colSpan={9} className="text-center py-8 text-gray-400">Loading...</td></tr>
             ) : customers.length === 0 ? (
-              <tr><td colSpan={8} className="text-center py-8 text-gray-400">No customers found</td></tr>
+              <tr><td colSpan={9} className="text-center py-8 text-gray-400">No customers found</td></tr>
             ) : customers.map(c => {
               const booking = c.bookings?.[0];
               const slot = booking?.time_slots;
@@ -169,6 +171,9 @@ export default function CustomersPage() {
                         {c.phone && <p className="text-xs text-gray-400">{c.phone}</p>}
                       </div>
                     </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <DriveTimeBadge minutes={c.drive_minutes} city={c.city} state={c.state} />
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${SEGMENT_COLORS[c.segment as keyof typeof SEGMENT_COLORS]}`}>
@@ -275,5 +280,28 @@ function BookingStatusBadge({ status, segment }: { status?: string; segment: str
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[status] || 'bg-gray-100 text-gray-600'}`}>
       {labels[status] || status}
     </span>
+  );
+}
+
+function DriveTimeBadge({ minutes, city, state }: { minutes: number | null; city: string; state: string }) {
+  if (!minutes && !city) return <span className="text-xs text-gray-300">—</span>;
+
+  const hrs = minutes ? Math.floor(minutes / 60) : 0;
+  const mins = minutes ? minutes % 60 : 0;
+  const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+
+  // Color by drive time
+  let color = 'text-green-700 bg-green-50';
+  if (!minutes) color = 'text-gray-500 bg-gray-50';
+  else if (minutes > 180) color = 'text-red-700 bg-red-50';
+  else if (minutes > 90) color = 'text-amber-700 bg-amber-50';
+
+  return (
+    <div>
+      <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium ${color}`}>
+        {minutes ? timeStr : '?'}
+      </span>
+      <p className="text-[10px] text-gray-400 mt-0.5">{city}{state ? `, ${state}` : ''}</p>
+    </div>
   );
 }
