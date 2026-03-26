@@ -6,7 +6,19 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
-import { randomUUID } from 'crypto';
+import { randomUUID, createHash } from 'crypto';
+
+// Generate a deterministic UUID from a seed string so IDs are stable across server reloads
+function stableId(seed: string): string {
+  const hash = createHash('md5').update(seed).digest('hex');
+  return [
+    hash.slice(0, 8),
+    hash.slice(8, 12),
+    '4' + hash.slice(13, 16),
+    '8' + hash.slice(17, 20),
+    hash.slice(20, 32),
+  ].join('-');
+}
 
 // ============================================================
 // Types
@@ -163,8 +175,8 @@ function loadData() {
   const data: MasterData = JSON.parse(raw);
 
   // Load time slots
-  timeSlots = data.time_slots.map(s => ({
-    id: randomUUID(),
+  timeSlots = data.time_slots.map((s, i) => ({
+    id: stableId(`slot-${s.day}-${s.time}-${i}`),
     day: s.day,
     time: s.time,
     capacity: s.capacity,
@@ -174,7 +186,7 @@ function loadData() {
   // Load customers
   for (const c of data.customers) {
     const isVip = c.email.toLowerCase() === JACOB_EMAIL;
-    const custId = randomUUID();
+    const custId = stableId(`customer-${c.token}`);
 
     // Upgrade local shipping-only customers (D/E within 90 min) to offer pickup
     // This expands beyond just iron — chair backs, ornaments, everything
@@ -208,7 +220,7 @@ function loadData() {
     // Orders
     const uniqueOrders = [...new Set(c.orders)];
     for (const orderNum of uniqueOrders) {
-      const orderId = randomUUID();
+      const orderId = stableId(`order-${c.token}-${orderNum}`);
       orders.push({
         id: orderId,
         customer_id: custId,
@@ -219,7 +231,7 @@ function loadData() {
       // Pickup line items
       for (const item of c.pickup_items.filter(i => i.order === orderNum)) {
         lineItems.push({
-          id: randomUUID(),
+          id: stableId(`item-${c.token}-${orderNum}-pickup-${item.item}`),
           order_id: orderId,
           customer_id: custId,
           item_name: item.item,
@@ -233,7 +245,7 @@ function loadData() {
       // Ship line items
       for (const item of c.ship_items.filter(i => i.order === orderNum)) {
         lineItems.push({
-          id: randomUUID(),
+          id: stableId(`item-${c.token}-${orderNum}-ship-${item.item}`),
           order_id: orderId,
           customer_id: custId,
           item_name: item.item,
