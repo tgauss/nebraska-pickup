@@ -7,6 +7,7 @@
 import { readFileSync, existsSync, statSync } from 'fs';
 import { resolve } from 'path';
 import { randomUUID, createHash } from 'crypto';
+import { createAdminClient } from './supabase';
 
 // Generate a deterministic UUID from a seed string so IDs are stable across server reloads
 function stableId(seed: string): string {
@@ -376,7 +377,26 @@ export function getActivityLogByCustomer(customerId: string): DBActivityLog[] {
 }
 
 // ============================================================
-// Mutation functions
+// Supabase write-through helper
+// ============================================================
+
+function getSb() {
+  try {
+    return createAdminClient();
+  } catch {
+    return null;
+  }
+}
+
+// Fire-and-forget Supabase writes — don't block the response
+function sbWrite(fn: (sb: ReturnType<typeof createAdminClient>) => Promise<unknown>): void {
+  const sb = getSb();
+  if (!sb) return;
+  fn(sb).catch(err => console.error('[supabase write-through]', err));
+}
+
+// ============================================================
+// Mutation functions (in-memory + Supabase write-through)
 // ============================================================
 
 export function incrementSlotBooking(slotId: string): boolean {
@@ -384,6 +404,9 @@ export function incrementSlotBooking(slotId: string): boolean {
   const slot = timeSlots.find(s => s.id === slotId);
   if (!slot || slot.current_bookings >= slot.capacity) return false;
   slot.current_bookings++;
+  sbWrite(async (sb) => {
+    await sb!.rpc('increment_booking_count', { slot_id: slotId });
+  });
   return true;
 }
 
@@ -391,6 +414,9 @@ export function decrementSlotBooking(slotId: string): void {
   loadData();
   const slot = timeSlots.find(s => s.id === slotId);
   if (slot && slot.current_bookings > 0) slot.current_bookings--;
+  sbWrite(async (sb) => {
+    await sb!.rpc('decrement_booking_count', { slot_id: slotId });
+  });
 }
 
 export function createBooking(customerId: string, slotId: string, rescheduleCount = 0): DBBooking {
@@ -408,12 +434,40 @@ export function createBooking(customerId: string, slotId: string, rescheduleCoun
   };
   bookings.push(booking);
   booking.time_slots = timeSlots.find(s => s.id === slotId);
+  sbWrite(async (sb) => {
+    // Find the Supabase customer ID by matching the in-memory customer
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+    const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+    if (!sbCust) return;
+    const { data: sbSlot } = await sb!.from('time_slots').select('id').eq('day', booking.time_slots?.day || '').eq('time', booking.time_slots?.time || '').single();
+    if (!sbSlot) return;
+    await sb!.from('bookings').insert({
+      customer_id: sbCust.id,
+      time_slot_id: sbSlot.id,
+      status: booking.status,
+      confirmed_at: booking.confirmed_at,
+      reschedule_count: rescheduleCount,
+    });
+    await sb!.rpc('increment_booking_count', { slot_id: sbSlot.id });
+  });
   return booking;
 }
 
 export function deleteBooking(bookingId: string): void {
   loadData();
+  const booking = bookings.find(b => b.id === bookingId);
   bookings = bookings.filter(b => b.id !== bookingId);
+  if (booking) {
+    sbWrite(async (sb) => {
+      const customer = customers.find(c => c.id === booking.customer_id);
+      if (!customer) return;
+      const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+      if (sbCust) {
+        await sb!.from('bookings').delete().eq('customer_id', sbCust.id);
+      }
+    });
+  }
 }
 
 export function updateBookingStatus(customerId: string, status: string, extraFields?: Partial<DBBooking>): DBBooking | undefined {
@@ -423,6 +477,16 @@ export function updateBookingStatus(customerId: string, status: string, extraFie
   booking.status = status;
   if (extraFields) Object.assign(booking, extraFields);
   booking.time_slots = timeSlots.find(s => s.id === booking.time_slot_id);
+  sbWrite(async (sb) => {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+    const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+    if (!sbCust) return;
+    const updates: Record<string, unknown> = { status };
+    if (extraFields?.checked_in_at) updates.checked_in_at = extraFields.checked_in_at;
+    if (extraFields?.completed_at) updates.completed_at = extraFields.completed_at;
+    await sb!.from('bookings').update(updates).eq('customer_id', sbCust.id);
+  });
   return booking;
 }
 
@@ -432,6 +496,16 @@ export function updateLineItemPreference(itemId: string, preference: 'ship' | 'p
   if (item) {
     item.fulfillment_preference = preference;
     if (status) item.fulfillment_status = status;
+    sbWrite(async (sb) => {
+      // Find by customer token + item name + order
+      const customer = customers.find(c => c.id === item.customer_id);
+      if (!customer) return;
+      const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+      if (!sbCust) return;
+      const updates: Record<string, string> = { fulfillment_preference: preference };
+      if (status) updates.fulfillment_status = status;
+      await sb!.from('line_items').update(updates).eq('customer_id', sbCust.id).eq('item_name', item.item_name).eq('qty', item.qty);
+    });
   }
 }
 
@@ -445,16 +519,42 @@ export function updateLineItemsStatus(customerId: string, filter: Partial<DBLine
     }
     if (match) item.fulfillment_status = status;
   }
+  sbWrite(async (sb) => {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+    const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+    if (!sbCust) return;
+    let query = sb!.from('line_items').update({ fulfillment_status: status }).eq('customer_id', sbCust.id);
+    if (filter.fulfillment_preference) query = query.eq('fulfillment_preference', filter.fulfillment_preference);
+    if (filter.item_type) query = query.eq('item_type', filter.item_type);
+    await query;
+  });
 }
 
 export function addActivityLog(customerId: string | null, action: string, details: Record<string, unknown> = {}): void {
   loadData();
-  activityLog.push({
+  const logEntry = {
     id: randomUUID(),
     customer_id: customerId,
     action,
     details,
     created_at: new Date().toISOString(),
+  };
+  activityLog.push(logEntry);
+  sbWrite(async (sb) => {
+    let sbCustomerId: string | null = null;
+    if (customerId) {
+      const customer = customers.find(c => c.id === customerId);
+      if (customer) {
+        const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+        if (sbCust) sbCustomerId = sbCust.id;
+      }
+    }
+    await sb!.from('activity_log').insert({
+      customer_id: sbCustomerId,
+      action,
+      details,
+    });
   });
 }
 
