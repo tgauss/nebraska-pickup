@@ -542,9 +542,7 @@ export function incrementSlotBooking(slotId: string): boolean {
   const slot = timeSlots.find(s => s.id === slotId);
   if (!slot || slot.current_bookings >= slot.capacity) return false;
   slot.current_bookings++;
-  sbWrite(async (sb) => {
-    await sb!.rpc('increment_booking_count', { slot_id: slotId });
-  });
+  // Note: Supabase slot increment is handled atomically in the confirm route
   return true;
 }
 
@@ -552,9 +550,7 @@ export function decrementSlotBooking(slotId: string): void {
   loadData();
   const slot = timeSlots.find(s => s.id === slotId);
   if (slot && slot.current_bookings > 0) slot.current_bookings--;
-  sbWrite(async (sb) => {
-    await sb!.rpc('decrement_booking_count', { slot_id: slotId });
-  });
+  // Note: Supabase slot decrement is handled in the confirm route
 }
 
 export function createBooking(customerId: string, slotId: string, rescheduleCount = 0): DBBooking {
@@ -572,40 +568,14 @@ export function createBooking(customerId: string, slotId: string, rescheduleCoun
   };
   bookings.push(booking);
   booking.time_slots = timeSlots.find(s => s.id === slotId);
-  sbWrite(async (sb) => {
-    // Find the Supabase customer ID by matching the in-memory customer
-    const customer = customers.find(c => c.id === customerId);
-    if (!customer) return;
-    const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
-    if (!sbCust) return;
-    const { data: sbSlot } = await sb!.from('time_slots').select('id').eq('day', booking.time_slots?.day || '').eq('time', booking.time_slots?.time || '').single();
-    if (!sbSlot) return;
-    await sb!.from('bookings').insert({
-      customer_id: sbCust.id,
-      time_slot_id: sbSlot.id,
-      status: booking.status,
-      confirmed_at: booking.confirmed_at,
-      reschedule_count: rescheduleCount,
-    });
-    await sb!.rpc('increment_booking_count', { slot_id: sbSlot.id });
-  });
+  // Note: Supabase booking creation is handled directly in the confirm route
   return booking;
 }
 
 export function deleteBooking(bookingId: string): void {
   loadData();
-  const booking = bookings.find(b => b.id === bookingId);
   bookings = bookings.filter(b => b.id !== bookingId);
-  if (booking) {
-    sbWrite(async (sb) => {
-      const customer = customers.find(c => c.id === booking.customer_id);
-      if (!customer) return;
-      const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
-      if (sbCust) {
-        await sb!.from('bookings').delete().eq('customer_id', sbCust.id);
-      }
-    });
-  }
+  // Note: Supabase booking deletion is handled directly in the confirm route
 }
 
 export function updateBookingStatus(customerId: string, status: string, extraFields?: Partial<DBBooking>): DBBooking | undefined {
