@@ -5030,6 +5030,30 @@
       "pickup_items": [],
       "ship_items": [
         {
+          "item": "Nebraska Volleyball Historical Ornament Collectible",
+          "qty": 1,
+          "order": "#NEB3118055",
+          "fulfillment": "ship"
+        },
+        {
+          "item": "Nebraska Historical Ornament Collectible",
+          "qty": 1,
+          "order": "#NEB3118055",
+          "fulfillment": "ship"
+        },
+        {
+          "item": "Huskers Classic Holiday Ornament Collectible",
+          "qty": 1,
+          "order": "#NEB3118055",
+          "fulfillment": "ship"
+        },
+        {
+          "item": "Herbie Historical Ornament Collectible",
+          "qty": 1,
+          "order": "#NEB3118055",
+          "fulfillment": "ship"
+        },
+        {
           "item": "Iron End-of-Row Side Pieces",
           "qty": 2,
           "order": "#NEB3118054",
@@ -5042,7 +5066,7 @@
       "endrow_count": 0,
       "iron_qty": 2,
       "chairback_qty": 0,
-      "ornament_qty": 0,
+      "ornament_qty": 4,
       "shipping_paid": 82.19999999999999,
       "needs_pickup_scheduling": false,
       "offer_pickup_conversion": false,
