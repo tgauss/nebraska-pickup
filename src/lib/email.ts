@@ -66,7 +66,7 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
 
   <!-- Preheader text (hidden, shows in inbox preview) -->
   <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
-    ${firstName}, your Devaney Center pickup scheduling is now live. Select your time slot today.
+    Action needed: Pick your time slot for April 16-18 in Roca, NE. Spots are limited and filling up.
   </div>
 
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f1e7;">
@@ -358,7 +358,7 @@ export async function sendPickupEmail(recipient: EmailRecipient): Promise<{ succ
     const result = await pm.sendEmail({
       From: FROM_EMAIL,
       To: recipient.email,
-      Subject: `${recipient.name.split(' ')[0]}, Your Devaney Pickup is Ready - Schedule Now`,
+      Subject: `${recipient.name.split(' ')[0]}, your Devaney seats are ready — schedule your pickup`,
       HtmlBody: generatePickupEmail(recipient),
       TextBody: generatePickupEmailText(recipient),
       TrackOpens: true,
