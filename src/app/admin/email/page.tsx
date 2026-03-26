@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
   Mail, Send, Eye, Users, CheckCircle, AlertTriangle,
-  Loader2, MailOpen, XCircle, ChevronDown, ChevronRight, Search
+  Loader2, MailOpen, ChevronDown, ChevronRight, Search,
+  MousePointerClick, Package, Filter
 } from 'lucide-react';
 
 interface Recipient {
@@ -14,17 +15,30 @@ interface Recipient {
   segment: string;
   hasBooked: boolean;
   pickupItemCount: number;
+  pickupRequired: boolean;
+  shipItemCount: number;
   pickupItemNames: string[];
+  emailSent: boolean;
+  emailOpened: boolean;
+  emailClicked: boolean;
+  emailBounced: boolean;
+  sentAt: string | null;
+  openedAt: string | null;
+  clickedAt: string | null;
 }
 
 interface EmailData {
-  eligible: number;
-  not_booked: number;
-  booked: number;
-  recipients: Recipient[];
+  total: number;
+  pickup_required_count: number;
+  pickup_optional_count: number;
+  booked_count: number;
+  not_booked_count: number;
   all_recipients: Recipient[];
-  stats: { sent: number; opened: number; clicked: number; bounced: number } | null;
+  engagement: { sent: number; opened: number; clicked: number; bounced: number };
 }
+
+type SegmentFilter = 'pickup_required' | 'pickup_optional' | 'all';
+type StatusFilter = 'all' | 'not_sent' | 'sent' | 'opened' | 'clicked' | 'not_booked' | 'booked';
 
 export default function EmailPage() {
   const [data, setData] = useState<EmailData | null>(null);
@@ -40,16 +54,18 @@ export default function EmailPage() {
   const [activePreviewId, setActivePreviewId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sendResult, setSendResult] = useState<{ sent: number; failed: number } | null>(null);
-  const [showBooked, setShowBooked] = useState(false);
-  const [includeBooked, setIncludeBooked] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
     if (res.ok) {
       const d: EmailData = await res.json();
       setData(d);
-      setSelectedIds(new Set(d.recipients.map(r => r.id)));
+      // Default: select all pickup-required who haven't been sent
+      const pickupReq = d.all_recipients.filter(r => r.pickupRequired && !r.emailSent);
+      setSelectedIds(new Set(pickupReq.map(r => r.id)));
     }
     setLoading(false);
   }, []);
@@ -73,10 +89,9 @@ export default function EmailPage() {
     setPreviewLoading(false);
   }, []);
 
-  // Auto-preview first recipient on load
   useEffect(() => {
     if (data && !activePreviewId) {
-      const first = data.recipients[0] || data.all_recipients[0];
+      const first = data.all_recipients.find(r => r.pickupRequired) || data.all_recipients[0];
       if (first) handlePreview(first);
     }
   }, [data, activePreviewId, handlePreview]);
@@ -88,11 +103,7 @@ export default function EmailPage() {
     const res = await fetch('/api/admin/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'test',
-        testEmail: testEmail.trim(),
-        customerIds: [activePreviewId],
-      }),
+      body: JSON.stringify({ action: 'test', testEmail: testEmail.trim(), customerIds: [activePreviewId] }),
     });
     const d = await res.json();
     setTestResult(d.success ? `Test sent to ${testEmail} (as ${previewName})` : `Failed: ${d.error}`);
@@ -102,7 +113,6 @@ export default function EmailPage() {
   const handleSendAll = async () => {
     if (selectedIds.size === 0) return;
     if (!confirm(`Send pickup scheduling email to ${selectedIds.size} customers?`)) return;
-
     setSending(true);
     setSendResult(null);
     const res = await fetch('/api/admin/email', {
@@ -119,37 +129,46 @@ export default function EmailPage() {
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
   };
-
-  const selectAll = () => {
-    const recipients = includeBooked ? data?.all_recipients : data?.recipients;
-    if (!recipients) return;
-    setSelectedIds(new Set(recipients.map(r => r.id)));
-  };
-
-  const selectNone = () => setSelectedIds(new Set());
 
   if (loading || !data) {
     return <div className="text-center py-12 text-gray-400">Loading...</div>;
   }
 
-  const activeRecipients = includeBooked ? data.all_recipients : data.recipients;
-  const bookedRecipients = data.all_recipients.filter(r => r.hasBooked);
+  // Apply filters
+  let filtered = data.all_recipients;
+  if (segmentFilter === 'pickup_required') filtered = filtered.filter(r => r.pickupRequired);
+  else if (segmentFilter === 'pickup_optional') filtered = filtered.filter(r => !r.pickupRequired);
 
-  // Filter by search
-  const filteredRecipients = searchQuery.trim()
-    ? activeRecipients.filter(r =>
-        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.email.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : activeRecipients;
+  if (statusFilter === 'not_sent') filtered = filtered.filter(r => !r.emailSent);
+  else if (statusFilter === 'sent') filtered = filtered.filter(r => r.emailSent);
+  else if (statusFilter === 'opened') filtered = filtered.filter(r => r.emailOpened);
+  else if (statusFilter === 'clicked') filtered = filtered.filter(r => r.emailClicked);
+  else if (statusFilter === 'not_booked') filtered = filtered.filter(r => !r.hasBooked);
+  else if (statusFilter === 'booked') filtered = filtered.filter(r => r.hasBooked);
 
-  const notBookedFiltered = filteredRecipients.filter(r => !r.hasBooked);
-  const bookedFiltered = filteredRecipients.filter(r => r.hasBooked);
+  if (searchQuery.trim()) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(r => r.name.toLowerCase().includes(q) || r.email.toLowerCase().includes(q));
+  }
+
+  const selectFiltered = () => setSelectedIds(new Set(filtered.map(r => r.id)));
+  const selectNone = () => setSelectedIds(new Set());
+
+  // Engagement counts for current segment
+  const segRecipients = segmentFilter === 'pickup_required'
+    ? data.all_recipients.filter(r => r.pickupRequired)
+    : segmentFilter === 'pickup_optional'
+      ? data.all_recipients.filter(r => !r.pickupRequired)
+      : data.all_recipients;
+
+  const engSent = segRecipients.filter(r => r.emailSent).length;
+  const engOpened = segRecipients.filter(r => r.emailOpened).length;
+  const engClicked = segRecipients.filter(r => r.emailClicked).length;
+  const engBooked = segRecipients.filter(r => r.hasBooked).length;
 
   return (
     <div className="space-y-6">
@@ -164,66 +183,81 @@ export default function EmailPage() {
           className="flex items-center gap-1.5 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
         >
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          Send to {selectedIds.size} Recipients
+          Send to {selectedIds.size}
         </button>
       </div>
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Users className="w-4 h-4 text-blue-500" />
-            <span className="text-xs font-medium text-gray-500">Eligible</span>
-          </div>
-          <p className="text-2xl font-bold">{data.eligible}</p>
-          <p className="text-xs text-gray-400 mt-0.5">with pickup items</p>
-        </div>
-        <div className="bg-white rounded-xl border p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Mail className="w-4 h-4 text-amber-500" />
-            <span className="text-xs font-medium text-gray-500">Need Outreach</span>
-          </div>
-          <p className="text-2xl font-bold text-amber-600">{data.not_booked}</p>
-          <p className="text-xs text-gray-400 mt-0.5">haven&apos;t scheduled</p>
-        </div>
-        <div className="bg-white rounded-xl border p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span className="text-xs font-medium text-gray-500">Booked</span>
-          </div>
-          <p className="text-2xl font-bold text-green-600">{data.booked}</p>
-          <p className="text-xs text-gray-400 mt-0.5">have a time slot</p>
-        </div>
-        {data.stats ? (
-          <div className="bg-white rounded-xl border p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <MailOpen className="w-4 h-4 text-purple-500" />
-              <span className="text-xs font-medium text-gray-500">Delivery Stats</span>
-            </div>
-            <div className="grid grid-cols-3 gap-1 mt-1">
-              <div className="text-center">
-                <p className="text-lg font-bold">{data.stats.sent}</p>
-                <p className="text-[10px] text-gray-400">Sent</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-bold text-green-600">{data.stats.opened}</p>
-                <p className="text-[10px] text-gray-400">Opened</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg font-bold text-blue-600">{data.stats.clicked}</p>
-                <p className="text-[10px] text-gray-400">Clicked</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl border p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <MailOpen className="w-4 h-4 text-gray-400" />
-              <span className="text-xs font-medium text-gray-500">Delivery Stats</span>
-            </div>
-            <p className="text-xs text-gray-400 mt-2">Available after first send</p>
-          </div>
-        )}
+      {/* Segment toggle */}
+      <div className="flex items-center gap-2">
+        <Filter className="w-4 h-4 text-gray-400" />
+        {[
+          { key: 'pickup_required' as const, label: 'Pickup Required', count: data.pickup_required_count, color: 'text-red-600' },
+          { key: 'pickup_optional' as const, label: 'Pickup Optional (Seg C)', count: data.pickup_optional_count, color: 'text-amber-600' },
+          { key: 'all' as const, label: 'All', count: data.total, color: 'text-gray-600' },
+        ].map(seg => (
+          <button
+            key={seg.key}
+            onClick={() => { setSegmentFilter(seg.key); setSearchQuery(''); }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              segmentFilter === seg.key
+                ? 'bg-gray-900 text-white'
+                : 'bg-white border text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            {seg.label} <span className="opacity-60">({seg.count})</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Engagement funnel */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <FunnelCard
+          icon={<Users className="w-4 h-4 text-gray-500" />}
+          label="Total"
+          count={segRecipients.length}
+          active={statusFilter === 'all'}
+          onClick={() => setStatusFilter('all')}
+        />
+        <FunnelCard
+          icon={<Mail className="w-4 h-4 text-blue-500" />}
+          label="Sent"
+          count={engSent}
+          total={segRecipients.length}
+          active={statusFilter === 'sent'}
+          onClick={() => setStatusFilter(statusFilter === 'sent' ? 'all' : 'sent')}
+          altLabel="Not Sent"
+          altCount={segRecipients.length - engSent}
+          altActive={statusFilter === 'not_sent'}
+          onAltClick={() => setStatusFilter(statusFilter === 'not_sent' ? 'all' : 'not_sent')}
+        />
+        <FunnelCard
+          icon={<MailOpen className="w-4 h-4 text-green-500" />}
+          label="Opened"
+          count={engOpened}
+          total={engSent}
+          active={statusFilter === 'opened'}
+          onClick={() => setStatusFilter(statusFilter === 'opened' ? 'all' : 'opened')}
+        />
+        <FunnelCard
+          icon={<MousePointerClick className="w-4 h-4 text-purple-500" />}
+          label="Clicked"
+          count={engClicked}
+          total={engSent}
+          active={statusFilter === 'clicked'}
+          onClick={() => setStatusFilter(statusFilter === 'clicked' ? 'all' : 'clicked')}
+        />
+        <FunnelCard
+          icon={<CheckCircle className="w-4 h-4 text-green-600" />}
+          label="Booked"
+          count={engBooked}
+          total={segRecipients.length}
+          active={statusFilter === 'booked'}
+          onClick={() => setStatusFilter(statusFilter === 'booked' ? 'all' : 'booked')}
+          altLabel="Not Booked"
+          altCount={segRecipients.length - engBooked}
+          altActive={statusFilter === 'not_booked'}
+          onAltClick={() => setStatusFilter(statusFilter === 'not_booked' ? 'all' : 'not_booked')}
+        />
       </div>
 
       {/* Send result */}
@@ -231,19 +265,16 @@ export default function EmailPage() {
         <div className={`rounded-xl border p-4 ${sendResult.failed > 0 ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'}`}>
           <div className="flex items-center gap-2">
             {sendResult.failed > 0 ? <AlertTriangle className="w-5 h-5 text-amber-600" /> : <CheckCircle className="w-5 h-5 text-green-600" />}
-            <p className="font-medium text-sm">
-              {sendResult.sent} emails sent{sendResult.failed > 0 && `, ${sendResult.failed} failed`}
-            </p>
+            <p className="font-medium text-sm">{sendResult.sent} sent{sendResult.failed > 0 && `, ${sendResult.failed} failed`}</p>
           </div>
         </div>
       )}
 
-      {/* Two-panel layout: recipients + preview */}
+      {/* Two-panel: list + preview */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
         {/* LEFT: Recipient list */}
         <div className="lg:col-span-2 space-y-3">
-          {/* Search + controls */}
           <div className="bg-white rounded-xl border p-3 space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -251,89 +282,44 @@ export default function EmailPage() {
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search by name or email..."
+                placeholder="Search name or email..."
                 className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <button onClick={selectAll} className="text-xs text-blue-600 hover:underline">All</button>
+                <button onClick={selectFiltered} className="text-xs text-blue-600 hover:underline">Select Visible ({filtered.length})</button>
                 <button onClick={selectNone} className="text-xs text-gray-500 hover:underline">None</button>
                 <span className="text-xs text-gray-400">{selectedIds.size} selected</span>
               </div>
-              <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={includeBooked}
-                  onChange={e => {
-                    setIncludeBooked(e.target.checked);
-                    if (e.target.checked) {
-                      setSelectedIds(new Set(data.all_recipients.map(r => r.id)));
-                    } else {
-                      setSelectedIds(new Set(data.recipients.map(r => r.id)));
-                    }
-                  }}
-                  className="rounded"
-                />
-                Include booked
-              </label>
             </div>
           </div>
 
-          {/* Recipient rows */}
           <div className="bg-white rounded-xl border overflow-hidden">
             <div className="divide-y max-h-[600px] overflow-y-auto">
-              {notBookedFiltered.map(r => (
-                <RecipientRow
-                  key={r.id}
-                  recipient={r}
-                  selected={selectedIds.has(r.id)}
-                  active={activePreviewId === r.id}
-                  onToggle={() => toggleSelect(r.id)}
-                  onPreview={() => handlePreview(r)}
-                />
-              ))}
-              {notBookedFiltered.length === 0 && (
+              {filtered.length === 0 ? (
                 <div className="px-5 py-8 text-center text-sm text-gray-400">
-                  {searchQuery ? 'No matches' : 'All customers have booked!'}
+                  {searchQuery ? 'No matches' : 'No recipients in this filter'}
                 </div>
+              ) : (
+                filtered.map(r => (
+                  <RecipientRow
+                    key={r.id}
+                    recipient={r}
+                    selected={selectedIds.has(r.id)}
+                    active={activePreviewId === r.id}
+                    onToggle={() => toggleSelect(r.id)}
+                    onPreview={() => handlePreview(r)}
+                  />
+                ))
               )}
             </div>
-
-            {/* Booked section */}
-            {includeBooked && bookedFiltered.length > 0 && (
-              <>
-                <button
-                  onClick={() => setShowBooked(!showBooked)}
-                  className="w-full px-4 py-2.5 bg-green-50 border-t flex items-center gap-2 text-xs text-green-700 font-medium hover:bg-green-100"
-                >
-                  {showBooked ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  Already Booked ({bookedFiltered.length})
-                </button>
-                {showBooked && (
-                  <div className="divide-y">
-                    {bookedFiltered.map(r => (
-                      <RecipientRow
-                        key={r.id}
-                        recipient={r}
-                        selected={selectedIds.has(r.id)}
-                        active={activePreviewId === r.id}
-                        onToggle={() => toggleSelect(r.id)}
-                        onPreview={() => handlePreview(r)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
           </div>
         </div>
 
-        {/* RIGHT: Email preview */}
+        {/* RIGHT: Preview */}
         <div className="lg:col-span-3">
           <div className="bg-white rounded-xl border overflow-hidden sticky top-20">
-            {/* Preview header */}
             <div className="px-5 py-3 border-b bg-gray-50">
               <div className="flex items-center justify-between">
                 <div>
@@ -343,18 +329,15 @@ export default function EmailPage() {
                       {previewName ? `Preview: ${previewName}` : 'Email Preview'}
                     </h3>
                   </div>
-                  {previewEmail && (
-                    <p className="text-xs text-gray-400 mt-0.5">To: {previewEmail}</p>
-                  )}
+                  {previewEmail && <p className="text-xs text-gray-400 mt-0.5">To: {previewEmail}</p>}
                 </div>
-                {/* Test send from preview */}
                 <div className="flex items-center gap-2">
                   <input
                     type="email"
                     value={testEmail}
                     onChange={e => setTestEmail(e.target.value)}
-                    placeholder="Test email address"
-                    className="border rounded-lg px-3 py-1.5 text-xs w-48 focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Test email"
+                    className="border rounded-lg px-3 py-1.5 text-xs w-44 focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                   <button
                     onClick={handleTestSend}
@@ -362,30 +345,19 @@ export default function EmailPage() {
                     className="px-3 py-1.5 bg-gray-900 text-white rounded-lg text-xs font-medium hover:bg-gray-800 disabled:opacity-50 flex items-center gap-1.5"
                   >
                     {testSending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                    Send Test
+                    Test
                   </button>
                 </div>
               </div>
               {testResult && (
-                <p className={`mt-2 text-xs ${testResult.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>
-                  {testResult}
-                </p>
+                <p className={`mt-2 text-xs ${testResult.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>{testResult}</p>
               )}
             </div>
 
-            {/* Preview content */}
             {previewLoading ? (
-              <div className="flex items-center justify-center py-24">
-                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-              </div>
+              <div className="flex items-center justify-center py-24"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
             ) : previewHtml ? (
-              <iframe
-                srcDoc={previewHtml}
-                className="w-full border-0"
-                style={{ height: '700px' }}
-                title="Email preview"
-                sandbox="allow-same-origin"
-              />
+              <iframe srcDoc={previewHtml} className="w-full border-0" style={{ height: '700px' }} title="Email preview" sandbox="allow-same-origin" />
             ) : (
               <div className="flex flex-col items-center justify-center py-24 text-gray-400">
                 <Mail className="w-10 h-10 mb-3 opacity-40" />
@@ -399,6 +371,57 @@ export default function EmailPage() {
   );
 }
 
+// ============================================================
+// Funnel Card
+// ============================================================
+
+function FunnelCard({ icon, label, count, total, active, onClick, altLabel, altCount, altActive, onAltClick }: {
+  icon: React.ReactNode;
+  label: string;
+  count: number;
+  total?: number;
+  active: boolean;
+  onClick: () => void;
+  altLabel?: string;
+  altCount?: number;
+  altActive?: boolean;
+  onAltClick?: () => void;
+}) {
+  const pct = total && total > 0 ? Math.round((count / total) * 100) : null;
+  return (
+    <div
+      onClick={onClick}
+      className={`bg-white rounded-xl border p-4 cursor-pointer transition-colors ${active ? 'ring-2 ring-primary border-primary' : 'hover:border-gray-300'}`}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        {icon}
+        <span className="text-xs font-medium text-gray-500">{label}</span>
+      </div>
+      <p className="text-2xl font-bold">{count}</p>
+      {pct !== null && (
+        <div className="mt-1">
+          <div className="w-full bg-gray-100 rounded-full h-1.5">
+            <div className="bg-primary h-1.5 rounded-full" style={{ width: `${pct}%` }} />
+          </div>
+          <p className="text-[10px] text-gray-400 mt-0.5">{pct}% of {total}</p>
+        </div>
+      )}
+      {altLabel && onAltClick && altCount !== undefined && (
+        <button
+          onClick={e => { e.stopPropagation(); onAltClick(); }}
+          className={`mt-1.5 text-[10px] font-medium px-1.5 py-0.5 rounded ${altActive ? 'bg-amber-100 text-amber-700' : 'text-gray-400 hover:text-gray-600'}`}
+        >
+          {altLabel}: {altCount}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
+// Recipient Row
+// ============================================================
+
 function RecipientRow({ recipient, selected, active, onToggle, onPreview }: {
   recipient: Recipient;
   selected: boolean;
@@ -408,12 +431,8 @@ function RecipientRow({ recipient, selected, active, onToggle, onPreview }: {
 }) {
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors ${
-        active
-          ? 'bg-blue-50 border-l-2 border-l-blue-500'
-          : recipient.hasBooked
-            ? 'bg-green-50/30 hover:bg-gray-50'
-            : 'hover:bg-gray-50'
+      className={`flex items-center gap-2.5 px-4 py-2.5 cursor-pointer transition-colors ${
+        active ? 'bg-blue-50 border-l-2 border-l-blue-500' : 'hover:bg-gray-50'
       }`}
       onClick={onPreview}
     >
@@ -427,15 +446,42 @@ function RecipientRow({ recipient, selected, active, onToggle, onPreview }: {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-medium truncate">{recipient.name}</p>
+          {recipient.pickupRequired && (
+            <span title="Pickup required"><Package className="w-3 h-3 text-red-500 shrink-0" /></span>
+          )}
           {recipient.hasBooked && (
-            <CheckCircle className="w-3 h-3 text-green-500 shrink-0" />
+            <span title="Booked"><CheckCircle className="w-3 h-3 text-green-500 shrink-0" /></span>
           )}
         </div>
         <p className="text-[11px] text-gray-400 truncate">{recipient.email}</p>
       </div>
+
+      {/* Engagement indicators */}
+      <div className="shrink-0 flex items-center gap-1">
+        {recipient.emailSent && (
+          <span className={`w-4 h-4 rounded-full flex items-center justify-center ${recipient.emailOpened ? 'bg-green-100' : 'bg-blue-100'}`} title={recipient.emailOpened ? `Opened${recipient.openedAt ? ' ' + new Date(recipient.openedAt).toLocaleString() : ''}` : `Sent${recipient.sentAt ? ' ' + new Date(recipient.sentAt).toLocaleString() : ''}`}>
+            {recipient.emailOpened ? (
+              <MailOpen className="w-2.5 h-2.5 text-green-600" />
+            ) : (
+              <Mail className="w-2.5 h-2.5 text-blue-600" />
+            )}
+          </span>
+        )}
+        {recipient.emailClicked && (
+          <span className="w-4 h-4 rounded-full bg-purple-100 flex items-center justify-center" title={`Clicked${recipient.clickedAt ? ' ' + new Date(recipient.clickedAt).toLocaleString() : ''}`}>
+            <MousePointerClick className="w-2.5 h-2.5 text-purple-600" />
+          </span>
+        )}
+        {recipient.emailBounced && (
+          <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center" title="Bounced">
+            <AlertTriangle className="w-2.5 h-2.5 text-red-600" />
+          </span>
+        )}
+      </div>
+
       <div className="shrink-0 text-right">
         <p className="text-[11px] text-gray-500">{recipient.pickupItemCount} items</p>
-        <p className="text-[10px] text-gray-400 truncate max-w-[100px]">Seg {recipient.segment}</p>
+        <p className="text-[10px] text-gray-400">Seg {recipient.segment}</p>
       </div>
     </div>
   );

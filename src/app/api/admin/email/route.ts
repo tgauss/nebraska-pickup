@@ -1,23 +1,23 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail, getEmailStats } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
+import { recordEvent, getStatusByEmail, getEventSummary } from '@/lib/email-tracking';
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/admin/email — get eligible recipients + stats
+// GET /api/admin/email — get eligible recipients + stats + engagement
 export async function GET() {
   const customers = db.getAllCustomers();
   const allBookings = db.getAllBookings();
   const bookedIds = new Set(allBookings.map(b => b.customer_id));
 
-  // Only customers with pickup items (Seg A, B, or C with pickup items)
-  const eligible = customers
+  // Build full recipient list with engagement data
+  const allRecipients = customers
     .filter(c => {
       if (!c.email) return false;
-      // Must have pickup items or be offered pickup conversion
       const items = db.getLineItemsByCustomer(c.id);
       const hasPickup = items.some(i => i.item_type === 'pickup');
       return hasPickup || c.offer_pickup_conversion;
@@ -25,6 +25,10 @@ export async function GET() {
     .map(c => {
       const items = db.getLineItemsByCustomer(c.id);
       const pickupItems = items.filter(i => i.item_type === 'pickup');
+      const pickupRequired = pickupItems.reduce((s, i) => s + i.qty, 0);
+      const shipItems = items.filter(i => i.item_type === 'ship');
+      const emailStatus = getStatusByEmail(c.email);
+
       return {
         id: c.id,
         name: c.name,
@@ -32,30 +36,36 @@ export async function GET() {
         token: c.token,
         segment: c.segment,
         hasBooked: bookedIds.has(c.id),
-        pickupItemCount: pickupItems.reduce((s, i) => s + i.qty, 0),
+        pickupItemCount: pickupRequired,
+        pickupRequired: pickupRequired > 0,
+        shipItemCount: shipItems.reduce((s, i) => s + i.qty, 0),
         pickupItemNames: [...new Set(pickupItems.map(i => {
           const p = getProductInfo(i.item_name);
           return p?.shortName || i.item_name;
         }))],
+        emailSent: emailStatus.sent,
+        emailOpened: emailStatus.opened,
+        emailClicked: emailStatus.clicked,
+        emailBounced: emailStatus.bounced,
+        sentAt: emailStatus.sentAt,
+        openedAt: emailStatus.openedAt,
+        clickedAt: emailStatus.clickedAt,
       };
     });
 
-  const notBooked = eligible.filter(c => !c.hasBooked);
-  const booked = eligible.filter(c => c.hasBooked);
+  const pickupRequired = allRecipients.filter(r => r.pickupRequired);
+  const pickupOptional = allRecipients.filter(r => !r.pickupRequired);
 
-  // Try to get Postmark stats
-  let stats = null;
-  try {
-    stats = await getEmailStats();
-  } catch { /* postmark not configured */ }
+  const engagement = getEventSummary();
 
   return NextResponse.json({
-    eligible: eligible.length,
-    not_booked: notBooked.length,
-    booked: booked.length,
-    recipients: notBooked, // Default: only send to those who haven't booked
-    all_recipients: eligible,
-    stats,
+    total: allRecipients.length,
+    pickup_required_count: pickupRequired.length,
+    pickup_optional_count: pickupOptional.length,
+    booked_count: allRecipients.filter(r => r.hasBooked).length,
+    not_booked_count: allRecipients.filter(r => !r.hasBooked).length,
+    all_recipients: allRecipients,
+    engagement,
   });
 }
 
@@ -115,7 +125,7 @@ export async function POST(request: Request) {
 
     const result = await sendPickupEmail({
       name: customer.name,
-      email: testEmail, // Override to test address
+      email: testEmail,
       token: customer.token,
       pickupItems,
       vehicleRec,
@@ -163,7 +173,15 @@ export async function POST(request: Request) {
         ...result,
       });
 
-      // Log the send
+      // Track the send
+      recordEvent({
+        customerId: customer.id,
+        email: customer.email.toLowerCase(),
+        token: customer.token,
+        event: 'sent',
+        timestamp: new Date().toISOString(),
+      });
+
       db.addActivityLog(customer.id, 'email_sent', {
         type: 'pickup_scheduling',
         success: result.success,
