@@ -76,15 +76,9 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
 
           <!-- HEADER -->
           <tr>
-            <td style="background-color: #1a1a1a; padding: 20px 32px; border-radius: 8px 8px 0 0;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                <tr>
-                  <td>
-                    <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="36" height="36" style="display: inline-block; vertical-align: middle; opacity: 0.85;" />
-                    <span style="font-family: 'Oswald', Arial, sans-serif; font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase; vertical-align: middle; margin-left: 10px;">Nebraska Rare Goods</span>
-                  </td>
-                </tr>
-              </table>
+            <td style="background-color: #1a1a1a; padding: 20px 32px; border-radius: 8px 8px 0 0; text-align: center;">
+              <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display: block; margin: 0 auto 8px; width: 40px; height: auto;" />
+              <span style="font-family: 'Oswald', Arial, sans-serif; font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase;">Nebraska Rare Goods</span>
             </td>
           </tr>
 
