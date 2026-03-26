@@ -318,6 +318,13 @@ export function searchCustomers(query: string): DBCustomer[] {
   );
 }
 
+export function getActivityLogByCustomer(customerId: string): DBActivityLog[] {
+  loadData();
+  return activityLog
+    .filter(l => l.customer_id === customerId)
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+
 // ============================================================
 // Mutation functions
 // ============================================================

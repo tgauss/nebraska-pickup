@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { SEGMENT_LABELS, SEGMENT_COLORS } from '@/lib/types';
 
@@ -38,6 +39,7 @@ interface CustomerRow {
 }
 
 export default function CustomersPage() {
+  const router = useRouter();
   const [customers, setCustomers] = useState<CustomerRow[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -152,7 +154,7 @@ export default function CustomersPage() {
               const shipItems = c.line_items?.filter(i => i.fulfillment_preference === 'ship') || [];
 
               return (
-                <tr key={c.id} className={`hover:bg-gray-50 ${c.is_vip ? 'bg-amber-50' : ''}`}>
+                <tr key={c.id} onClick={() => router.push(`/admin/customers/${c.id}`)} className={`hover:bg-gray-50 cursor-pointer ${c.is_vip ? 'bg-amber-50' : ''}`}>
                   <td className="px-4 py-3">
                     {c.label ? (
                       <span className="inline-block bg-accent text-accent-foreground font-mono font-bold text-sm px-2 py-1 rounded-sm min-w-[48px] text-center">
