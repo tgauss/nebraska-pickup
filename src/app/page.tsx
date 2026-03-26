@@ -41,6 +41,7 @@ function HomeChat() {
     identified: false, needsHuman: false,
     conversationId: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   });
+  const [hasBooked, setHasBooked] = useState(false);
   const [step, setStep] = useState<'identify' | 'chat'>('identify');
   const [identifyInput, setIdentifyInput] = useState('');
   const [identifyError, setIdentifyError] = useState<string | null>(null);
@@ -117,6 +118,7 @@ function HomeChat() {
           customerEmail: data.customerEmail, customerToken: data.customerToken, identified: true,
         }));
         setStep('chat');
+        setHasBooked(data.hasBooked);
         const firstName = data.customerName.split(' ')[0];
         let welcome = `Hey ${firstName}! 👋 Great to have you here. I can see your order`;
         if (data.hasBooked) {
@@ -277,9 +279,20 @@ function HomeChat() {
               {/* Quick actions after first message */}
               {messages.length === 1 && messages[0].role === 'assistant' && context.customerToken && (
                 <div className="flex flex-wrap gap-2 pl-11">
-                  <QuickButton label="Schedule Pickup" href={`/pickup/${context.customerToken}`} />
-                  <QuickButton label="Get Directions" href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430" external />
-                  <QuickButton label="What should I bring?" onClick={() => setInput('What vehicle do I need for my items?')} />
+                  {hasBooked ? (
+                    <>
+                      <QuickButton label="View My Receipt" href={`/pickup/${context.customerToken}`} />
+                      <QuickButton label="Reschedule Pickup" onClick={() => setInput('I need to reschedule my pickup time')} />
+                      <QuickButton label="Get Directions" href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430" external />
+                      <QuickButton label="What should I bring?" onClick={() => setInput('What vehicle do I need for my items?')} />
+                    </>
+                  ) : (
+                    <>
+                      <QuickButton label="Schedule Pickup" href={`/pickup/${context.customerToken}`} />
+                      <QuickButton label="Get Directions" href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430" external />
+                      <QuickButton label="What should I bring?" onClick={() => setInput('What vehicle do I need for my items?')} />
+                    </>
+                  )}
                 </div>
               )}
 
