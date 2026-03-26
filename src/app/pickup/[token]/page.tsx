@@ -233,8 +233,9 @@ export default function PickupPage() {
         <main className="flex-1 flex flex-col justify-center px-5 sm:px-6 py-8 max-w-lg mx-auto w-full">
           <div className="text-center space-y-6">
             {/* Product preview */}
-            {pickup_items.length > 0 && (() => {
-              const product = getProductInfo(pickup_items[0].item_name);
+            {(() => {
+              const previewItem = pickup_items[0] || ship_items[0];
+              const product = previewItem ? getProductInfo(previewItem.item_name) : null;
               return product ? (
                 <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full overflow-hidden border-4 border-secondary relative">
                   <img src={product.image} alt={product.shortName} className="absolute inset-0 w-full h-full object-cover" />
@@ -247,28 +248,49 @@ export default function PickupPage() {
               <h1 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
                 Good News, {firstName}!
               </h1>
-              <p className="font-serif text-xl sm:text-2xl text-muted-foreground mt-1">
-                Your order is ready for pickup.
-              </p>
+              {totalPickupItems > 0 ? (
+                <p className="font-serif text-xl sm:text-2xl text-muted-foreground mt-1">
+                  Your order is ready for pickup.
+                </p>
+              ) : (
+                <p className="font-serif text-xl sm:text-2xl text-muted-foreground mt-1">
+                  We have some convenient options for you.
+                </p>
+              )}
             </div>
 
-            <p className="text-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
-              Your {totalPickupItems} {totalPickupItems === 1 ? 'item needs' : 'items need'} to be picked up in person.
-              Select a time slot — spots are limited.
-            </p>
-
-            <div className="bg-primary/5 border border-primary/20 rounded-sm px-4 py-2.5 inline-block">
-              <p className="text-xs sm:text-sm text-primary font-semibold flex items-center justify-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                Pickup required — select your time now
+            {totalPickupItems > 0 ? (
+              <p className="text-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
+                Your {totalPickupItems} {totalPickupItems === 1 ? 'item needs' : 'items need'} to be picked up in person.
+                Select a time slot — spots are limited.
               </p>
-            </div>
+            ) : (
+              <p className="text-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
+                Your items can be shipped to you, or you can save time and pick them up at our warehouse near Lincoln.
+              </p>
+            )}
+
+            {totalPickupItems > 0 ? (
+              <div className="bg-primary/5 border border-primary/20 rounded-sm px-4 py-2.5 inline-block">
+                <p className="text-xs sm:text-sm text-primary font-semibold flex items-center justify-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  Pickup required — select your time now
+                </p>
+              </div>
+            ) : (
+              <div className="bg-secondary rounded-sm px-4 py-2.5 inline-block">
+                <p className="text-xs sm:text-sm text-foreground font-medium flex items-center justify-center gap-1.5">
+                  <Package className="w-3.5 h-3.5 text-primary" />
+                  Choose your fulfillment option
+                </p>
+              </div>
+            )}
 
             {/* Quick info pills */}
             <div className="flex flex-wrap justify-center gap-2">
               <span className="inline-flex items-center gap-1.5 text-xs bg-secondary rounded-full px-3 py-1.5">
                 <Calendar className="w-3 h-3 text-primary" />
-                Apr 2–4, 2026
+                Apr 16–18, 2026
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs bg-secondary rounded-full px-3 py-1.5">
                 <MapPin className="w-3 h-3 text-primary" />
@@ -288,12 +310,12 @@ export default function PickupPage() {
               }}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 rounded-sm font-sans font-semibold text-base sm:text-lg transition-colors flex items-center justify-center gap-2"
             >
-              Select My Pickup Time
+              {totalPickupItems > 0 ? 'Select My Pickup Time' : 'Choose My Option'}
               <ArrowRight className="w-5 h-5" />
             </button>
 
-            {/* Seg C decline option */}
-            {customer.segment === 'C' && (
+            {/* Seg C decline option — only on welcome if they have pickup items too */}
+            {customer.segment === 'C' && totalPickupItems > 0 && (
               <button
                 onClick={handleDeclinePickup}
                 disabled={confirming}
@@ -306,47 +328,119 @@ export default function PickupPage() {
         </main>
       )}
 
-      {/* ============ STEP: ITEMS (Seg B/C only) ============ */}
+      {/* ============ STEP: ITEMS (Seg B/C) ============ */}
       {step === 'items' && (
         <main className="flex-1 px-5 sm:px-6 py-6 max-w-lg mx-auto w-full">
           <div className="space-y-6">
-            <div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold">Your Items</h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                {customer.segment === 'B'
-                  ? 'Some items can be shipped instead of picked up. Choose below.'
-                  : 'Toggle any items you\'d like to pick up instead of having shipped.'
-                }
-              </p>
-            </div>
+            {/* Seg C with no pickup items: all-or-nothing choice */}
+            {customer.segment === 'C' && pickup_items.length === 0 ? (
+              <>
+                <div>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-bold">How Would You Like Your Items?</h2>
+                  <p className="text-muted-foreground text-sm mt-1">
+                    Choose one option for all your items.
+                  </p>
+                </div>
 
-            {/* Pickup items (no toggle, must pick up) */}
-            {pickup_items.length > 0 && (
-              <ItemCard items={pickup_items} title="Must Pick Up" />
-            )}
+                {/* Item summary — compact */}
+                <div className="bg-card rounded-sm border border-border p-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3">Your Items</p>
+                  {ship_items.map(item => {
+                    const product = getProductInfo(item.item_name);
+                    return (
+                      <div key={item.id} className="flex items-center gap-3 py-1.5">
+                        <div className="shrink-0 w-10 h-10 rounded-sm overflow-hidden bg-muted relative">
+                          {product ? (
+                            <img src={product.image} alt={product.shortName} className="absolute inset-0 w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-muted" />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium flex-1">{product?.shortName || item.item_name}</span>
+                        <span className="text-xs text-muted-foreground">Qty: {item.qty}</span>
+                      </div>
+                    );
+                  })}
+                </div>
 
-            {/* Shippable items with toggle */}
-            {ship_items.length > 0 && (
-              <ItemCard
-                items={ship_items}
-                title={customer.segment === 'B' ? 'Can Ship or Pick Up' : 'Your Items'}
-                showToggle
-                onToggle={(id, pref) => setShipPreferences(prev => ({ ...prev, [id]: pref }))}
-                preferences={shipPreferences}
-              />
-            )}
+                {/* Two big choice buttons */}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => {
+                      // Set ALL ship items to pickup
+                      const prefs: Record<string, 'ship' | 'pickup'> = {};
+                      ship_items.forEach(i => { prefs[i.id] = 'pickup'; });
+                      setShipPreferences(prefs);
+                      setStep('timeslot');
+                      scrollToTop();
+                    }}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-5 rounded-sm font-sans font-semibold text-base transition-colors flex items-center justify-center gap-3"
+                  >
+                    <MapPin className="w-5 h-5" />
+                    I&apos;ll Pick Them Up
+                  </button>
+                  <p className="text-xs text-muted-foreground text-center">Pick up at our warehouse near Lincoln — free, fast, no shipping wait</p>
 
-            {customer.shipping_paid > 0 && (
-              <p className="text-xs text-muted-foreground text-center bg-secondary/50 rounded-sm px-3 py-2">
-                Shipping charge of ${customer.shipping_paid.toFixed(2)} is non-refundable regardless of fulfillment choice.
-              </p>
+                  <button
+                    onClick={handleDeclinePickup}
+                    disabled={confirming}
+                    className="w-full border-2 border-border bg-card text-foreground px-6 py-5 rounded-sm font-sans font-semibold text-base hover:bg-secondary transition-colors flex items-center justify-center gap-3"
+                  >
+                    <Truck className="w-5 h-5" />
+                    Ship Them to Me
+                  </button>
+                  <p className="text-xs text-muted-foreground text-center">We&apos;ll ship your items to you</p>
+                </div>
+
+                {customer.shipping_paid > 0 && (
+                  <p className="text-xs text-muted-foreground text-center bg-secondary/50 rounded-sm px-3 py-2">
+                    Shipping charge of ${customer.shipping_paid.toFixed(2)} is non-refundable regardless of fulfillment choice.
+                  </p>
+                )}
+              </>
+            ) : (
+              /* Seg B (or Seg C with pickup items): per-item toggles with compact layout */
+              <>
+                <div>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-bold">Your Items</h2>
+                  <p className="text-muted-foreground text-sm mt-1">
+                    {customer.segment === 'B'
+                      ? 'Some items can be shipped instead of picked up. Choose below.'
+                      : 'Choose which items you\'d like to pick up.'
+                    }
+                  </p>
+                </div>
+
+                {/* Pickup items (no toggle, must pick up) */}
+                {pickup_items.length > 0 && (
+                  <ItemCard items={pickup_items} title="Must Pick Up" compact />
+                )}
+
+                {/* Shippable items with toggle */}
+                {ship_items.length > 0 && (
+                  <ItemCard
+                    items={ship_items}
+                    title={customer.segment === 'B' ? 'Can Ship or Pick Up' : 'Your Items'}
+                    showToggle
+                    compact
+                    onToggle={(id, pref) => setShipPreferences(prev => ({ ...prev, [id]: pref }))}
+                    preferences={shipPreferences}
+                  />
+                )}
+
+                {customer.shipping_paid > 0 && (
+                  <p className="text-xs text-muted-foreground text-center bg-secondary/50 rounded-sm px-3 py-2">
+                    Shipping charge of ${customer.shipping_paid.toFixed(2)} is non-refundable regardless of fulfillment choice.
+                  </p>
+                )}
+              </>
             )}
           </div>
 
-          {/* Sticky bottom CTA */}
-          <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4 safe-area-bottom z-20">
-            <div className="max-w-lg mx-auto">
-              {(customer.segment !== 'C' || segCHasPickupItems || pickup_items.length > 0) ? (
+          {/* Sticky bottom CTA — only for Seg B or Seg C with pickup items */}
+          {(customer.segment !== 'C' || pickup_items.length > 0) && (
+            <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4 safe-area-bottom z-20">
+              <div className="max-w-lg mx-auto">
                 <button
                   onClick={() => { setStep('timeslot'); scrollToTop(); }}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 rounded-sm font-sans font-semibold text-base transition-colors flex items-center justify-center gap-2"
@@ -354,22 +448,11 @@ export default function PickupPage() {
                   Choose Your Time
                   <ArrowRight className="w-5 h-5" />
                 </button>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground text-center">Toggle at least one item to &quot;Pick up&quot; to continue</p>
-                  <button
-                    onClick={handleDeclinePickup}
-                    disabled={confirming}
-                    className="w-full border border-border bg-card text-foreground px-6 py-3 rounded-sm font-sans font-medium hover:bg-secondary transition-colors"
-                  >
-                    Ship Everything Instead
-                  </button>
-                </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
           {/* Bottom spacer for fixed CTA */}
-          <div className="h-24" />
+          {(customer.segment !== 'C' || pickup_items.length > 0) && <div className="h-24" />}
         </main>
       )}
 
@@ -396,7 +479,7 @@ export default function PickupPage() {
             <div className="bg-card rounded-sm border border-border p-3 flex items-start gap-3">
               <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div className="text-sm">
-                <p className="font-medium">2410 Production Drive, Unit 6, Roca, NE 68430</p>
+                <p className="font-medium">2410 Production Drive, Unit 4, Roca, NE 68430</p>
                 <p className="text-muted-foreground mt-0.5">{vehicleRec}</p>
                 {customer.drive_minutes > 0 && (
                   <p className="text-muted-foreground">~{customer.drive_minutes} min from {customer.city}</p>
@@ -458,7 +541,7 @@ function PickupHeader() {
 function PickupFooter() {
   return (
     <footer className="bg-accent text-accent-foreground/40 py-4 text-center mt-auto">
-      <p className="text-[10px]">2410 Production Drive, Unit 6, Roca, NE 68430</p>
+      <p className="text-[10px]">2410 Production Drive, Unit 4, Roca, NE 68430</p>
     </footer>
   );
 }
