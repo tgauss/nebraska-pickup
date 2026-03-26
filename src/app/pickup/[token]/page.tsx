@@ -245,13 +245,16 @@ export default function PickupPage() {
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-primary font-medium mb-2">{orderNums}</p>
               <h1 className="font-serif text-3xl sm:text-4xl font-bold leading-tight">
-                {firstName}, pick up<br />your Devaney order
+                Good News, {firstName}!
               </h1>
+              <p className="font-serif text-xl sm:text-2xl text-muted-foreground mt-1">
+                Your order is ready for pickup.
+              </p>
             </div>
 
             <p className="text-foreground text-sm sm:text-base leading-relaxed max-w-xs mx-auto">
               Your {totalPickupItems} {totalPickupItems === 1 ? 'item needs' : 'items need'} to be picked up in person.
-              Choose a time slot below — spots are limited.
+              Select a time slot — spots are limited.
             </p>
 
             <div className="bg-primary/5 border border-primary/20 rounded-sm px-4 py-2.5 inline-block">
@@ -270,10 +273,6 @@ export default function PickupPage() {
               <span className="inline-flex items-center gap-1.5 text-xs bg-secondary rounded-full px-3 py-1.5">
                 <MapPin className="w-3 h-3 text-primary" />
                 Roca, NE
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs bg-secondary rounded-full px-3 py-1.5">
-                <Truck className="w-3 h-3 text-primary" />
-                {vehicleRec.split(' ').slice(0, 3).join(' ')}
               </span>
             </div>
 
