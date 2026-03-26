@@ -270,6 +270,21 @@ export function generatePickupEmail(recipient: EmailRecipient): string {
                 &mdash; Nebraska Rare Goods Support Team
               </p>
 
+              <hr style="border: none; border-top: 2px solid #f5f1e7; margin: 24px 0;" />
+
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td align="center" style="padding: 0;">
+                    <p style="margin: 0 0 8px; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666;">
+                      Have questions? Need to make changes?
+                    </p>
+                    <a href="${APP_URL}/support" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 32px; border-radius: 4px; letter-spacing: 0.5px;">
+                      Chat with Husker Helper
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
             </td>
           </tr>
 
