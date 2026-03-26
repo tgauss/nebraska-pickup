@@ -399,34 +399,72 @@ export default function PickupPage() {
                 )}
               </>
             ) : (
-              /* Seg B (or Seg C with pickup items): per-item toggles with compact layout */
+              /* Seg B: must-pickup items + single toggle for all shippable items */
               <>
                 <div>
                   <h2 className="font-serif text-2xl sm:text-3xl font-bold">Your Items</h2>
                   <p className="text-muted-foreground text-sm mt-1">
-                    {customer.segment === 'B'
-                      ? 'Some items can be shipped instead of picked up. Choose below.'
-                      : 'Choose which items you\'d like to pick up.'
-                    }
+                    You&apos;re already picking up your seats — want to grab everything else while you&apos;re here?
                   </p>
                 </div>
 
                 {/* Pickup items (no toggle, must pick up) */}
                 {pickup_items.length > 0 && (
-                  <ItemCard items={pickup_items} title="Must Pick Up" compact />
+                  <ItemCard items={pickup_items} title="Picking Up In Person" compact />
                 )}
 
-                {/* Shippable items with toggle */}
-                {ship_items.length > 0 && (
-                  <ItemCard
-                    items={ship_items}
-                    title={customer.segment === 'B' ? 'Can Ship or Pick Up' : 'Your Items'}
-                    showToggle
-                    compact
-                    onToggle={(id, pref) => setShipPreferences(prev => ({ ...prev, [id]: pref }))}
-                    preferences={shipPreferences}
-                  />
-                )}
+                {/* Shippable items — single all-or-nothing choice */}
+                {ship_items.length > 0 && (() => {
+                  const allPickup = ship_items.every(i => shipPreferences[i.id] === 'pickup');
+                  return (
+                    <div className="space-y-3">
+                      <h3 className="font-serif text-lg font-bold text-foreground">Also In Your Order</h3>
+                      <ItemCard items={ship_items} title="" compact />
+
+                      {/* Nudge + single toggle */}
+                      <div className="bg-primary/5 border border-primary/20 rounded-sm p-4">
+                        <p className="text-sm font-medium text-foreground mb-1">
+                          Pick these up too?
+                        </p>
+                        <p className="text-xs text-muted-foreground mb-4">
+                          Since you&apos;re already coming for your seats, grab these items at the same time — no shipping wait!
+                        </p>
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => {
+                              const prefs: Record<string, 'ship' | 'pickup'> = {};
+                              ship_items.forEach(i => { prefs[i.id] = 'pickup'; });
+                              setShipPreferences(prefs);
+                            }}
+                            className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
+                              allPickup
+                                ? 'bg-primary text-primary-foreground'
+                                : 'border-2 border-border bg-card text-foreground hover:border-primary'
+                            }`}
+                          >
+                            <MapPin className="w-4 h-4" />
+                            Pick up with my seats
+                          </button>
+                          <button
+                            onClick={() => {
+                              const prefs: Record<string, 'ship' | 'pickup'> = {};
+                              ship_items.forEach(i => { prefs[i.id] = 'ship'; });
+                              setShipPreferences(prefs);
+                            }}
+                            className={`flex-1 py-3 rounded-sm font-sans font-semibold text-sm transition-colors flex items-center justify-center gap-2 ${
+                              !allPickup
+                                ? 'bg-accent text-accent-foreground'
+                                : 'border-2 border-border bg-card text-foreground hover:border-accent'
+                            }`}
+                          >
+                            <Truck className="w-4 h-4" />
+                            Ship to me later
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {customer.shipping_paid > 0 && (
                   <p className="text-xs text-muted-foreground text-center bg-secondary/50 rounded-sm px-3 py-2">
