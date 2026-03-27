@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { flushWrites, ensureHydrated } from '@/lib/local-data';
 import { createAdminClient } from '@/lib/supabase';
+import { sendConfirmationEmail } from '@/lib/email';
+import { getVehicleRecommendation } from '@/lib/types';
+import type { PickupSize } from '@/lib/types';
+import { getProductInfo } from '@/lib/products';
+import { getLabelByToken } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -240,6 +245,40 @@ export async function POST(
   });
 
   await flushWrites();
+
+  // Send confirmation email with receipt
+  if (customer.email) {
+    const items = db.getLineItemsByCustomer(customer.id);
+    const pickupItems = items
+      .filter(i => i.fulfillment_preference === 'pickup')
+      .map(i => {
+        const p = getProductInfo(i.item_name);
+        return { name: p?.shortName || i.item_name, qty: i.qty };
+      });
+    // Consolidate dupes
+    const consolidated: Array<{ name: string; qty: number }> = [];
+    for (const item of pickupItems) {
+      const existing = consolidated.find(c => c.name === item.name);
+      if (existing) existing.qty += item.qty;
+      else consolidated.push({ ...item });
+    }
+
+    const label = getLabelByToken(token);
+    const vehicleRec = getVehicleRecommendation(customer.size as PickupSize);
+
+    sendConfirmationEmail({
+      name: customer.name,
+      email: customer.email,
+      token: customer.token,
+      pickupItems: consolidated,
+      vehicleRec,
+      day: slot.day,
+      time: slot.time,
+      label: label?.label || '',
+      pickupPageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://huskerpickup.raregoods.com'}/pickup/${token}`,
+      isReschedule,
+    }).catch(err => console.error('Confirmation email error:', err));
+  }
 
   return NextResponse.json({
     success: true,

@@ -566,6 +566,215 @@ Go Big Red!
 `.trim();
 }
 
+interface ConfirmationRecipient extends EmailRecipient {
+  day: string;
+  time: string;
+  label: string;
+  pickupPageUrl: string;
+  isReschedule: boolean;
+}
+
+/**
+ * Generate booking confirmation email
+ */
+export function generateConfirmationEmail(r: ConfirmationRecipient): string {
+  const firstName = r.name.split(' ')[0];
+  const dateMap: Record<string, string> = {
+    Thursday: 'Thursday, April 16',
+    Friday: 'Friday, April 17',
+    Saturday: 'Saturday, April 18',
+  };
+  const displayDate = dateMap[r.day] || r.day;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(r.email)}`;
+
+  const itemRows = r.pickupItems.map(item => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#1a1a1a;">${item.name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">${item.qty}</td>
+    </tr>`).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pickup Confirmed</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">Your Devaney pickup is ${r.isReschedule ? 'rescheduled' : 'confirmed'} for ${displayDate} at ${r.time}. Save this email as your receipt.</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<!-- HEADER -->
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<!-- GREEN CONFIRMATION BAR -->
+<tr><td style="background-color:#16a34a;padding:16px 32px;text-align:center;">
+<p style="margin:0;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;">
+&#10003; Pickup ${r.isReschedule ? 'Rescheduled' : 'Confirmed'}
+</p>
+</td></tr>
+
+<!-- MAIN -->
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;text-align:center;">
+${r.isReschedule ? 'Updated' : 'You\'re all set'}, ${firstName}!
+</h1>
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:15px;color:#666;text-align:center;line-height:1.5;">
+${r.isReschedule ? 'Your pickup has been rescheduled. Here are your updated details.' : 'Your pickup is confirmed. Save this email — it\'s your receipt.'}
+</p>
+
+<!-- PICKUP CARD -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:2px solid #e5e5e5;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+<tr><td style="padding:24px;text-align:center;">
+
+<!-- LABEL -->
+${r.label ? `<div style="display:inline-block;background-color:#1a1a1a;color:#ffffff;font-family:Arial,sans-serif;font-size:32px;font-weight:900;padding:16px 24px;border-radius:8px;letter-spacing:2px;margin-bottom:16px;">${r.label}</div><br/>` : ''}
+
+<!-- QR CODE -->
+<img src="${APP_URL}/api/pickup/${r.token}/qr" alt="Pickup QR Code" width="180" height="180" style="display:block;margin:12px auto;border:1px solid #e5e5e5;border-radius:4px;" />
+
+<p style="margin:12px 0 4px;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#1a1a1a;">${r.name}</p>
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:13px;color:#666;">Show this QR code at pickup</p>
+
+<!-- DATE/TIME -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td style="padding:12px 16px;background-color:#f5f1e7;border-radius:4px;text-align:center;">
+<p style="margin:0 0 2px;font-family:Arial,sans-serif;font-size:16px;font-weight:700;color:#1a1a1a;">${displayDate}</p>
+<p style="margin:0;font-family:Arial,sans-serif;font-size:20px;font-weight:700;color:#d00000;">${r.time}</p>
+<p style="margin:4px 0 0;font-family:Georgia,serif;font-size:12px;color:#666;">30-minute pickup window</p>
+</td></tr>
+</table>
+
+</td></tr>
+</table>
+
+<!-- IMPORTANT BOX -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#fff8f0;border:1px solid #fed7aa;border-radius:8px;margin-bottom:24px;">
+<tr><td style="padding:16px;">
+<p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:1px;">Save This Email</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+This email is your pickup receipt. Screenshot the QR code above or show this email on your phone when you arrive. You can also send a friend or family member with this receipt to pick up on your behalf.
+</p>
+</td></tr>
+</table>
+
+<!-- LOCATION -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="padding:12px 16px;background-color:#1a1a1a;border-radius:4px;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;">Pickup Location</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#ffffff;">2410 Production Dr, Unit 4<br/>Roca, NE 68430</p>
+<a href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430" style="font-family:Georgia,serif;font-size:13px;color:#d00000;margin-top:6px;display:inline-block;">Get Directions &rarr;</a>
+</td></tr>
+</table>
+
+<!-- ITEMS -->
+<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">Your Items</h2>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #e5e5e5;border-radius:4px;overflow:hidden;margin-bottom:24px;">
+<tr style="background-color:#f5f1e7;">
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;">Item</td>
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;text-align:center;">Qty</td>
+</tr>
+${itemRows}
+</table>
+
+<!-- VEHICLE -->
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:14px;color:#666;line-height:1.5;">
+&#128663; <strong>Vehicle:</strong> ${r.vehicleRec}<br/>
+Our team will be there to help load. Dress comfortably — pickup is in a warehouse.
+</p>
+
+<!-- VIEW PICKUP PAGE BUTTON -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${r.pickupPageUrl}" style="display:inline-block;background-color:#1a1a1a;color:#ffffff;font-family:Arial,sans-serif;font-size:14px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:50px;">View My Pickup Page</a>
+</td></tr>
+</table>
+
+<p style="margin:24px 0 0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;text-align:center;">
+See you there &mdash; Go Big Red! &#127805;
+</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">
+&mdash; Nebraska Rare Goods
+</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+/**
+ * Send booking confirmation email + CC to team
+ */
+export async function sendConfirmationEmail(r: ConfirmationRecipient): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  const firstName = r.name.split(' ')[0];
+  const dateMap: Record<string, string> = { Thursday: 'Thursday, April 16', Friday: 'Friday, April 17', Saturday: 'Saturday, April 18' };
+  const displayDate = dateMap[r.day] || r.day;
+
+  const subject = r.isReschedule
+    ? `${firstName}, your pickup is rescheduled — ${displayDate} at ${r.time}`
+    : `Confirmed! ${firstName}, your Devaney pickup is ${displayDate} at ${r.time}`;
+
+  const html = generateConfirmationEmail(r);
+  const text = `${r.isReschedule ? 'RESCHEDULED' : 'CONFIRMED'}: Your Devaney Pickup
+
+Hey ${firstName},
+
+Your pickup is ${r.isReschedule ? 'rescheduled' : 'confirmed'}:
+  ${displayDate} at ${r.time}
+  ${r.label ? 'Label: ' + r.label : ''}
+
+Location: 2410 Production Dr, Unit 4, Roca, NE 68430
+Directions: https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430
+
+Your items:
+${r.pickupItems.map(i => '  - ' + i.qty + 'x ' + i.name).join('\n')}
+
+Vehicle: ${r.vehicleRec}
+
+View your pickup page: ${r.pickupPageUrl}
+
+Show the QR code on your pickup page when you arrive. You can also send a friend or family member with your receipt.
+
+Go Big Red!
+- Nebraska Rare Goods`;
+
+  try {
+    const pm = getClient();
+    const result = await pm.sendEmail({
+      From: FROM_EMAIL,
+      To: r.email,
+      Cc: 'taylor@raregoods.com, support@raregoods.com',
+      Subject: subject,
+      HtmlBody: html,
+      TextBody: text,
+      TrackOpens: true,
+      TrackLinks: Models.LinkTrackingOptions.HtmlAndText,
+      Tag: r.isReschedule ? 'pickup-rescheduled' : 'pickup-confirmed',
+      Metadata: { customer_token: r.token, customer_name: r.name },
+      MessageStream: 'outbound',
+    });
+    return { success: true, messageId: result.MessageID };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
 export type EmailTemplate = 'initial' | 'reminder';
 
 /**
