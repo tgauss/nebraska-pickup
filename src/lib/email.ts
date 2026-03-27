@@ -824,12 +824,12 @@ You can <strong>pick up near Lincoln at no additional cost</strong> and get your
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 <tr>
 <td style="padding:8px 12px;text-align:center;width:50%;">
-<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#16a34a;">&#10003; Pick Up</p>
-<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">Get your items right away<br/>No extra cost</p>
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#16a34a;">&#10003; Pick Up (soonest)</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">April 16&ndash;18 near Lincoln<br/>No extra cost</p>
 </td>
 <td style="padding:8px 12px;text-align:center;width:50%;border-left:1px solid #d1d5db;">
 <p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#666;">Ship to Me</p>
-<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">Arrives in a few weeks<br/>No action needed</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">A few weeks later<br/>No action needed</p>
 </td>
 </tr>
 </table>
