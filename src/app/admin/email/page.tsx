@@ -57,7 +57,7 @@ export default function EmailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder'>('initial');
+  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation'>('initial');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
@@ -210,7 +210,18 @@ export default function EmailPage() {
               emailTemplate === 'reminder' ? 'bg-amber-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
             }`}
           >
-            Reminder (Not Booked)
+            Reminder
+          </button>
+          <button
+            onClick={() => {
+              setEmailTemplate('confirmation');
+              setStatusFilter('booked');
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              emailTemplate === 'confirmation' ? 'bg-green-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            Confirmation Receipt
           </button>
         </div>
 

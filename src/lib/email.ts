@@ -775,7 +775,7 @@ Go Big Red!
   }
 }
 
-export type EmailTemplate = 'initial' | 'reminder';
+export type EmailTemplate = 'initial' | 'reminder' | 'confirmation';
 
 /**
  * Send an email using the specified template

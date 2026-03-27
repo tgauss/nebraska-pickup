@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail, generateReminderEmail } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail } from '@/lib/email';
 import type { EmailTemplate } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail, template: templateName } = body;
-  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : 'initial';
+  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : templateName === 'confirmation' ? 'confirmation' : 'initial';
 
   // Preview: return HTML for a specific customer
   if (action === 'preview') {
@@ -169,7 +169,25 @@ export async function POST(request: Request) {
     const vehicleRec = getVehicleRecommendation(customer.size as PickupSize);
 
     const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems, vehicleRec };
-    const html = template === 'reminder' ? generateReminderEmail(recipient) : generatePickupEmail(recipient);
+
+    let html: string;
+    if (template === 'confirmation') {
+      const booking = db.getBookingByCustomer(customer.id);
+      const { getLabelByToken } = await import('@/lib/labels');
+      const label = getLabelByToken(customer.token);
+      html = generateConfirmationEmail({
+        ...recipient,
+        day: booking?.time_slots?.day || 'Friday',
+        time: booking?.time_slots?.time || '10:00am',
+        label: label?.label || 'B01',
+        pickupPageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://huskerpickup.raregoods.com'}/pickup/${customer.token}`,
+        isReschedule: false,
+      });
+    } else if (template === 'reminder') {
+      html = generateReminderEmail(recipient);
+    } else {
+      html = generatePickupEmail(recipient);
+    }
 
     return NextResponse.json({ html, to: customer.email, name: customer.name });
   }
