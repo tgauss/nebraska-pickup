@@ -783,7 +783,7 @@ export type EmailTemplate = 'initial' | 'reminder' | 'confirmation';
 export async function sendPickupEmail(recipient: EmailRecipient, template: EmailTemplate = 'initial'): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const firstName = recipient.name.split(' ')[0];
 
-  const templates = {
+  const templates: Record<string, { subject: string; html: string; text: string; tag: string }> = {
     initial: {
       subject: `${firstName}, your Devaney seats are ready — schedule your pickup`,
       html: generatePickupEmail(recipient),
@@ -798,7 +798,7 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
     },
   };
 
-  const tmpl = templates[template];
+  const tmpl = templates[template] || templates.initial;
 
   try {
     const pm = getClient();
