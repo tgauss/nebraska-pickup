@@ -531,7 +531,7 @@ function RecipientRow({ recipient, selected, active, onToggle, onPreview }: {
       </div>
 
       <div className="shrink-0 text-right">
-        <p className="text-[11px] text-gray-500">{recipient.pickupItemCount} items</p>
+        <p className="text-[11px] text-gray-500">{(recipient.pickupItemCount + recipient.shipItemCount) || 0} items</p>
         <p className="text-[10px] text-gray-400">Seg {recipient.segment}</p>
       </div>
     </div>

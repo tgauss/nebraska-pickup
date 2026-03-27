@@ -110,7 +110,7 @@ export async function GET() {
         pickupItemCount: pickupRequired,
         pickupRequired: pickupRequired > 0,
         shipItemCount: shipItems.reduce((s, i) => s + i.qty, 0),
-        pickupItemNames: [...new Set(pickupItems.map(i => {
+        pickupItemNames: [...new Set((pickupRequired > 0 ? pickupItems : shipItems).map(i => {
           const p = getProductInfo(i.item_name);
           return p?.shortName || i.item_name;
         }))],
@@ -160,15 +160,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Customer not found' }, { status: 404 });
     }
     const items = db.getLineItemsByCustomer(customer.id);
-    const pickupItems = items
-      .filter(i => i.item_type === 'pickup')
+    const pickupTypeItems = items.filter(i => i.item_type === 'pickup');
+    const shipTypeItems = items.filter(i => i.item_type === 'ship');
+    // For Seg C, show their ship items since that's all they have
+    const displayItems = (template === 'seg_c' && pickupTypeItems.length === 0 ? shipTypeItems : pickupTypeItems)
       .map(i => {
         const p = getProductInfo(i.item_name);
         return { name: p?.shortName || i.item_name, qty: i.qty };
       });
+    // Consolidate dupes
+    const consolidated: typeof displayItems = [];
+    for (const item of displayItems) {
+      const existing = consolidated.find(c => c.name === item.name);
+      if (existing) existing.qty += item.qty;
+      else consolidated.push({ ...item });
+    }
     const vehicleRec = getVehicleRecommendation(customer.size as PickupSize);
 
-    const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems, vehicleRec };
+    const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems: consolidated, vehicleRec };
 
     let html: string;
     if (template === 'seg_c') {
@@ -205,8 +214,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No customer to preview' }, { status: 404 });
     }
     const items = db.getLineItemsByCustomer(customer.id);
+    const hasPickupType = items.some(i => i.item_type === 'pickup');
     const pickupItems = items
-      .filter(i => i.item_type === 'pickup')
+      .filter(i => template === 'seg_c' && !hasPickupType ? i.item_type === 'ship' : i.item_type === 'pickup')
       .map(i => {
         const p = getProductInfo(i.item_name);
         return { name: p?.shortName || i.item_name, qty: i.qty };
@@ -241,8 +251,9 @@ export async function POST(request: Request) {
       }
 
       const items = db.getLineItemsByCustomer(customer.id);
+      const hasPickupType = items.some(i => i.item_type === 'pickup');
       const pickupItems = items
-        .filter(i => i.item_type === 'pickup')
+        .filter(i => template === 'seg_c' && !hasPickupType ? i.item_type === 'ship' : i.item_type === 'pickup')
         .map(i => {
           const p = getProductInfo(i.item_name);
           return { name: p?.shortName || i.item_name, qty: i.qty };
