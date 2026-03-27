@@ -57,6 +57,7 @@ export default function EmailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder'>('initial');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
@@ -80,14 +81,14 @@ export default function EmailPage() {
     const res = await fetch('/api/admin/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'preview', customerIds: [recipient.id] }),
+      body: JSON.stringify({ action: 'preview', customerIds: [recipient.id], template: emailTemplate }),
     });
     if (res.ok) {
       const d = await res.json();
       setPreviewHtml(d.html);
     }
     setPreviewLoading(false);
-  }, []);
+  }, [emailTemplate]);
 
   useEffect(() => {
     if (data && !activePreviewId) {
@@ -103,7 +104,7 @@ export default function EmailPage() {
     const res = await fetch('/api/admin/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'test', testEmail: testEmail.trim(), customerIds: [activePreviewId] }),
+      body: JSON.stringify({ action: 'test', testEmail: testEmail.trim(), customerIds: [activePreviewId], template: emailTemplate }),
     });
     const d = await res.json();
     setTestResult(d.success ? `Test sent to ${testEmail} (as ${previewName})` : `Failed: ${d.error}`);
@@ -118,7 +119,7 @@ export default function EmailPage() {
     const res = await fetch('/api/admin/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'send', customerIds: [...selectedIds] }),
+      body: JSON.stringify({ action: 'send', customerIds: [...selectedIds], template: emailTemplate }),
     });
     const d = await res.json();
     setSendResult({ sent: d.sent, failed: d.failed });
@@ -187,26 +188,53 @@ export default function EmailPage() {
         </button>
       </div>
 
-      {/* Segment toggle */}
-      <div className="flex items-center gap-2">
-        <Filter className="w-4 h-4 text-gray-400" />
-        {[
-          { key: 'pickup_required' as const, label: 'Pickup Required', count: data.pickup_required_count, color: 'text-red-600' },
-          { key: 'pickup_optional' as const, label: 'Pickup Optional (Seg C)', count: data.pickup_optional_count, color: 'text-amber-600' },
-          { key: 'all' as const, label: 'All', count: data.total, color: 'text-gray-600' },
-        ].map(seg => (
+      {/* Template + Segment */}
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Template selector */}
+        <div className="flex items-center gap-2">
+          <Mail className="w-4 h-4 text-gray-400" />
           <button
-            key={seg.key}
-            onClick={() => { setSegmentFilter(seg.key); setSearchQuery(''); }}
+            onClick={() => { setEmailTemplate('initial'); }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              segmentFilter === seg.key
-                ? 'bg-gray-900 text-white'
-                : 'bg-white border text-gray-600 hover:bg-gray-50'
+              emailTemplate === 'initial' ? 'bg-primary text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
             }`}
           >
-            {seg.label} <span className="opacity-60">({seg.count})</span>
+            Initial Outreach
           </button>
-        ))}
+          <button
+            onClick={() => {
+              setEmailTemplate('reminder');
+              setStatusFilter('not_booked');
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              emailTemplate === 'reminder' ? 'bg-amber-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            Reminder (Not Booked)
+          </button>
+        </div>
+
+        {/* Segment filter */}
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-gray-400" />
+          {[
+            { key: 'pickup_required' as const, label: 'Pickup Required', count: data.pickup_required_count },
+            { key: 'pickup_optional' as const, label: 'Seg C', count: data.pickup_optional_count },
+            { key: 'all' as const, label: 'All', count: data.total },
+          ].map(seg => (
+            <button
+              key={seg.key}
+              onClick={() => { setSegmentFilter(seg.key); setSearchQuery(''); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                segmentFilter === seg.key
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-white border text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {seg.label} <span className="opacity-60">({seg.count})</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Engagement funnel */}

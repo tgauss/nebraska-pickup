@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail, generateReminderEmail } from '@/lib/email';
+import type { EmailTemplate } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
 import { getProductInfo } from '@/lib/products';
@@ -145,7 +146,8 @@ export async function GET() {
 export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
-  const { action, customerIds, testEmail } = body;
+  const { action, customerIds, testEmail, template: templateName } = body;
+  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : 'initial';
 
   // Preview: return HTML for a specific customer
   if (action === 'preview') {
@@ -166,13 +168,8 @@ export async function POST(request: Request) {
       });
     const vehicleRec = getVehicleRecommendation(customer.size as PickupSize);
 
-    const html = generatePickupEmail({
-      name: customer.name,
-      email: customer.email,
-      token: customer.token,
-      pickupItems,
-      vehicleRec,
-    });
+    const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems, vehicleRec };
+    const html = template === 'reminder' ? generateReminderEmail(recipient) : generatePickupEmail(recipient);
 
     return NextResponse.json({ html, to: customer.email, name: customer.name });
   }
@@ -202,7 +199,7 @@ export async function POST(request: Request) {
       token: customer.token,
       pickupItems,
       vehicleRec,
-    });
+    }, template);
 
     return NextResponse.json(result);
   }
@@ -238,7 +235,7 @@ export async function POST(request: Request) {
         token: customer.token,
         pickupItems,
         vehicleRec,
-      });
+      }, template);
 
       results.push({
         name: customer.name,

@@ -374,18 +374,234 @@ Go Big Red!
 /**
  * Send a single pickup scheduling email via Postmark
  */
-export async function sendPickupEmail(recipient: EmailRecipient): Promise<{ success: boolean; messageId?: string; error?: string }> {
+/**
+ * Generate reminder email HTML for customers who haven't booked yet
+ */
+export function generateReminderEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  const itemRows = recipient.pickupItems.map(item => `
+    <tr>
+      <td style="padding: 8px 12px; border-bottom: 1px solid #e5e5e5; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #1a1a1a;">
+        ${item.name}
+      </td>
+      <td style="padding: 8px 12px; border-bottom: 1px solid #e5e5e5; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666; text-align: center;">
+        ${item.qty}
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reminder: Schedule Your Devaney Pickup</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f1e7; font-family: 'Source Serif 4', Georgia, serif;">
+
+  <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+    ${firstName}, you still need to schedule your pickup time. Spots are filling up — don't miss out.
+  </div>
+
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f1e7;">
+    <tr>
+      <td align="center" style="padding: 24px 16px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%;">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color: #1a1a1a; padding: 20px 32px; border-radius: 8px 8px 0 0; text-align: center;">
+              <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display: block; margin: 0 auto 8px; width: 40px; height: auto;" />
+              <span style="font-family: 'Oswald', Arial, sans-serif; font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase;">Nebraska Rare Goods</span>
+            </td>
+          </tr>
+
+          <!-- MAIN CONTENT -->
+          <tr>
+            <td style="background-color: #ffffff; padding: 32px;">
+
+              <h1 style="margin: 0 0 8px; font-family: 'Oswald', Arial, sans-serif; font-size: 26px; font-weight: 700; color: #1a1a1a;">
+                Hey ${firstName}, quick reminder!
+              </h1>
+              <p style="margin: 0 0 20px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #1a1a1a; line-height: 1.6;">
+                We noticed you haven&rsquo;t scheduled your Devaney seats pickup yet. Spots are filling up fast &mdash; make sure you grab a time that works for you before they&rsquo;re gone!
+              </p>
+
+              <!-- URGENT CTA -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 24px;">
+                <tr>
+                  <td style="background-color: #d00000; border-radius: 8px; padding: 24px; text-align: center;">
+                    <p style="margin: 0 0 4px; font-family: 'Oswald', Arial, sans-serif; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px;">
+                      &#9888; Pickup Scheduling Required
+                    </p>
+                    <p style="margin: 0 0 16px; font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; color: #ffffff; line-height: 1.4;">
+                      Time slots are limited. Please schedule now.
+                    </p>
+                    <p style="margin: 0 0 12px; font-size: 28px; color: rgba(255,255,255,0.8);">&#9660;</p>
+                    <a href="${pickupUrl}" style="display: inline-block; background-color: #ffffff; color: #d00000; font-family: 'Oswald', Arial, sans-serif; font-size: 16px; font-weight: 700; text-decoration: none; padding: 16px 44px; border-radius: 50px; letter-spacing: 0.5px; text-transform: uppercase;">
+                      Schedule My Pickup Now
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 24px; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666; text-align: center; line-height: 1.5;">
+                Or copy this link: <a href="${pickupUrl}" style="color: #d00000; word-break: break-all;">${pickupUrl}</a>
+              </p>
+
+              <hr style="border: none; border-top: 2px solid #f5f1e7; margin: 24px 0;" />
+
+              <!-- YOUR ITEMS -->
+              <h2 style="margin: 0 0 12px; font-family: 'Oswald', Arial, sans-serif; font-size: 18px; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: 1px;">
+                Your Items Waiting for You
+              </h2>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border: 1px solid #e5e5e5; border-radius: 4px; overflow: hidden; margin-bottom: 24px;">
+                <tr style="background-color: #f5f1e7;">
+                  <td style="padding: 8px 12px; font-family: 'Oswald', Arial, sans-serif; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 1px;">Item</td>
+                  <td style="padding: 8px 12px; font-family: 'Oswald', Arial, sans-serif; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 1px; text-align: center;">Qty</td>
+                </tr>
+                ${itemRows}
+              </table>
+
+              <!-- PICKUP DETAILS -->
+              <h2 style="margin: 0 0 12px; font-family: 'Oswald', Arial, sans-serif; font-size: 18px; font-weight: 600; color: #1a1a1a; text-transform: uppercase; letter-spacing: 1px;">
+                Pickup Details
+              </h2>
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom: 16px;">
+                <tr>
+                  <td style="padding: 12px 16px; background-color: #f5f1e7; border-radius: 4px; border-left: 4px solid #d00000;">
+                    <p style="margin: 0 0 4px; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; color: #1a1a1a;">April 16&ndash;18, 2026</p>
+                    <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 13px; color: #666;">Thursday 12pm&ndash;8pm &middot; Friday &amp; Saturday 10am&ndash;8pm</p>
+                  </td>
+                </tr>
+                <tr><td style="height: 8px;"></td></tr>
+                <tr>
+                  <td style="padding: 12px 16px; background-color: #1a1a1a; border-radius: 4px;">
+                    <p style="margin: 0 0 4px; font-family: 'Oswald', Arial, sans-serif; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Location</p>
+                    <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; color: #ffffff;">
+                      2410 Production Dr, Unit 4 &middot; Roca, NE 68430
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <hr style="border: none; border-top: 2px solid #f5f1e7; margin: 24px 0;" />
+
+              <p style="margin: 0 0 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; color: #1a1a1a; line-height: 1.6;">
+                Don&rsquo;t miss out on bringing home your piece of Husker history. We&rsquo;ve got your items staged and ready to go!
+              </p>
+              <p style="margin: 12px 0 0; font-family: 'Oswald', Arial, sans-serif; font-size: 18px; font-weight: 700; color: #d00000;">
+                Go Big Red!
+              </p>
+              <p style="margin: 8px 0 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: #666;">
+                &mdash; Nebraska Rare Goods Support Team
+              </p>
+
+              <hr style="border: none; border-top: 2px solid #f5f1e7; margin: 24px 0;" />
+
+              <!-- SUPPORT CTA -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f1e7; border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 20px; text-align: center;">
+                    <p style="margin: 0 0 12px; font-family: 'Source Serif 4', Georgia, serif; font-size: 13px; color: #666;">
+                      Questions or need help? Chat with our AI assistant.
+                    </p>
+                    <a href="${supportUrl}" style="display: inline-block; background-color: #1a1a1a; color: #ffffff; font-family: 'Oswald', Arial, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 32px; border-radius: 50px; letter-spacing: 0.5px;">
+                      Chat with Husker Helper &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color: #1a1a1a; padding: 24px 32px; border-radius: 0 0 8px 8px; text-align: center;">
+              <p style="margin: 0 0 4px; font-family: 'Source Serif 4', Georgia, serif; font-size: 12px; color: rgba(255,255,255,0.4);">
+                2410 Production Dr, Unit 4, Roca, NE 68430
+              </p>
+              <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 11px; color: rgba(255,255,255,0.3);">
+                You are receiving this because you purchased Devaney Center seating.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
+  `.trim();
+}
+
+export function generateReminderEmailText(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const itemList = recipient.pickupItems.map(i => `  - ${i.qty}x ${i.name}`).join('\n');
+
+  return `Hey ${firstName}, quick reminder!
+
+We noticed you haven't scheduled your Devaney seats pickup yet. Spots are filling up fast — grab a time before they're gone!
+
+SCHEDULE NOW: ${pickupUrl}
+
+YOUR ITEMS:
+${itemList}
+
+PICKUP DATES: April 16-18, 2026
+LOCATION: 2410 Production Dr, Unit 4, Roca, NE 68430
+
+Don't miss out on bringing home your piece of Husker history!
+
+Go Big Red!
+- Nebraska Rare Goods Support Team
+`.trim();
+}
+
+export type EmailTemplate = 'initial' | 'reminder';
+
+/**
+ * Send an email using the specified template
+ */
+export async function sendPickupEmail(recipient: EmailRecipient, template: EmailTemplate = 'initial'): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  const firstName = recipient.name.split(' ')[0];
+
+  const templates = {
+    initial: {
+      subject: `${firstName}, your Devaney seats are ready — schedule your pickup`,
+      html: generatePickupEmail(recipient),
+      text: generatePickupEmailText(recipient),
+      tag: 'pickup-scheduling',
+    },
+    reminder: {
+      subject: `${firstName}, don't forget — schedule your Devaney pickup (spots filling up)`,
+      html: generateReminderEmail(recipient),
+      text: generateReminderEmailText(recipient),
+      tag: 'pickup-reminder',
+    },
+  };
+
+  const tmpl = templates[template];
+
   try {
     const pm = getClient();
     const result = await pm.sendEmail({
       From: FROM_EMAIL,
       To: recipient.email,
-      Subject: `${recipient.name.split(' ')[0]}, your Devaney seats are ready — schedule your pickup`,
-      HtmlBody: generatePickupEmail(recipient),
-      TextBody: generatePickupEmailText(recipient),
+      Subject: tmpl.subject,
+      HtmlBody: tmpl.html,
+      TextBody: tmpl.text,
       TrackOpens: true,
       TrackLinks: Models.LinkTrackingOptions.HtmlAndText,
-      Tag: 'pickup-scheduling',
+      Tag: tmpl.tag,
       Metadata: {
         customer_token: recipient.token,
         customer_name: recipient.name,
