@@ -55,22 +55,22 @@
     {
       "day": "Thursday",
       "time": "5:00pm",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Thursday",
       "time": "5:30pm",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Thursday",
       "time": "6:00pm",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Thursday",
       "time": "6:30pm",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Thursday",
@@ -85,22 +85,22 @@
     {
       "day": "Friday",
       "time": "10:00am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Friday",
       "time": "10:30am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Friday",
       "time": "11:00am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Friday",
       "time": "11:30am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Friday",
@@ -185,22 +185,22 @@
     {
       "day": "Saturday",
       "time": "10:00am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Saturday",
       "time": "10:30am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Saturday",
       "time": "11:00am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Saturday",
       "time": "11:30am",
-      "capacity": 6
+      "capacity": 8
     },
     {
       "day": "Saturday",
