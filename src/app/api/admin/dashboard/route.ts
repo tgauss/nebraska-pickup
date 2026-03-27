@@ -47,6 +47,36 @@ export async function GET() {
     no_show: allBookings.filter(b => b.status === 'no_show').length,
   };
 
+  // Fulfillment decisions: who converted ship→pickup vs kept shipping
+  const bookedCustomerIds = new Set(allBookings.map(b => b.customer_id));
+  const shipItems = allItems.filter(i => i.item_type === 'ship');
+
+  const convertedToPickup = shipItems
+    .filter(i => i.fulfillment_preference === 'pickup')
+    .map(i => {
+      const cust = customers.find(c => c.id === i.customer_id);
+      return { name: cust?.name || '', email: cust?.email || '', item: i.item_name, qty: i.qty };
+    });
+
+  const keptAsShip = shipItems
+    .filter(i => i.fulfillment_preference === 'ship' && bookedCustomerIds.has(i.customer_id))
+    .map(i => {
+      const cust = customers.find(c => c.id === i.customer_id);
+      return { name: cust?.name || '', email: cust?.email || '', item: i.item_name, qty: i.qty };
+    });
+
+  // Group by customer
+  const groupByCustomer = (items: Array<{ name: string; email: string; item: string; qty: number }>) => {
+    const map = new Map<string, { name: string; email: string; items: Array<{ item: string; qty: number }> }>();
+    for (const i of items) {
+      if (!map.has(i.email)) map.set(i.email, { name: i.name, email: i.email, items: [] });
+      const existing = map.get(i.email)!.items.find(x => x.item === i.item);
+      if (existing) existing.qty += i.qty;
+      else map.get(i.email)!.items.push({ item: i.item, qty: i.qty });
+    }
+    return [...map.values()];
+  };
+
   return NextResponse.json({
     total_customers: customers.length,
     segments,
@@ -56,5 +86,9 @@ export async function GET() {
     seg_c_total: segCCustomers.length,
     shipping_savings: shippingSavings,
     time_slot_fill: time_slots,
+    fulfillment_decisions: {
+      converted_to_pickup: groupByCustomer(convertedToPickup),
+      kept_as_ship: groupByCustomer(keptAsShip),
+    },
   });
 }

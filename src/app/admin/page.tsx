@@ -28,6 +28,10 @@ interface DashboardData {
   seg_c_total: number;
   shipping_savings: number;
   time_slot_fill: TimeSlot[];
+  fulfillment_decisions: {
+    converted_to_pickup: Array<{ name: string; email: string; items: Array<{ item: string; qty: number }> }>;
+    kept_as_ship: Array<{ name: string; email: string; items: Array<{ item: string; qty: number }> }>;
+  };
 }
 
 export default function AdminDashboard() {
@@ -163,6 +167,77 @@ export default function AdminDashboard() {
           <StatusCard label="Total Bookings" count={data.total_bookings} icon={<Users className="w-4 h-4" />} color="text-gray-600" />
         </div>
       </div>
+
+      {/* Fulfillment Decisions */}
+      {data.fulfillment_decisions && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Converted to pickup */}
+          <div className="bg-white rounded-xl border p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Package className="w-5 h-5 text-green-600" />
+                Chose Pickup
+              </h2>
+              <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                {data.fulfillment_decisions.converted_to_pickup.length}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-3">Ship-eligible items these customers chose to pick up instead</p>
+            {data.fulfillment_decisions.converted_to_pickup.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">None yet</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {data.fulfillment_decisions.converted_to_pickup.map((c, i) => (
+                  <div key={i} className="flex items-start justify-between py-2 border-b border-gray-50 last:border-0">
+                    <div>
+                      <p className="text-sm font-medium">{c.name}</p>
+                      <p className="text-[11px] text-gray-400">{c.email}</p>
+                    </div>
+                    <div className="text-right">
+                      {c.items.map((item, j) => (
+                        <p key={j} className="text-xs text-green-700">{item.qty}x {item.item.split(' ').slice(0, 3).join(' ')}</p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Kept as ship */}
+          <div className="bg-white rounded-xl border p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Truck className="w-5 h-5 text-blue-600" />
+                Chose Ship
+              </h2>
+              <span className="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                {data.fulfillment_decisions.kept_as_ship.length}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mb-3">Booked customers who chose to have these items shipped instead</p>
+            {data.fulfillment_decisions.kept_as_ship.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">None yet</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {data.fulfillment_decisions.kept_as_ship.map((c, i) => (
+                  <div key={i} className="flex items-start justify-between py-2 border-b border-gray-50 last:border-0">
+                    <div>
+                      <p className="text-sm font-medium">{c.name}</p>
+                      <p className="text-[11px] text-gray-400">{c.email}</p>
+                    </div>
+                    <div className="text-right">
+                      {c.items.map((item, j) => (
+                        <p key={j} className="text-xs text-blue-700">{item.qty}x {item.item.split(' ').slice(0, 3).join(' ')}</p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
