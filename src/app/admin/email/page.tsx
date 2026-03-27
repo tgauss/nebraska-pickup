@@ -57,7 +57,7 @@ export default function EmailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation'>('initial');
+  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation' | 'seg_c'>('initial');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
@@ -214,6 +214,18 @@ export default function EmailPage() {
           </button>
           <button
             onClick={() => {
+              setEmailTemplate('seg_c');
+              setSegmentFilter('pickup_optional');
+              setStatusFilter('all');
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              emailTemplate === 'seg_c' ? 'bg-blue-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            Pickup Option (Local)
+          </button>
+          <button
+            onClick={() => {
               setEmailTemplate('confirmation');
               setStatusFilter('booked');
             }}
@@ -221,7 +233,7 @@ export default function EmailPage() {
               emailTemplate === 'confirmation' ? 'bg-green-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
             }`}
           >
-            Confirmation Receipt
+            Confirmation
           </button>
         </div>
 

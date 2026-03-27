@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail, generateSegCEmail } from '@/lib/email';
 import type { EmailTemplate } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail, template: templateName } = body;
-  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : templateName === 'confirmation' ? 'confirmation' : 'initial';
+  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : templateName === 'confirmation' ? 'confirmation' : templateName === 'seg_c' ? 'seg_c' : 'initial';
 
   // Preview: return HTML for a specific customer
   if (action === 'preview') {
@@ -171,7 +171,9 @@ export async function POST(request: Request) {
     const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems, vehicleRec };
 
     let html: string;
-    if (template === 'confirmation') {
+    if (template === 'seg_c') {
+      html = generateSegCEmail(recipient);
+    } else if (template === 'confirmation') {
       const booking = db.getBookingByCustomer(customer.id);
       const { getLabelByToken } = await import('@/lib/labels');
       const label = getLabelByToken(customer.token);

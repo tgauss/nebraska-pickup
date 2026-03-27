@@ -775,7 +775,158 @@ Go Big Red!
   }
 }
 
-export type EmailTemplate = 'initial' | 'reminder' | 'confirmation';
+/**
+ * Generate Seg C email — local ship customers offered pickup option
+ */
+export function generateSegCEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  const itemRows = recipient.pickupItems.map(item => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#1a1a1a;">${item.name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">${item.qty}</td>
+    </tr>`).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pickup Option Available</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">${firstName}, want your Devaney items sooner? Pick up near Lincoln at no extra charge — some fans have already signed up!</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<!-- HEADER -->
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<!-- MAIN -->
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;">
+Good news, ${firstName}!
+</h1>
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+Our team is processing orders <strong>April 16&ndash;18</strong> to prepare them for shipping. Since you&rsquo;re nearby, some fans have asked about picking up in person &mdash; so we&rsquo;re opening that option for you too.
+</p>
+<p style="margin:0 0 20px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+You can <strong>pick up near Lincoln at no additional cost</strong> and get your items the same day, or we&rsquo;ll ship them to you in a few weeks.
+</p>
+
+<!-- OPTIONS BOX -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="padding:20px;background-color:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+<td style="padding:8px 12px;text-align:center;width:50%;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#16a34a;">&#10003; Pick Up</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">Get your items right away<br/>No extra cost</p>
+</td>
+<td style="padding:8px 12px;text-align:center;width:50%;border-left:1px solid #d1d5db;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#666;">Ship to Me</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">Arrives in a few weeks<br/>No action needed</p>
+</td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+<!-- CTA -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center" style="padding:0 0 24px;">
+<a href="${pickupUrl}" style="display:inline-block;background-color:#16a34a;color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;letter-spacing:0.5px;">
+See My Options
+</a>
+</td></tr>
+</table>
+
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">
+Or copy this link: <a href="${pickupUrl}" style="color:#d00000;word-break:break-all;">${pickupUrl}</a>
+</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+
+<!-- ITEMS -->
+<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">Your Items</h2>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #e5e5e5;border-radius:4px;overflow:hidden;margin-bottom:24px;">
+<tr style="background-color:#f5f1e7;">
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;">Item</td>
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;text-align:center;">Qty</td>
+</tr>
+${itemRows}
+</table>
+
+<!-- PICKUP DETAILS -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:16px;">
+<tr><td style="padding:12px 16px;background-color:#f5f1e7;border-radius:4px;border-left:4px solid #16a34a;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:#1a1a1a;">Pickup: April 16&ndash;18, 2026</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:13px;color:#666;">2410 Production Dr, Unit 4, Roca, NE &middot; Near Lincoln</p>
+</td></tr>
+</table>
+
+<!-- SHIPPING NOTE -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="padding:12px 16px;background-color:#f9fafb;border:1px solid #e5e5e5;border-radius:4px;">
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;line-height:1.5;">
+<strong>Please note:</strong> Shipping charges are non-refundable as they have already been purchased and processed. Pickup is available at no additional cost as a convenience.
+</p>
+</td></tr>
+</table>
+
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;">
+We&rsquo;re excited to get these to you &mdash; whether you pick up or we ship!
+</p>
+<p style="margin:12px 0 0;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#d00000;">Go Big Red!</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;">&mdash; Nebraska Rare Goods</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<!-- FOOTER -->
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+export function generateSegCEmailText(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const itemList = recipient.pickupItems.map(i => `  - ${i.qty}x ${i.name}`).join('\n');
+  return `Good news, ${firstName}!
+
+Our team is processing orders April 16-18 to prepare them for shipping. Since you're nearby, some fans have asked about picking up in person — so we're opening that option for you too.
+
+You can pick up near Lincoln at no additional cost and get your items the same day, or we'll ship them to you in a few weeks.
+
+SEE YOUR OPTIONS: ${pickupUrl}
+
+YOUR ITEMS:
+${itemList}
+
+PICKUP: April 16-18, 2026
+LOCATION: 2410 Production Dr, Unit 4, Roca, NE (near Lincoln)
+
+Please note: Shipping charges are non-refundable as they have already been purchased and processed. Pickup is available at no additional cost as a convenience.
+
+Go Big Red!
+- Nebraska Rare Goods`.trim();
+}
+
+export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c';
 
 /**
  * Send an email using the specified template
@@ -795,6 +946,12 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
       html: generateReminderEmail(recipient),
       text: generateReminderEmailText(recipient),
       tag: 'pickup-reminder',
+    },
+    seg_c: {
+      subject: `${firstName}, want your Devaney items sooner? Pickup option now available`,
+      html: generateSegCEmail(recipient),
+      text: generateSegCEmailText(recipient),
+      tag: 'pickup-option-offered',
     },
   };
 

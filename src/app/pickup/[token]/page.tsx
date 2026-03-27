@@ -378,9 +378,9 @@ export default function PickupPage() {
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-5 rounded-sm font-sans font-semibold text-base transition-colors flex items-center justify-center gap-3"
                   >
                     <MapPin className="w-5 h-5" />
-                    I&apos;ll Pick Them Up
+                    I&apos;ll Pick Them Up (soonest option)
                   </button>
-                  <p className="text-xs text-muted-foreground text-center">Pick up at our warehouse near Lincoln — free, fast, no shipping wait</p>
+                  <p className="text-xs text-muted-foreground text-center">Pick up at our warehouse near Lincoln — free, no extra cost, get them right away</p>
 
                   <button
                     onClick={handleDeclinePickup}
@@ -388,9 +388,9 @@ export default function PickupPage() {
                     className="w-full border-2 border-border bg-card text-foreground px-6 py-5 rounded-sm font-sans font-semibold text-base hover:bg-secondary transition-colors flex items-center justify-center gap-3"
                   >
                     <Truck className="w-5 h-5" />
-                    Ship Them to Me
+                    Ship Them to Me (few weeks later)
                   </button>
-                  <p className="text-xs text-muted-foreground text-center">We&apos;ll ship your items to you</p>
+                  <p className="text-xs text-muted-foreground text-center">We&apos;ll ship your items to you — arrives in a few weeks</p>
                 </div>
 
                 {customer.shipping_paid > 0 && (
