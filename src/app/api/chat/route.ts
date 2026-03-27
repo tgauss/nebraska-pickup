@@ -292,6 +292,68 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  // ADMIN EMAIL: send a custom email reply to the customer
+  if (action === 'admin_email') {
+    const { customerEmail, customerName, subject, message: emailBody, customerId: emailCustId } = body;
+    if (!customerEmail || !emailBody?.trim()) {
+      return NextResponse.json({ error: 'Missing email or message' }, { status: 400 });
+    }
+
+    try {
+      const { ServerClient, Models } = await import('postmark');
+      const pm = new ServerClient(process.env.POSTMARK_API_TOKEN || '');
+      const fromEmail = process.env.EMAIL_FROM || 'Nebraska Rare Goods <support@raregoods.com>';
+      const firstName = (customerName || '').split(' ')[0] || 'there';
+
+      const htmlBody = `
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+<tr><td style="background-color:#ffffff;padding:32px;">
+<p style="margin:0 0 16px;font-size:16px;color:#1a1a1a;line-height:1.6;">Hey ${firstName},</p>
+<div style="font-size:15px;color:#1a1a1a;line-height:1.7;white-space:pre-wrap;">${emailBody.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}</div>
+<p style="margin:24px 0 0;font-size:14px;color:#666;">— Nebraska Rare Goods Support Team</p>
+</td></tr>
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+</table></td></tr></table></body></html>`;
+
+      const result = await pm.sendEmail({
+        From: fromEmail,
+        To: customerEmail,
+        Subject: subject || `Update on your Devaney pickup — ${firstName}`,
+        HtmlBody: htmlBody,
+        TextBody: `Hey ${firstName},\n\n${emailBody.trim()}\n\n— Nebraska Rare Goods Support Team`,
+        TrackOpens: true,
+        TrackLinks: Models.LinkTrackingOptions.HtmlAndText,
+        Tag: 'support-reply',
+        MessageStream: 'outbound',
+      });
+
+      // Log it
+      if (emailCustId) {
+        db.addActivityLog(emailCustId, 'admin_email_sent', {
+          subject,
+          messageId: result.MessageID,
+          to: customerEmail,
+        });
+        await flushWrites();
+      }
+
+      return NextResponse.json({ success: true, messageId: result.MessageID });
+    } catch (err) {
+      return NextResponse.json({ success: false, error: err instanceof Error ? err.message : 'Send failed' });
+    }
+  }
+
   return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
 }
 

@@ -4,7 +4,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   MessageCircle, User, AlertTriangle, CheckCircle, Send,
-  Loader2, RefreshCw, ExternalLink, Package
+  Loader2, RefreshCw, ExternalLink, Package, Mail, X
 } from 'lucide-react';
 
 interface Conversation {
@@ -35,6 +35,11 @@ export default function AdminChatPage() {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [replying, setReplying] = useState(false);
+  const [showEmailComposer, setShowEmailComposer] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailResult, setEmailResult] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchConversations = useCallback(async () => {
@@ -93,6 +98,39 @@ export default function AdminChatPage() {
     setReplyText('');
     setReplying(false);
     fetchConversations();
+  };
+
+  const handleSendEmail = async () => {
+    if (!activeConv || !emailBody.trim()) return;
+    setEmailSending(true);
+    setEmailResult(null);
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'admin_email',
+        customerEmail: activeConv.customerEmail,
+        customerName: activeConv.customerName,
+        customerId: activeConv.customerId,
+        subject: emailSubject || undefined,
+        message: emailBody,
+      }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setEmailResult('Email sent!');
+      setMessages(prev => [...prev, {
+        role: 'admin' as const,
+        content: `📧 Email sent: ${emailSubject || 'Update on your Devaney pickup'}\n\n${emailBody}`,
+        timestamp: new Date().toISOString(),
+      }]);
+      setEmailBody('');
+      setEmailSubject('');
+      setShowEmailComposer(false);
+    } else {
+      setEmailResult('Failed: ' + (data.error || 'Unknown error'));
+    }
+    setEmailSending(false);
   };
 
   const needsHumanCount = conversations.filter(c => c.needsHuman).length;
@@ -263,26 +301,80 @@ export default function AdminChatPage() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Admin reply */}
-                <div className="px-5 py-3 border-t bg-white shrink-0">
-                  <div className="flex gap-2">
+                {/* Email composer */}
+                {showEmailComposer && (
+                  <div className="px-5 py-4 border-t bg-gray-50 shrink-0 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-semibold">Email to {activeConv.customerName}</span>
+                        <span className="text-xs text-gray-400">({activeConv.customerEmail})</span>
+                      </div>
+                      <button onClick={() => setShowEmailComposer(false)} className="text-gray-400 hover:text-gray-600">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
                     <input
                       type="text"
-                      value={replyText}
-                      onChange={e => setReplyText(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && handleReply()}
-                      placeholder="Reply as team member..."
-                      className="flex-1 border rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      value={emailSubject}
+                      onChange={e => setEmailSubject(e.target.value)}
+                      placeholder="Subject (optional — defaults to 'Update on your Devaney pickup')"
+                      className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    <button
-                      onClick={handleReply}
-                      disabled={replying || !replyText.trim()}
-                      className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 shrink-0"
-                    >
-                      {replying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    </button>
+                    <textarea
+                      value={emailBody}
+                      onChange={e => setEmailBody(e.target.value)}
+                      placeholder="Write your message here... (will be wrapped in branded email template)"
+                      rows={5}
+                      className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-y"
+                    />
+                    {emailResult && (
+                      <p className={`text-xs ${emailResult.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>{emailResult}</p>
+                    )}
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => setShowEmailComposer(false)} className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                      <button
+                        onClick={handleSendEmail}
+                        disabled={emailSending || !emailBody.trim()}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
+                      >
+                        {emailSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                        Send Email
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Admin reply + email button */}
+                {!showEmailComposer && (
+                  <div className="px-5 py-3 border-t bg-white shrink-0">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={replyText}
+                        onChange={e => setReplyText(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleReply()}
+                        placeholder="Reply in chat..."
+                        className="flex-1 border rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      />
+                      <button
+                        onClick={handleReply}
+                        disabled={replying || !replyText.trim()}
+                        className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 shrink-0"
+                        title="Reply in chat"
+                      >
+                        {replying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      </button>
+                      <button
+                        onClick={() => { setShowEmailComposer(true); setEmailResult(null); }}
+                        className="w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 shrink-0"
+                        title="Send email to customer"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-white rounded-xl border p-12 text-center text-gray-400" style={{ height: '700px' }}>
