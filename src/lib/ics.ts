@@ -86,6 +86,7 @@ export function getSlotDate(day: string, time: string): Date {
     Thursday: '2026-04-16',
     Friday: '2026-04-17',
     Saturday: '2026-04-18',
+    May2: '2026-05-02',
   };
 
   const dateStr = dayMap[day];

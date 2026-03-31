@@ -583,6 +583,7 @@ export function generateConfirmationEmail(r: ConfirmationRecipient): string {
     Thursday: 'Thursday, April 16',
     Friday: 'Friday, April 17',
     Saturday: 'Saturday, April 18',
+    May2: 'Saturday, May 2',
   };
   const displayDate = dateMap[r.day] || r.day;
   const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(r.email)}`;
