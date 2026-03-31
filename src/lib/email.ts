@@ -927,7 +927,96 @@ Go Big Red!
 - Nebraska Rare Goods`.trim();
 }
 
-export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c';
+/**
+ * Generate alternate pickup day email for customers who said April doesn't work
+ */
+export function generateAlternateEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const alternateUrl = `${APP_URL}/pickup/alternate?email=${encodeURIComponent(recipient.email)}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Alternate Pickup Day</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">${firstName}, we heard you — we've opened an alternate pickup day on May 2nd just for you.</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;">
+Good news, ${firstName}!
+</h1>
+<p style="margin:0 0 20px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+Thank you for your patience as we worked with the university on an alternate pickup date as you requested. We&rsquo;re happy to let you know that we now have one available for you!
+</p>
+
+<!-- DATE CARD -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="background-color:#16a34a;border-radius:8px;padding:24px;text-align:center;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:2px;">
+Alternate Pickup Day
+</p>
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#ffffff;">
+Saturday, May 2, 2026
+</p>
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:14px;color:rgba(255,255,255,0.85);">
+10:00 AM &ndash; 4:00 PM &middot; Same location in Roca, NE
+</p>
+<p style="margin:0 0 12px;font-size:28px;color:rgba(255,255,255,0.8);">&#9660;</p>
+<a href="${alternateUrl}" style="display:inline-block;background-color:#ffffff;color:#16a34a;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;">
+Schedule My May 2nd Pickup
+</a>
+</td></tr>
+</table>
+
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">
+Or copy this link: <a href="${alternateUrl}" style="color:#d00000;word-break:break-all;">${alternateUrl}</a>
+</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+
+<!-- DETAILS -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:16px;">
+<tr><td style="padding:12px 16px;background-color:#1a1a1a;border-radius:4px;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;">Pickup Location</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#ffffff;">2410 Production Dr, Unit 4<br/>Roca, NE 68430</p>
+<a href="https://maps.google.com/?q=2410+Production+Drive+Unit+4+Roca+NE+68430" style="font-family:Georgia,serif;font-size:13px;color:#d00000;margin-top:6px;display:inline-block;">Get Directions &rarr;</a>
+</td></tr>
+</table>
+
+<p style="margin:0 0 0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;">
+This is a limited invite &mdash; spots are available on a first-come basis. If you can&rsquo;t make this date either, you&rsquo;re welcome to send a friend or family member with your pickup receipt.
+</p>
+<p style="margin:16px 0 0;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#d00000;">Go Big Red!</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;">&mdash; Nebraska Rare Goods</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate';
 
 /**
  * Send an email using the specified template
@@ -953,6 +1042,12 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
       html: generateSegCEmail(recipient),
       text: generateSegCEmailText(recipient),
       tag: 'pickup-option-offered',
+    },
+    alternate: {
+      subject: `Good news ${firstName} — alternate pickup day May 2nd is now available`,
+      html: generateAlternateEmail(recipient),
+      text: `Good news, ${firstName}!\n\nThank you for your patience as we worked with the university on an alternate pickup date. We now have one available for you!\n\nSaturday, May 2, 2026 — 10am to 4pm\n2410 Production Dr, Unit 4, Roca, NE\n\nSchedule here: ${APP_URL}/pickup/alternate?email=${encodeURIComponent(recipient.email)}\n\nSpots are limited. If you can't make this date either, you can send a friend or family member with your receipt.\n\nGo Big Red!\n- Nebraska Rare Goods`,
+      tag: 'alternate-pickup',
     },
   };
 
