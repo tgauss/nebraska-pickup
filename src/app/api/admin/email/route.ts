@@ -147,7 +147,7 @@ export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail, template: templateName } = body;
-  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : templateName === 'confirmation' ? 'confirmation' : templateName === 'seg_c' ? 'seg_c' : 'initial';
+  const template: EmailTemplate = templateName === 'reminder' ? 'reminder' : templateName === 'confirmation' ? 'confirmation' : templateName === 'seg_c' ? 'seg_c' : templateName === 'alternate' ? 'alternate' : 'initial';
 
   // Preview: return HTML for a specific customer
   if (action === 'preview') {
