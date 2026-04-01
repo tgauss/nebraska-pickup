@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail, generateSegCEmail } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail, generateSegCEmail, generateAlternateEmail } from '@/lib/email';
 import type { EmailTemplate } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -180,7 +180,9 @@ export async function POST(request: Request) {
     const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems: consolidated, vehicleRec };
 
     let html: string;
-    if (template === 'seg_c') {
+    if (template === 'alternate') {
+      html = generateAlternateEmail(recipient);
+    } else if (template === 'seg_c') {
       html = generateSegCEmail(recipient);
     } else if (template === 'confirmation') {
       const booking = db.getBookingByCustomer(customer.id);
@@ -237,16 +239,38 @@ export async function POST(request: Request) {
   // Send: batch send to selected customers
   if (action === 'send') {
     const ids: string[] = customerIds || [];
+    const force = body.force === true; // allow explicit override
     if (ids.length === 0) {
       return NextResponse.json({ error: 'No customers selected' }, { status: 400 });
     }
 
-    const results: Array<{ name: string; email: string; success: boolean; messageId?: string; error?: string }> = [];
+    // Check for already-sent emails with this template to prevent duplicates
+    const sb = createAdminClient();
+    let alreadySentEmails = new Set<string>();
+    if (sb && !force) {
+      const { data: priorSends } = await sb.from('activity_log')
+        .select('customers(email)')
+        .eq('action', 'email_sent');
+      alreadySentEmails = new Set(
+        (priorSends || []).map(s => {
+          const c = s.customers as unknown as { email: string } | { email: string }[] | null;
+          return Array.isArray(c) ? c[0]?.email : c?.email;
+        }).filter(Boolean).map(e => (e as string).toLowerCase())
+      );
+    }
+
+    const results: Array<{ name: string; email: string; success: boolean; messageId?: string; error?: string; skipped?: boolean }> = [];
 
     for (const id of ids) {
       const customer = db.getCustomerById(id);
       if (!customer || !customer.email) {
         results.push({ name: id, email: '', success: false, error: 'Customer not found or no email' });
+        continue;
+      }
+
+      // Skip if already sent this template (unless forced)
+      if (!force && template === 'initial' && alreadySentEmails.has(customer.email.toLowerCase())) {
+        results.push({ name: customer.name, email: customer.email, success: true, skipped: true, error: 'Already sent — skipped' });
         continue;
       }
 

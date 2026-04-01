@@ -57,7 +57,7 @@ export default function EmailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation' | 'seg_c'>('initial');
+  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate'>('initial');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
@@ -223,6 +223,17 @@ export default function EmailPage() {
             }`}
           >
             Pickup Option (Local)
+          </button>
+          <button
+            onClick={() => {
+              setEmailTemplate('alternate');
+              setStatusFilter('not_booked');
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              emailTemplate === 'alternate' ? 'bg-green-700 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            May 2nd Invite
           </button>
           <button
             onClick={() => {
