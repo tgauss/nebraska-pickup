@@ -124,13 +124,13 @@ export default function AdminDashboard() {
       <div className="bg-white rounded-xl border p-6">
         <h2 className="text-lg font-semibold mb-4">Time Slot Heatmap</h2>
         <div className="space-y-6">
-          {['Thursday', 'Friday', 'Saturday'].map(day => {
+          {['Thursday', 'Friday', 'Saturday', 'May2'].map(day => {
             const daySlots = data.time_slot_fill
               .filter(s => s.day === day)
               .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
             return (
               <div key={day}>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">{day}</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">{day === 'May2' ? 'Saturday, May 2 (Alternate)' : day}</h3>
                 <div className="flex flex-wrap gap-2">
                   {daySlots.map(slot => {
                     const pct = slot.capacity > 0 ? slot.current_bookings / slot.capacity : 0;

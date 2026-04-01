@@ -271,6 +271,66 @@
       "day": "Saturday",
       "time": "6:30pm",
       "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "10:00am",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "10:30am",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "11:00am",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "11:30am",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "12:00pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "12:30pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "1:00pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "1:30pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "2:00pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "2:30pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "3:00pm",
+      "capacity": 6
+    },
+    {
+      "day": "May2",
+      "time": "3:30pm",
+      "capacity": 6
     }
   ],
   "customers": [

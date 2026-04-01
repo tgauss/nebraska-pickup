@@ -142,7 +142,7 @@ export default function DayOfPage() {
 
       {/* Day selector */}
       <div className="flex gap-2">
-        {['Thursday', 'Friday', 'Saturday'].map(day => (
+        {['Thursday', 'Friday', 'Saturday', 'May2'].map(day => (
           <button
             key={day}
             onClick={() => setSelectedDay(day)}
@@ -152,7 +152,7 @@ export default function DayOfPage() {
                 : 'bg-white border hover:bg-gray-50'
             }`}
           >
-            {day}
+            {day === 'May2' ? 'May 2' : day}
           </button>
         ))}
       </div>
