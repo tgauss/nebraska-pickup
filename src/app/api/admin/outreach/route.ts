@@ -28,6 +28,7 @@ export async function GET() {
       const called = logs.some(l => l.action === 'phone_called');
       const note = logs.find(l => l.action === 'outreach_note');
 
+      const booking = allBookings.find(b => b.customer_id === c.id);
       return {
         id: c.id,
         name: c.name,
@@ -37,6 +38,8 @@ export async function GET() {
         state: c.state,
         segment: c.segment,
         hasBooked: bookedIds.has(c.id),
+        bookingDay: booking?.time_slots?.day || null,
+        bookingTime: booking?.time_slots?.time || null,
         pickupItems: pickupItems.map(i => `${i.qty}x ${i.item_name.split(' - ')[0].substring(0, 35)}`),
         pickupLink: `https://huskerpickup.raregoods.com/pickup/${c.token}`,
         smsText: `Hi ${c.name.split(' ')[0]}! This is Nebraska Rare Goods. Your Devaney seats order is ready for pickup April 16-18 near Lincoln, NE. Please use this link to schedule your pickup time: https://huskerpickup.raregoods.com/pickup/${c.token} — Questions? Reply here or visit huskerpickup.raregoods.com/support`,

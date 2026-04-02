@@ -15,6 +15,8 @@ interface OutreachCustomer {
   state: string;
   segment: string;
   hasBooked: boolean;
+  bookingDay: string | null;
+  bookingTime: string | null;
   pickupItems: string[];
   pickupLink: string;
   smsText: string;
@@ -105,7 +107,7 @@ export default function OutreachPage() {
                     <h3 className="font-semibold text-lg">{c.name}</h3>
                     {c.hasBooked && (
                       <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" /> Booked
+                        <CheckCircle className="w-3 h-3" /> Booked {c.bookingDay === 'May2' ? 'May 2' : c.bookingDay} {c.bookingTime}
                       </span>
                     )}
                     {c.texted && !c.hasBooked && (
@@ -121,13 +123,22 @@ export default function OutreachPage() {
                   </div>
                   <p className="text-sm text-gray-500">{c.city}, {c.state} &middot; Seg {c.segment}</p>
                 </div>
-                <a
-                  href={`tel:${c.phone}`}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
-                >
-                  <Phone className="w-4 h-4" />
-                  {c.phone}
-                </a>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => copyToClipboard(c.phone, c.id + '-phone')}
+                    className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  >
+                    {copied === c.id + '-phone' ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied === c.id + '-phone' ? 'Copied!' : 'Copy #'}
+                  </button>
+                  <a
+                    href={`tel:${c.phone}`}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
+                  >
+                    <Phone className="w-4 h-4" />
+                    {c.phone}
+                  </a>
+                </div>
               </div>
 
               {/* Items */}
