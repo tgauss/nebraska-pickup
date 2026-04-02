@@ -508,37 +508,51 @@ function RecipientRow({ recipient, selected, active, onToggle, onPreview }: {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-medium truncate">{recipient.name}</p>
-          {recipient.pickupRequired && (
-            <span title="Pickup required"><Package className="w-3 h-3 text-red-500 shrink-0" /></span>
+          {recipient.pickupRequired ? (
+            <span className="text-[9px] bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-medium shrink-0">Pickup Req</span>
+          ) : (
+            <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-medium shrink-0">Optional</span>
           )}
           {recipient.hasBooked && (
-            <span title="Booked"><CheckCircle className="w-3 h-3 text-green-500 shrink-0" /></span>
+            <span className="text-[9px] bg-green-50 text-green-700 px-1.5 py-0.5 rounded font-medium shrink-0 flex items-center gap-0.5">
+              <CheckCircle className="w-2.5 h-2.5" /> Booked
+            </span>
           )}
         </div>
         <p className="text-[11px] text-gray-400 truncate">{recipient.email}</p>
-      </div>
-
-      {/* Engagement indicators */}
-      <div className="shrink-0 flex items-center gap-1">
-        {recipient.emailSent && (
-          <span className={`w-4 h-4 rounded-full flex items-center justify-center ${recipient.emailOpened ? 'bg-green-100' : 'bg-blue-100'}`} title={recipient.emailOpened ? `Opened${recipient.openedAt ? ' ' + new Date(recipient.openedAt).toLocaleString() : ''}` : `Sent${recipient.sentAt ? ' ' + new Date(recipient.sentAt).toLocaleString() : ''}`}>
-            {recipient.emailOpened ? (
-              <MailOpen className="w-2.5 h-2.5 text-green-600" />
-            ) : (
-              <Mail className="w-2.5 h-2.5 text-blue-600" />
-            )}
-          </span>
-        )}
-        {recipient.emailClicked && (
-          <span className="w-4 h-4 rounded-full bg-purple-100 flex items-center justify-center" title={`Clicked${recipient.clickedAt ? ' ' + new Date(recipient.clickedAt).toLocaleString() : ''}`}>
-            <MousePointerClick className="w-2.5 h-2.5 text-purple-600" />
-          </span>
-        )}
-        {recipient.emailBounced && (
-          <span className="w-4 h-4 rounded-full bg-red-100 flex items-center justify-center" title="Bounced">
-            <AlertTriangle className="w-2.5 h-2.5 text-red-600" />
-          </span>
-        )}
+        {/* Engagement history line */}
+        <div className="flex items-center gap-2 mt-0.5">
+          {recipient.emailSent ? (
+            <>
+              <span className="text-[9px] text-blue-500 flex items-center gap-0.5">
+                <Mail className="w-2.5 h-2.5" /> Sent
+              </span>
+              {recipient.emailOpened && (
+                <span className="text-[9px] text-green-600 flex items-center gap-0.5">
+                  <MailOpen className="w-2.5 h-2.5" /> Opened
+                </span>
+              )}
+              {recipient.emailClicked && (
+                <span className="text-[9px] text-purple-600 flex items-center gap-0.5">
+                  <MousePointerClick className="w-2.5 h-2.5" /> Clicked
+                </span>
+              )}
+              {recipient.emailBounced && (
+                <span className="text-[9px] text-red-600 flex items-center gap-0.5">
+                  <AlertTriangle className="w-2.5 h-2.5" /> Bounced
+                </span>
+              )}
+              {recipient.emailOpened && !recipient.hasBooked && !recipient.emailClicked && (
+                <span className="text-[9px] text-amber-500 italic">Opened but didn&apos;t click</span>
+              )}
+              {recipient.emailClicked && !recipient.hasBooked && (
+                <span className="text-[9px] text-amber-500 italic">Clicked but didn&apos;t book</span>
+              )}
+            </>
+          ) : (
+            <span className="text-[9px] text-gray-400">Not emailed</span>
+          )}
+        </div>
       </div>
 
       <div className="shrink-0 text-right">
