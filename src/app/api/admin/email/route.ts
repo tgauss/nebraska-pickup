@@ -88,7 +88,15 @@ export async function GET() {
       if (!c.email) return false;
       const items = db.getLineItemsByCustomer(c.id);
       const hasPickup = items.some(i => i.item_type === 'pickup');
-      return hasPickup || c.offer_pickup_conversion;
+      if (!hasPickup && !c.offer_pickup_conversion) return false;
+      // Exclude customers on alternate track from main lists
+      const logs = db.getActivityLogByCustomer(c.id);
+      const excluded = logs.some(l => l.action === 'exclude_from_main_outreach');
+      if (excluded) return false;
+      // Exclude cancelled/refund customers
+      const cancelled = logs.some(l => l.action === 'order_cancelled_refund');
+      if (cancelled) return false;
+      return true;
     })
     .map(c => {
       const items = db.getLineItemsByCustomer(c.id);
