@@ -89,7 +89,7 @@ ${booking ? `BOOKED — ${booking.time_slots?.day} at ${booking.time_slots?.time
 https://huskerpickup.raregoods.com/pickup/${customer.token}
 
 ### Reschedule:
-${booking ? (booking.reschedule_count < 1 ? 'Can reschedule 1 time via their pickup page' : 'Already used their reschedule — needs team help to change') : 'N/A — not booked yet'}
+${booking ? (booking.reschedule_count < 2 ? `Can reschedule ${2 - booking.reschedule_count} more time(s) via their pickup page` : 'Already used both reschedules — needs team help to change') : 'N/A — not booked yet'}
 `;
     }
   }
@@ -149,8 +149,8 @@ ${booking ? (booking.reschedule_count < 1 ? 'Can reschedule 1 time via their pic
 ### Important Rules
 - Seats and benches MUST be picked up — they're too large to ship. This was clearly communicated during the ordering process: every customer had to check a box confirming they understood that seats are pickup-only before completing their purchase. No shipping charges were applied to seat orders.
 - Iron pieces and chair backs CAN be shipped
-- Customers can reschedule ONE time via their pickup page
-- After that, they need to contact the team
+- Customers can reschedule up to 2 times via their pickup page
+- After 2 reschedules, they need to contact the team
 
 ### Shipping Refunds & Costs
 - Shipping charges are NON-REFUNDABLE — they have already been purchased and processed
@@ -186,7 +186,7 @@ ${customerContext}
 - Direct them to their pickup page to schedule or reschedule
 - Answer general questions about the products, the event, directions
 - Help with shipping vs pickup decisions for iron/chair back items
-- **Reschedule their pickup** — if they ask to change their time, say something like "Sure, let me pull up the available times!" and include [SHOW_RESCHEDULE] at the end of your message. This will show them an interactive slot picker right in the chat. Only offer this if they currently have a booking AND haven't already used their one reschedule.
+- **Reschedule their pickup** — if they ask to change their time, say something like "Sure, let me pull up the available times!" and include [SHOW_RESCHEDULE] at the end of your message. This will show them an interactive slot picker right in the chat. Only offer this if they currently have a booking AND haven't already used both of their 2 reschedules.
 
 ### Support Contact
 - Email: support@raregoods.com — give this to anyone who asks for a way to contact the team

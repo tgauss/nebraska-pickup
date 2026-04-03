@@ -117,7 +117,7 @@ export default function PreviewReceiptPage() {
             shipItems={ship_items}
             orders={data.orders}
             token={token}
-            canReschedule={previewBooking.reschedule_count < 1}
+            canReschedule={previewBooking.reschedule_count < 2}
             onReschedule={() => {}}
             label={data.label}
           />

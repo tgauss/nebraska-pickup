@@ -158,7 +158,7 @@ export async function POST(
   const isReschedule = !!(sbBookingInfo?.exists || existingBooking);
   const currentRescheduleCount = sbBookingInfo?.rescheduleCount ?? existingBooking?.reschedule_count ?? 0;
 
-  if (isReschedule && currentRescheduleCount >= 1) {
+  if (isReschedule && currentRescheduleCount >= 2) {
     return NextResponse.json({
       error: 'Maximum reschedules reached. Please email the team to change your slot.',
     }, { status: 400 });

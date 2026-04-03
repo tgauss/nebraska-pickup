@@ -207,7 +207,7 @@ export default function PickupPage() {
             shipItems={ship_items}
             orders={data.orders}
             token={token}
-            canReschedule={booking.reschedule_count < 1}
+            canReschedule={booking.reschedule_count < 2}
             onReschedule={() => { setIsRescheduling(true); setStep('timeslot'); setSelectedSlot(null); scrollToTop(); }}
             label={data.label}
           />

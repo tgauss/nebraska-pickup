@@ -184,7 +184,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No existing booking to reschedule' }, { status: 400 });
     }
 
-    if (existingBooking.reschedule_count >= 1) {
+    if (existingBooking.reschedule_count >= 2) {
       return NextResponse.json({ error: 'Already used reschedule — needs team help' }, { status: 400 });
     }
 
