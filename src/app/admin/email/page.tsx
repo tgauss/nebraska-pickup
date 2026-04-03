@@ -199,7 +199,8 @@ export default function EmailPage() {
             { key: 'initial', label: 'Initial', color: 'bg-primary', filter: () => {} },
             { key: 'reminder', label: 'Reminder', color: 'bg-gray-700', filter: () => { setStatusFilter('not_booked'); } },
             { key: 'seg_c', label: 'Pickup Option', color: 'bg-blue-600', filter: () => { setSegmentFilter('pickup_optional'); } },
-            { key: 'alternate', label: 'May 2nd', color: 'bg-green-700', filter: () => { setStatusFilter('not_booked'); } },
+            { key: 'alternate', label: 'May 2nd Invite', color: 'bg-green-700', filter: () => { setStatusFilter('not_booked'); } },
+            { key: 'alternate_reminder', label: 'May 2nd Reminder', color: 'bg-green-800', filter: () => { setStatusFilter('not_booked'); } },
             { key: 'confirmation', label: 'Confirmation', color: 'bg-green-600', filter: () => { setStatusFilter('booked'); } },
           ].map(t => (
             <button

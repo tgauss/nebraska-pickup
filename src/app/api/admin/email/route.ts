@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
-import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail, generateSegCEmail, generateAlternateEmail, generateUrgentReminderEmail, generateUrgentSegCEmail } from '@/lib/email';
+import { sendPickupEmail, generatePickupEmail, generateReminderEmail, generateConfirmationEmail, generateSegCEmail, generateAlternateEmail, generateUrgentReminderEmail, generateUrgentSegCEmail, generateAlternateReminderEmail } from '@/lib/email';
 import type { EmailTemplate } from '@/lib/email';
 import { getVehicleRecommendation } from '@/lib/types';
 import type { PickupSize } from '@/lib/types';
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail, template: templateName } = body;
-  const templateMap: Record<string, EmailTemplate> = { reminder: 'reminder', confirmation: 'confirmation', seg_c: 'seg_c', alternate: 'alternate', urgent_reminder: 'urgent_reminder', urgent_seg_c: 'urgent_seg_c' };
+  const templateMap: Record<string, EmailTemplate> = { reminder: 'reminder', confirmation: 'confirmation', seg_c: 'seg_c', alternate: 'alternate', urgent_reminder: 'urgent_reminder', urgent_seg_c: 'urgent_seg_c', alternate_reminder: 'alternate_reminder' };
   const template: EmailTemplate = templateMap[templateName as string] || 'initial';
 
   // Preview: return HTML for a specific customer
@@ -181,7 +181,9 @@ export async function POST(request: Request) {
     const recipient = { name: customer.name, email: customer.email, token: customer.token, pickupItems: consolidated, vehicleRec };
 
     let html: string;
-    if (template === 'urgent_reminder') {
+    if (template === 'alternate_reminder') {
+      html = generateAlternateReminderEmail(recipient);
+    } else if (template === 'urgent_reminder') {
       html = generateUrgentReminderEmail(recipient);
     } else if (template === 'urgent_seg_c') {
       html = generateUrgentSegCEmail(recipient);

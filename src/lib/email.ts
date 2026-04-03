@@ -1232,7 +1232,97 @@ ${itemRows}
 </body></html>`.trim();
 }
 
-export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate' | 'urgent_reminder' | 'urgent_seg_c';
+/**
+ * Generate May 2nd reminder for people who got the invite but haven't booked
+ */
+export function generateAlternateReminderEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const alternateUrl = `${APP_URL}/pickup/alternate?email=${encodeURIComponent(recipient.email)}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reminder — Lock In Your May 2nd Pickup</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">${firstName}, you still need to confirm your May 2nd pickup time. Spots are limited — please lock in your slot today.</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;">
+${firstName}, friendly reminder!
+</h1>
+<p style="margin:0 0 20px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+We opened an alternate pickup day on <strong>May 2nd</strong> just for you, but we haven&rsquo;t seen you lock in a time yet. Spots are limited on this invite-only day &mdash; please confirm your slot today so we can have your items ready.
+</p>
+
+<!-- CTA -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="background-color:#16a34a;border-radius:8px;padding:24px;text-align:center;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:2px;">
+&#9888; Please Confirm Your Slot
+</p>
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:#ffffff;">
+Saturday, May 2, 2026
+</p>
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:14px;color:rgba(255,255,255,0.85);">
+10:00 AM &ndash; 4:00 PM &middot; Roca, NE
+</p>
+<p style="margin:0 0 12px;font-size:28px;color:rgba(255,255,255,0.8);">&#9660;</p>
+<a href="${alternateUrl}" style="display:inline-block;background-color:#ffffff;color:#16a34a;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;">
+Lock In My Time
+</a>
+</td></tr>
+</table>
+
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">
+Or copy this link: <a href="${alternateUrl}" style="color:#d00000;word-break:break-all;">${alternateUrl}</a>
+</p>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#fff8f0;border:1px solid #fed7aa;border-radius:8px;margin-bottom:24px;">
+<tr><td style="padding:16px;">
+<p style="margin:0 0 4px;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;This is an invite-only date with limited spots
+</p>
+<p style="margin:0 0 4px;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;Pickup is required for seats and benches &mdash; shipping is not available
+</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;Can&rsquo;t make it? A friend or family member can pick up with your receipt
+</p>
+</td></tr>
+</table>
+
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;">We want to get your Husker history home to you &mdash; let&rsquo;s lock this in!</p>
+<p style="margin:12px 0 0;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#d00000;">Go Big Red!</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;">&mdash; Nebraska Rare Goods</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate' | 'urgent_reminder' | 'urgent_seg_c' | 'alternate_reminder';
 
 /**
  * Send an email using the specified template
@@ -1276,6 +1366,12 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
       html: generateUrgentSegCEmail(recipient),
       text: `Last chance, ${firstName}! Pickup spots are filling up. Pick up sooner at no extra cost: ${APP_URL}/pickup/${recipient.token}\n\nGo Big Red!\n- Nebraska Rare Goods`,
       tag: 'urgent-seg-c',
+    },
+    alternate_reminder: {
+      subject: `${firstName}, please confirm your May 2nd pickup — spots are limited`,
+      html: generateAlternateReminderEmail(recipient),
+      text: `${firstName}, friendly reminder! We opened May 2nd for you but you haven't locked in a time yet. Spots are limited: ${APP_URL}/pickup/alternate?email=${encodeURIComponent(recipient.email)}\n\nGo Big Red!\n- Nebraska Rare Goods`,
+      tag: 'alternate-reminder',
     },
   };
 
