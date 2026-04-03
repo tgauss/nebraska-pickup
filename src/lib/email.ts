@@ -1356,13 +1356,13 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
       tag: 'alternate-pickup',
     },
     urgent_reminder: {
-      subject: `${firstName}, spots are filling up — please book your Devaney pickup today`,
+      subject: `🚨 Important: ${firstName}, please book your Devaney pickup — spots filling up`,
       html: generateUrgentReminderEmail(recipient),
       text: `${firstName}, pickup is less than two weeks away and time slots are filling up fast! Please book your slot today: ${APP_URL}/pickup/${recipient.token}\n\nGo Big Red!\n- Nebraska Rare Goods`,
       tag: 'urgent-reminder',
     },
     urgent_seg_c: {
-      subject: `Last chance ${firstName} — pick up your Devaney items sooner (spots filling up)`,
+      subject: `📦 ${firstName}, last chance to pick up your Devaney items sooner — spots filling up`,
       html: generateUrgentSegCEmail(recipient),
       text: `Last chance, ${firstName}! Pickup spots are filling up. Pick up sooner at no extra cost: ${APP_URL}/pickup/${recipient.token}\n\nGo Big Red!\n- Nebraska Rare Goods`,
       tag: 'urgent-seg-c',
