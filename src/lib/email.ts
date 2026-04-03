@@ -1016,7 +1016,223 @@ This is a limited invite &mdash; spots are available on a first-come basis. If y
 </body></html>`.trim();
 }
 
-export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate';
+/**
+ * Generate urgent follow-up for pickup-required customers who haven't booked
+ */
+export function generateUrgentReminderEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  const itemRows = recipient.pickupItems.map(item => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#1a1a1a;">${item.name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">${item.qty}</td>
+    </tr>`).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Action Needed — Book Your Pickup</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">${firstName}, pickup is in less than 2 weeks and your slot isn't booked yet. Time slots are filling up — please book today.</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;">
+${firstName}, we still need you to book your pickup!
+</h1>
+<p style="margin:0 0 20px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+Pickup is less than two weeks away and <strong>time slots are filling up fast</strong>. We want to make sure you get a spot that works for you &mdash; please take a moment to book today.
+</p>
+
+<!-- URGENT CTA -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="background-color:#d00000;border-radius:8px;padding:24px;text-align:center;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:2px;">
+&#9888; Pickup Required &mdash; Book Today
+</p>
+<p style="margin:0 0 6px;font-family:Arial,sans-serif;font-size:20px;font-weight:700;color:#ffffff;">
+April 16&ndash;18 near Lincoln, NE
+</p>
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:14px;color:rgba(255,255,255,0.85);">
+Spots are booking up &mdash; secure yours now
+</p>
+<p style="margin:0 0 12px;font-size:28px;color:rgba(255,255,255,0.8);">&#9660;</p>
+<a href="${pickupUrl}" style="display:inline-block;background-color:#ffffff;color:#d00000;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;">
+Book My Pickup Slot
+</a>
+</td></tr>
+</table>
+
+<p style="margin:0 0 24px;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">
+Or copy this link: <a href="${pickupUrl}" style="color:#d00000;word-break:break-all;">${pickupUrl}</a>
+</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+
+<!-- ITEMS -->
+<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">Your Items Waiting for You</h2>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #e5e5e5;border-radius:4px;overflow:hidden;margin-bottom:24px;">
+<tr style="background-color:#f5f1e7;">
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;">Item</td>
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;text-align:center;">Qty</td>
+</tr>
+${itemRows}
+</table>
+
+<!-- REMINDER -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#fff8f0;border:1px solid #fed7aa;border-radius:8px;margin-bottom:24px;">
+<tr><td style="padding:16px;">
+<p style="margin:0 0 6px;font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:1px;">Reminder</p>
+<p style="margin:0 0 4px;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;Seats and benches are pickup only &mdash; shipping is not available for these items
+</p>
+<p style="margin:0 0 4px;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;${recipient.vehicleRec}
+</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:13px;color:#1a1a1a;line-height:1.5;">
+&#9679;&nbsp;&nbsp;Can&rsquo;t make it? A friend or family member can pick up with your receipt
+</p>
+</td></tr>
+</table>
+
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;">
+We can&rsquo;t wait for you to bring home your piece of Husker history!
+</p>
+<p style="margin:12px 0 0;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#d00000;">Go Big Red!</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;">&mdash; Nebraska Rare Goods</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+/**
+ * Generate urgent follow-up for Seg C customers who haven't opted in
+ */
+export function generateUrgentSegCEmail(recipient: EmailRecipient): string {
+  const firstName = recipient.name.split(' ')[0];
+  const pickupUrl = `${APP_URL}/pickup/${recipient.token}`;
+  const supportUrl = `${APP_URL}/support?email=${encodeURIComponent(recipient.email)}`;
+
+  const itemRows = recipient.pickupItems.map(item => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#1a1a1a;">${item.name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e5e5e5;font-family:Georgia,serif;font-size:14px;color:#666;text-align:center;">${item.qty}</td>
+    </tr>`).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Last Chance — Pickup Option</title></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">${firstName}, last chance to pick up your Devaney items in person April 16-18. Get them weeks sooner than shipping!</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;width:100%;">
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:8px 8px 0 0;text-align:center;">
+<img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" height="40" style="display:block;margin:0 auto 8px;width:40px;height:auto;" />
+<span style="font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;">Nebraska Rare Goods</span>
+</td></tr>
+
+<tr><td style="background-color:#ffffff;padding:32px;">
+
+<h1 style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:24px;font-weight:700;color:#1a1a1a;">
+Last chance, ${firstName}!
+</h1>
+<p style="margin:0 0 20px;font-family:Georgia,serif;font-size:16px;color:#1a1a1a;line-height:1.6;">
+Our team is processing orders April 16&ndash;18 and pickup spots are filling up. If you&rsquo;d like your items sooner &mdash; at no extra cost &mdash; now&rsquo;s the time to grab a slot. Otherwise, we&rsquo;ll ship them to you in a few weeks.
+</p>
+
+<!-- OPTIONS -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="padding:20px;background-color:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+<td style="padding:8px 12px;text-align:center;width:50%;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#16a34a;">&#10003; Pick Up (soonest)</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">April 16&ndash;18 near Lincoln<br/>No extra cost &middot; Spots filling up</p>
+</td>
+<td style="padding:8px 12px;text-align:center;width:50%;border-left:1px solid #d1d5db;">
+<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#666;">Ship to Me</p>
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;">A few weeks later<br/>No action needed</p>
+</td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center" style="padding:0 0 24px;">
+<a href="${pickupUrl}" style="display:inline-block;background-color:#16a34a;color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:700;text-decoration:none;padding:16px 44px;border-radius:50px;">
+Choose My Option
+</a>
+</td></tr>
+</table>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+
+<h2 style="margin:0 0 12px;font-family:Arial,sans-serif;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">Your Items</h2>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #e5e5e5;border-radius:4px;overflow:hidden;margin-bottom:24px;">
+<tr style="background-color:#f5f1e7;">
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;">Item</td>
+<td style="padding:8px 12px;font-family:Arial,sans-serif;font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;text-align:center;">Qty</td>
+</tr>
+${itemRows}
+</table>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:24px;">
+<tr><td style="padding:12px 16px;background-color:#f9fafb;border:1px solid #e5e5e5;border-radius:4px;">
+<p style="margin:0;font-family:Georgia,serif;font-size:12px;color:#666;line-height:1.5;">
+<strong>Please note:</strong> Shipping charges are non-refundable as they have already been purchased and processed. Pickup is available at no additional cost.
+</p>
+</td></tr>
+</table>
+
+<p style="margin:0;font-family:Georgia,serif;font-size:15px;color:#1a1a1a;line-height:1.6;">Whether you pick up or we ship &mdash; we can&rsquo;t wait for you to enjoy your piece of Husker history!</p>
+<p style="margin:12px 0 0;font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#d00000;">Go Big Red!</p>
+<p style="margin:8px 0 0;font-family:Georgia,serif;font-size:14px;color:#666;">&mdash; Nebraska Rare Goods</p>
+
+<hr style="border:none;border-top:2px solid #f5f1e7;margin:24px 0;" />
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr><td align="center">
+<a href="${supportUrl}" style="font-family:Georgia,serif;font-size:13px;color:#1a1a1a;text-decoration:underline;">Questions? Chat with Husker Helper &rarr;</a>
+</td></tr>
+</table>
+
+</td></tr>
+
+<tr><td style="background-color:#1a1a1a;padding:20px 32px;border-radius:0 0 8px 8px;text-align:center;">
+<p style="margin:0;font-family:Georgia,serif;font-size:11px;color:rgba(255,255,255,0.3);">2410 Production Dr, Unit 4, Roca, NE 68430</p>
+</td></tr>
+
+</table></td></tr></table>
+</body></html>`.trim();
+}
+
+export type EmailTemplate = 'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate' | 'urgent_reminder' | 'urgent_seg_c';
 
 /**
  * Send an email using the specified template
@@ -1048,6 +1264,18 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
       html: generateAlternateEmail(recipient),
       text: `Good news, ${firstName}!\n\nThank you for your patience as we worked with the university on an alternate pickup date. We now have one available for you!\n\nSaturday, May 2, 2026 — 10am to 4pm\n2410 Production Dr, Unit 4, Roca, NE\n\nSchedule here: ${APP_URL}/pickup/alternate?email=${encodeURIComponent(recipient.email)}\n\nSpots are limited. If you can't make this date either, you can send a friend or family member with your receipt.\n\nGo Big Red!\n- Nebraska Rare Goods`,
       tag: 'alternate-pickup',
+    },
+    urgent_reminder: {
+      subject: `${firstName}, spots are filling up — please book your Devaney pickup today`,
+      html: generateUrgentReminderEmail(recipient),
+      text: `${firstName}, pickup is less than two weeks away and time slots are filling up fast! Please book your slot today: ${APP_URL}/pickup/${recipient.token}\n\nGo Big Red!\n- Nebraska Rare Goods`,
+      tag: 'urgent-reminder',
+    },
+    urgent_seg_c: {
+      subject: `Last chance ${firstName} — pick up your Devaney items sooner (spots filling up)`,
+      html: generateUrgentSegCEmail(recipient),
+      text: `Last chance, ${firstName}! Pickup spots are filling up. Pick up sooner at no extra cost: ${APP_URL}/pickup/${recipient.token}\n\nGo Big Red!\n- Nebraska Rare Goods`,
+      tag: 'urgent-seg-c',
     },
   };
 

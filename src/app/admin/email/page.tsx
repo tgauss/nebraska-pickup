@@ -57,7 +57,7 @@ export default function EmailPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [segmentFilter, setSegmentFilter] = useState<SegmentFilter>('pickup_required');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [emailTemplate, setEmailTemplate] = useState<'initial' | 'reminder' | 'confirmation' | 'seg_c' | 'alternate'>('initial');
+  const [emailTemplate, setEmailTemplate] = useState<string>('initial');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/email');
@@ -193,59 +193,25 @@ export default function EmailPage() {
         {/* Template selector */}
         <div className="flex items-center gap-2">
           <Mail className="w-4 h-4 text-gray-400" />
-          <button
-            onClick={() => { setEmailTemplate('initial'); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              emailTemplate === 'initial' ? 'bg-primary text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            Initial Outreach
-          </button>
-          <button
-            onClick={() => {
-              setEmailTemplate('reminder');
-              setStatusFilter('not_booked');
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              emailTemplate === 'reminder' ? 'bg-amber-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            Reminder
-          </button>
-          <button
-            onClick={() => {
-              setEmailTemplate('seg_c');
-              setSegmentFilter('pickup_optional');
-              setStatusFilter('all');
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              emailTemplate === 'seg_c' ? 'bg-blue-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            Pickup Option (Local)
-          </button>
-          <button
-            onClick={() => {
-              setEmailTemplate('alternate');
-              setStatusFilter('not_booked');
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              emailTemplate === 'alternate' ? 'bg-green-700 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            May 2nd Invite
-          </button>
-          <button
-            onClick={() => {
-              setEmailTemplate('confirmation');
-              setStatusFilter('booked');
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              emailTemplate === 'confirmation' ? 'bg-green-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            Confirmation
-          </button>
+          {[
+            { key: 'urgent_reminder', label: 'Follow Up (Required)', color: 'bg-red-600', filter: () => { setSegmentFilter('pickup_required'); setStatusFilter('not_booked'); } },
+            { key: 'urgent_seg_c', label: 'Follow Up (Optional)', color: 'bg-amber-600', filter: () => { setSegmentFilter('pickup_optional'); setStatusFilter('not_booked'); } },
+            { key: 'initial', label: 'Initial', color: 'bg-primary', filter: () => {} },
+            { key: 'reminder', label: 'Reminder', color: 'bg-gray-700', filter: () => { setStatusFilter('not_booked'); } },
+            { key: 'seg_c', label: 'Pickup Option', color: 'bg-blue-600', filter: () => { setSegmentFilter('pickup_optional'); } },
+            { key: 'alternate', label: 'May 2nd', color: 'bg-green-700', filter: () => { setStatusFilter('not_booked'); } },
+            { key: 'confirmation', label: 'Confirmation', color: 'bg-green-600', filter: () => { setStatusFilter('booked'); } },
+          ].map(t => (
+            <button
+              key={t.key}
+              onClick={() => { setEmailTemplate(t.key); t.filter(); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                emailTemplate === t.key ? t.color + ' text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
         {/* Segment filter */}
