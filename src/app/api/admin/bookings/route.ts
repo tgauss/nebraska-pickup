@@ -13,18 +13,22 @@ export async function GET() {
 
   return NextResponse.json({
     total: bookings?.length || 0,
-    bookings: (bookings || []).map(b => ({
-      name: b.customers?.name,
-      email: b.customers?.email,
-      token: b.customers?.token,
-      segment: b.customers?.segment,
-      city: b.customers?.city,
-      state: b.customers?.state,
-      day: b.time_slots?.day === 'May2' ? 'May 2' : b.time_slots?.day,
-      time: b.time_slots?.time,
-      status: b.status,
-      confirmedAt: b.confirmed_at,
-      rescheduled: b.reschedule_count > 0,
-    })),
+    bookings: (bookings || []).map(b => {
+      const cust = b.customers as unknown as { name: string; email: string; token: string; segment: string; city: string; state: string } | null;
+      const slot = b.time_slots as unknown as { day: string; time: string } | null;
+      return {
+        name: cust?.name || '',
+        email: cust?.email || '',
+        token: cust?.token || '',
+        segment: cust?.segment || '',
+        city: cust?.city || '',
+        state: cust?.state || '',
+        day: slot?.day === 'May2' ? 'May 2' : slot?.day || '',
+        time: slot?.time || '',
+        status: b.status,
+        confirmedAt: b.confirmed_at,
+        rescheduled: b.reschedule_count > 0,
+      };
+    }),
   });
 }
