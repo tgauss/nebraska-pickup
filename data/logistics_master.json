@@ -14033,6 +14033,41 @@
       "offer_pickup_conversion": false,
       "offer_ship_to_pickup": false,
       "ship_as_normal": true
+    },
+    {
+      "token": "377a090355ed",
+      "segment": "A",
+      "name": "Ted Thomsen",
+      "email": "tktomaha@gmail.com",
+      "phone": "",
+      "city": "Omaha",
+      "state": "NE",
+      "drive_minutes": 71,
+      "size": "XL",
+      "orders": [
+        "#NEB3118250"
+      ],
+      "pickup_items": [
+        {
+          "item": "Two Authentic Devaney Seats, Rebuilt as a Collectible Bench - Ready-to-use bench with feet",
+          "qty": 1,
+          "order": "#NEB3118250",
+          "fulfillment": "pickup"
+        }
+      ],
+      "ship_items": [],
+      "bench_count": 1,
+      "seat_count": 0,
+      "wall_mount_count": 0,
+      "endrow_count": 0,
+      "iron_qty": 0,
+      "chairback_qty": 0,
+      "ornament_qty": 0,
+      "shipping_paid": 0,
+      "needs_pickup_scheduling": true,
+      "offer_pickup_conversion": false,
+      "offer_ship_to_pickup": false,
+      "ship_as_normal": false
     }
   ]
 }

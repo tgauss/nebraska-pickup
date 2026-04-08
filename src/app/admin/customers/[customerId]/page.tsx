@@ -59,6 +59,11 @@ export default function CustomerDetailPage() {
   const [newNote, setNewNote] = useState('');
   const [realDrive, setRealDrive] = useState<{ minutes: number; miles: number } | null>(null);
   const [customerCoords, setCustomerCoords] = useState<{ lng: number; lat: number } | null>(null);
+  const [showSlotPicker, setShowSlotPicker] = useState(false);
+  const [timeSlots, setTimeSlots] = useState<Array<{ id: string; day: string; time: string; capacity: number; current_bookings: number }>>([]);
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingResult, setBookingResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const fetchData = useCallback(async () => {
     const [custRes, notesRes] = await Promise.all([
@@ -112,6 +117,37 @@ export default function CustomerDetailPage() {
     });
     setNewNote('');
     await fetchData();
+  };
+
+  const openSlotPicker = async () => {
+    setShowSlotPicker(true);
+    setBookingResult(null);
+    setSelectedSlot(null);
+    const res = await fetch('/api/admin/dashboard');
+    if (res.ok) {
+      const d = await res.json();
+      setTimeSlots(d.time_slot_fill || []);
+    }
+  };
+
+  const handleAdminBook = async () => {
+    if (!selectedSlot) return;
+    setBookingLoading(true);
+    setBookingResult(null);
+    const res = await fetch(`/api/admin/customers/${customerId}/book`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ time_slot_id: selectedSlot }),
+    });
+    const result = await res.json();
+    if (result.success) {
+      setBookingResult({ success: true, message: `${result.action === 'rescheduled' ? 'Rescheduled' : 'Booked'} for ${result.day}, ${result.time}${result.emailSent ? ' — confirmation email sent' : ''}` });
+      setShowSlotPicker(false);
+      await fetchData();
+    } else {
+      setBookingResult({ success: false, message: result.error || 'Booking failed' });
+    }
+    setBookingLoading(false);
   };
 
   if (loading) {
@@ -207,6 +243,13 @@ export default function CustomerDetailPage() {
                   <CheckCircle className="w-4 h-4" /> Pickup Complete
                 </span>
               )}
+              <button
+                onClick={openSlotPicker}
+                className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-sm text-sm font-medium hover:bg-amber-700"
+              >
+                <Calendar className="w-4 h-4" />
+                {booking ? 'Reschedule' : 'Book Slot'}
+              </button>
               <a
                 href={`/pickup/${customer.token}`}
                 target="_blank"
@@ -233,6 +276,86 @@ export default function CustomerDetailPage() {
               </a>
             </div>
           </div>
+
+          {/* Booking result message */}
+          {bookingResult && (
+            <div className={`rounded-sm border p-3 text-sm flex items-center gap-2 ${bookingResult.success ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+              {bookingResult.success ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+              {bookingResult.message}
+            </div>
+          )}
+
+          {/* Slot picker */}
+          {showSlotPicker && (
+            <div className="bg-card rounded-sm border border-border p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-serif text-lg font-bold">
+                  {booking ? 'Reschedule Pickup' : 'Assign Pickup Slot'}
+                </h2>
+                <button onClick={() => setShowSlotPicker(false)} className="text-sm text-muted-foreground hover:text-foreground">
+                  Cancel
+                </button>
+              </div>
+              {booking && (
+                <p className="text-sm text-muted-foreground mb-3">
+                  Currently booked: {booking.time_slots.day}, {booking.time_slots.time}
+                </p>
+              )}
+              <div className="space-y-4">
+                {['Thursday', 'Friday', 'Saturday', 'May2'].map(day => {
+                  const daySlots = timeSlots
+                    .filter(s => s.day === day)
+                    .sort((a, b) => a.time.localeCompare(b.time));
+                  if (daySlots.length === 0) return null;
+                  return (
+                    <div key={day}>
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
+                        {day === 'May2' ? 'May 2 (Overflow)' : day}
+                      </p>
+                      <div className="grid grid-cols-4 gap-2">
+                        {daySlots.map(s => {
+                          const full = s.current_bookings >= s.capacity;
+                          const isSelected = selectedSlot === s.id;
+                          return (
+                            <button
+                              key={s.id}
+                              onClick={() => setSelectedSlot(s.id)}
+                              className={`px-3 py-2 rounded-sm text-xs font-medium border transition-colors ${
+                                isSelected
+                                  ? 'bg-primary text-primary-foreground border-primary'
+                                  : full
+                                    ? 'bg-red-50 border-red-200 text-red-400 hover:bg-red-100 hover:border-red-300'
+                                    : 'bg-background border-border hover:bg-secondary'
+                              }`}
+                            >
+                              <span>{s.time}</span>
+                              <span className={`block text-[10px] mt-0.5 ${isSelected ? 'text-primary-foreground/70' : full ? 'text-red-400' : 'text-muted-foreground'}`}>
+                                {s.current_bookings}/{s.capacity}{full ? ' FULL' : ''}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-4 flex items-center gap-3">
+                <button
+                  onClick={handleAdminBook}
+                  disabled={!selectedSlot || bookingLoading}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-sm text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {bookingLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                  {booking ? 'Confirm Reschedule' : 'Confirm Booking'}
+                </button>
+                <p className="text-xs text-muted-foreground">
+                  Admin override — bypasses capacity and reschedule limits.
+                  {customer.email ? ' Confirmation email will be sent.' : ' No email on file.'}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Items */}
           <div className="bg-card rounded-sm border border-border p-5">
