@@ -9,6 +9,7 @@ import {
 interface OutreachCustomer {
   id: string;
   name: string;
+  email: string | null;
   phone: string;
   token: string;
   city: string;
@@ -23,12 +24,14 @@ interface OutreachCustomer {
   texted: boolean;
   called: boolean;
   outreachNote: string;
+  phoneOnly: boolean;
 }
 
 interface OutreachData {
   total: number;
   contacted: number;
-  booked: number;
+  phoneOnly: number;
+  hasEmail: number;
   customers: OutreachCustomer[];
 }
 
@@ -75,18 +78,24 @@ export default function OutreachPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <div className="bg-white rounded-xl border p-4">
           <p className="text-xs font-medium text-gray-500">Need Outreach</p>
           <p className="text-2xl font-bold">{data.total}</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
-          <p className="text-xs font-medium text-gray-500">Contacted</p>
-          <p className="text-2xl font-bold text-blue-600">{data.contacted}</p>
+          <p className="text-xs font-medium text-gray-500">Phone Only</p>
+          <p className="text-2xl font-bold text-amber-600">{data.phoneOnly}</p>
+          <p className="text-[10px] text-gray-400">No email on file</p>
         </div>
         <div className="bg-white rounded-xl border p-4">
-          <p className="text-xs font-medium text-gray-500">Booked</p>
-          <p className="text-2xl font-bold text-green-600">{data.booked}</p>
+          <p className="text-xs font-medium text-gray-500">Has Email Too</p>
+          <p className="text-2xl font-bold text-purple-600">{data.hasEmail}</p>
+          <p className="text-[10px] text-gray-400">Not responding to email</p>
+        </div>
+        <div className="bg-white rounded-xl border p-4">
+          <p className="text-xs font-medium text-gray-500">Contacted</p>
+          <p className="text-2xl font-bold text-blue-600">{data.contacted}</p>
         </div>
       </div>
 
@@ -105,23 +114,26 @@ export default function OutreachPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-lg">{c.name}</h3>
-                    {c.hasBooked && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" /> Booked {c.bookingDay === 'May2' ? 'May 2' : c.bookingDay} {c.bookingTime}
-                      </span>
+                    {c.phoneOnly ? (
+                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Phone Only</span>
+                    ) : (
+                      <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">Has Email</span>
                     )}
-                    {c.texted && !c.hasBooked && (
+                    {c.texted && (
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <MessageSquare className="w-3 h-3" /> Texted
                       </span>
                     )}
-                    {c.called && !c.hasBooked && (
+                    {c.called && (
                       <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <Phone className="w-3 h-3" /> Called
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500">{c.city}, {c.state} &middot; Seg {c.segment}</p>
+                  <p className="text-sm text-gray-500">
+                    {c.city}, {c.state} &middot; Seg {c.segment}
+                    {c.email && <span className="ml-2 text-gray-400">&middot; {c.email}</span>}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -184,42 +196,40 @@ export default function OutreachPage() {
               </div>
 
               {/* Action buttons */}
-              {!c.hasBooked && (
-                <div className="flex flex-wrap gap-2">
-                  {!c.texted && (
-                    <button
-                      onClick={() => markAction(c.id, 'sms_sent')}
-                      disabled={actionLoading === c.id + 'sms_sent'}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 disabled:opacity-50"
-                    >
-                      {actionLoading === c.id + 'sms_sent' ? <Loader2 className="w-3 h-3 animate-spin" /> : <MessageSquare className="w-3 h-3" />}
-                      Mark Texted
-                    </button>
-                  )}
-                  {!c.called && (
-                    <button
-                      onClick={() => markAction(c.id, 'phone_called')}
-                      disabled={actionLoading === c.id + 'phone_called'}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700 disabled:opacity-50"
-                    >
-                      {actionLoading === c.id + 'phone_called' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Phone className="w-3 h-3" />}
-                      Mark Called
-                    </button>
-                  )}
+              <div className="flex flex-wrap gap-2">
+                {!c.texted && (
                   <button
-                    onClick={() => {
-                      const note = prompt('Add a note about this outreach:');
-                      if (note) markAction(c.id, 'outreach_note', note);
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50"
+                    onClick={() => markAction(c.id, 'sms_sent')}
+                    disabled={actionLoading === c.id + 'sms_sent'}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 disabled:opacity-50"
                   >
-                    Add Note
+                    {actionLoading === c.id + 'sms_sent' ? <Loader2 className="w-3 h-3 animate-spin" /> : <MessageSquare className="w-3 h-3" />}
+                    Mark Texted
                   </button>
-                </div>
-              )}
+                )}
+                {!c.called && (
+                  <button
+                    onClick={() => markAction(c.id, 'phone_called')}
+                    disabled={actionLoading === c.id + 'phone_called'}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700 disabled:opacity-50"
+                  >
+                    {actionLoading === c.id + 'phone_called' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Phone className="w-3 h-3" />}
+                    Mark Called
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    const note = prompt('Add a note about this outreach:');
+                    if (note) markAction(c.id, 'outreach_note', note);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50"
+                >
+                  Add Note
+                </button>
+              </div>
 
-              {/* Warning for not booked + not contacted */}
-              {!c.hasBooked && !c.texted && !c.called && (
+              {/* Warning for not contacted */}
+              {!c.texted && !c.called && (
                 <div className="mt-3 flex items-center gap-2 text-amber-600">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span className="text-xs font-medium">Not contacted yet — needs outreach</span>

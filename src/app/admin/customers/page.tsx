@@ -107,6 +107,7 @@ export default function CustomersPage() {
           className="border rounded-lg px-3 py-2 text-sm bg-white"
         >
           <option value="">All Statuses</option>
+          <option value="pickup_required">Pickup Required</option>
           <option value="confirmed">Confirmed</option>
           <option value="checked_in">Checked In</option>
           <option value="completed">Completed</option>

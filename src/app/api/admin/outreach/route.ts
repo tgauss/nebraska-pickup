@@ -12,11 +12,11 @@ export async function GET() {
   const allBookings = db.getAllBookings();
   const bookedIds = new Set(allBookings.map(b => b.customer_id));
 
-  // Customers needing phone outreach: pickup required, no email, not booked
+  // Customers needing phone outreach: pickup required, has phone, not yet booked
   const needsPhone = customers
     .filter(c => {
-      if (c.email) return false;
       if (!c.phone) return false;
+      if (bookedIds.has(c.id)) return false;
       const items = db.getLineItemsByCustomer(c.id);
       return items.some(i => i.item_type === 'pickup');
     })
@@ -28,37 +28,42 @@ export async function GET() {
       const called = logs.some(l => l.action === 'phone_called');
       const note = logs.find(l => l.action === 'outreach_note');
 
-      const booking = allBookings.find(b => b.customer_id === c.id);
       return {
         id: c.id,
         name: c.name,
+        email: c.email || null,
         phone: c.phone,
         token: c.token,
         city: c.city,
         state: c.state,
         segment: c.segment,
-        hasBooked: bookedIds.has(c.id),
-        bookingDay: booking?.time_slots?.day || null,
-        bookingTime: booking?.time_slots?.time || null,
+        hasBooked: false,
+        bookingDay: null,
+        bookingTime: null,
         pickupItems: pickupItems.map(i => `${i.qty}x ${i.item_name.split(' - ')[0].substring(0, 35)}`),
         pickupLink: `https://huskerpickup.raregoods.com/pickup/${c.token}`,
         smsText: `Hi ${c.name.split(' ')[0]}! This is Nebraska Rare Goods. Your Devaney seats order is ready for pickup April 16-18 near Lincoln, NE. Please use this link to schedule your pickup time: https://huskerpickup.raregoods.com/pickup/${c.token} — Questions? Reply here or visit huskerpickup.raregoods.com/support`,
         texted,
         called,
         outreachNote: note?.details?.note || '',
+        phoneOnly: !c.email,
       };
     })
     .sort((a, b) => {
-      // Not booked first, then not contacted, then alphabetical
-      if (a.hasBooked !== b.hasBooked) return a.hasBooked ? 1 : -1;
-      if (a.texted !== b.texted) return a.texted ? 1 : -1;
+      // Not contacted first, then contacted, then alphabetical
+      const aContacted = a.texted || a.called;
+      const bContacted = b.texted || b.called;
+      if (aContacted !== bContacted) return aContacted ? 1 : -1;
+      // Phone-only customers first (no email fallback)
+      if (a.phoneOnly !== b.phoneOnly) return a.phoneOnly ? -1 : 1;
       return a.name.localeCompare(b.name);
     });
 
   return NextResponse.json({
     total: needsPhone.length,
     contacted: needsPhone.filter(c => c.texted || c.called).length,
-    booked: needsPhone.filter(c => c.hasBooked).length,
+    phoneOnly: needsPhone.filter(c => c.phoneOnly).length,
+    hasEmail: needsPhone.filter(c => !c.phoneOnly).length,
     customers: needsPhone,
   });
 }

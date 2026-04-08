@@ -290,6 +290,8 @@ function loadData() {
 // ============================================================
 let hydrated = false;
 let hydratePromise: Promise<void> | null = null;
+let hydrateRetries = 0;
+const MAX_HYDRATE_RETRIES = 3;
 
 function hydrateFromSupabase() {
   if (hydrated || hydratePromise) return;
@@ -390,9 +392,15 @@ function hydrateFromSupabase() {
       }
 
       hydrated = true;
+      hydrateRetries = 0;
     } catch (err) {
       console.error('[supabase hydration error]', err);
-      hydrated = true; // Don't retry on error
+      hydrateRetries++;
+      if (hydrateRetries >= MAX_HYDRATE_RETRIES) {
+        console.error(`[supabase hydration] giving up after ${MAX_HYDRATE_RETRIES} retries`);
+        hydrated = true;
+      }
+      // Leave hydrated = false so next ensureHydrated() call retries
     } finally {
       hydratePromise = null;
     }
@@ -405,6 +413,8 @@ function hydrateFromSupabase() {
 export async function ensureHydrated(): Promise<void> {
   loadData();
   if (hydrated) return;
+  // If no hydration in progress, kick one off (handles retry after error)
+  if (!hydratePromise) hydrateFromSupabase();
   if (hydratePromise) await hydratePromise;
 }
 
