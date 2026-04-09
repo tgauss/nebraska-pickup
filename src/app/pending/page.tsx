@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Search, Mail, Phone, MapPin, ExternalLink, Copy, Check, ChevronDown, ChevronUp,
   Clock, Package, CheckCircle, Plus, X, Loader2, AlertTriangle,
@@ -76,6 +76,7 @@ export default function PendingPage() {
   const [scheduledExpanded, setScheduledExpanded] = useState<string | null>(null);
   const [scheduledDetail, setScheduledDetail] = useState<PendingCustomer | null>(null);
   const [scheduledDetailLoading, setScheduledDetailLoading] = useState(false);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/pending');
@@ -84,6 +85,13 @@ export default function PendingPage() {
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  // Scroll to detail panel when opened
+  useEffect(() => {
+    if (expandedId && detailRef.current) {
+      setTimeout(() => detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    }
+  }, [expandedId]);
 
   useEffect(() => {
     const timer = setTimeout(() => setSearch(searchInput), 300);
@@ -325,7 +333,7 @@ export default function PendingPage() {
                     const totalShipQty = c.shipItems.reduce((s, i) => s + i.qty, 0);
 
                     return (
-                      <tr key={c.id} className="group" onClick={() => setExpandedId(isExpanded ? null : c.id)}>
+                      <tr key={c.id} className={`group cursor-pointer transition-colors ${isExpanded ? 'bg-primary/5 border-l-2 border-l-primary' : 'hover:bg-secondary/30'}`} onClick={() => setExpandedId(isExpanded ? null : c.id)}>
                         <td className="px-4 py-3 cursor-pointer">
                           <div className="flex items-center gap-2">
                             <div>
@@ -415,7 +423,7 @@ export default function PendingPage() {
               const c = filtered.find(x => x.id === expandedId);
               if (!c) return null;
               return (
-                <div className="bg-card rounded-sm border-2 border-primary/20 shadow-lg overflow-hidden -mt-2">
+                <div ref={detailRef} className="bg-card rounded-sm border-2 border-primary/20 shadow-lg overflow-hidden -mt-2 scroll-mt-16">
                   <div className="flex items-center justify-between px-5 py-3 bg-primary/5 border-b border-border">
                     <h3 className="font-serif font-bold text-lg flex items-center gap-2">
                       {c.name}
