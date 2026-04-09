@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 /* eslint-disable @next/next/no-img-element */
 import { MessageCircle, X, Send, Loader2, User, AlertCircle, ExternalLink } from 'lucide-react';
 
@@ -21,6 +22,7 @@ interface ChatContext {
 }
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -193,6 +195,9 @@ export default function ChatWidget() {
       setLoading(false);
     }
   };
+
+  // Hide chat on internal coordination pages
+  if (pathname?.startsWith('/pending')) return null;
 
   return (
     <>
