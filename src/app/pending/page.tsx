@@ -144,7 +144,7 @@ export default function PendingPage() {
   if (loading || !data) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-3">
-        <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="w-12 h-12 animate-pulse" />
+        <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-12 w-auto animate-pulse" />
         <p className="text-sm text-muted-foreground">Loading pickup data...</p>
       </div>
     );
@@ -202,12 +202,14 @@ export default function PendingPage() {
 
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 relative">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-            <div className="flex items-center gap-4">
-              <img
-                src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
-                alt="Nebraska N"
-                className="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-lg"
-              />
+            <div className="flex items-center gap-5">
+              <div className="shrink-0 bg-white/10 backdrop-blur-sm rounded-sm p-2.5">
+                <img
+                  src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png"
+                  alt="Nebraska N"
+                  className="h-12 sm:h-14 w-auto"
+                />
+              </div>
               <div>
                 <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight drop-shadow-sm">
                   Pickup Coordination
@@ -536,7 +538,7 @@ export default function PendingPage() {
 
         {/* Footer */}
         <div className="text-center text-xs text-muted-foreground py-10 border-t border-border mt-8">
-          <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="w-8 h-8 mx-auto mb-2 opacity-30" />
+          <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-8 w-auto mx-auto mb-2 opacity-30" />
           <p className="font-medium">Nebraska Rare Goods</p>
           <p className="mt-0.5">Devaney Pickup Coordination &middot; April 16&ndash;18, 2026 &middot; Roca, NE</p>
         </div>
