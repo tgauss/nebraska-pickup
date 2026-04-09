@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated } from '@/lib/local-data';
+import { createAdminClient } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,20 @@ export async function GET() {
   await ensureHydrated();
   const customers = db.getAllCustomers();
   const allBookings = db.getAllBookings();
-  const time_slots = db.getAllTimeSlots();
+  let time_slots = db.getAllTimeSlots();
+
+  // Sync slot counts from Supabase (source of truth)
+  const sb = createAdminClient();
+  if (sb) {
+    const { data: sbSlots } = await sb.from('time_slots').select('day, time, current_bookings');
+    if (sbSlots) {
+      const sbMap = new Map(sbSlots.map(s => [`${s.day}-${s.time}`, s.current_bookings]));
+      time_slots = time_slots.map(s => {
+        const sbCount = sbMap.get(`${s.day}-${s.time}`);
+        return sbCount !== undefined ? { ...s, current_bookings: sbCount } : s;
+      });
+    }
+  }
   const allItems = db.getAllLineItems();
 
   // Segment breakdown
