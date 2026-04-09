@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated } from '@/lib/local-data';
+import { createAdminClient } from '@/lib/supabase';
 import { getLabelByToken } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
@@ -30,7 +31,20 @@ export async function GET(
   const pickup_items = allItems.filter(i => i.item_type === 'pickup');
   const ship_items = allItems.filter(i => i.item_type === 'ship');
   const booking = db.getBookingByCustomer(customer.id) || null;
-  const time_slots = db.getAllTimeSlots();
+  let time_slots = db.getAllTimeSlots();
+
+  // Sync slot counts from Supabase (source of truth) to prevent stale availability
+  const sb = createAdminClient();
+  if (sb) {
+    const { data: sbSlots } = await sb.from('time_slots').select('day, time, current_bookings');
+    if (sbSlots) {
+      const sbMap = new Map(sbSlots.map(s => [`${s.day}-${s.time}`, s.current_bookings]));
+      time_slots = time_slots.map(s => {
+        const sbCount = sbMap.get(`${s.day}-${s.time}`);
+        return sbCount !== undefined ? { ...s, current_bookings: sbCount } : s;
+      });
+    }
+  }
 
   const label = getLabelByToken(token);
 

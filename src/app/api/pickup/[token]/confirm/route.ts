@@ -39,8 +39,20 @@ async function reserveSlotInSupabase(inMemorySlotId: string): Promise<{ sbSlotId
 
   if (!sbSlot) return null;
 
-  // Check capacity in Supabase (source of truth)
-  if (sbSlot.current_bookings >= sbSlot.capacity) {
+  // Count actual bookings (source of truth) — counter can drift from reschedules
+  const { count: actualBookings } = await sb
+    .from('bookings')
+    .select('id', { count: 'exact', head: true })
+    .eq('time_slot_id', sbSlot.id);
+
+  const realCount = actualBookings ?? sbSlot.current_bookings;
+
+  // Fix counter drift if detected
+  if (realCount !== sbSlot.current_bookings) {
+    await sb.from('time_slots').update({ current_bookings: realCount }).eq('id', sbSlot.id);
+  }
+
+  if (realCount >= sbSlot.capacity) {
     return null;
   }
 
