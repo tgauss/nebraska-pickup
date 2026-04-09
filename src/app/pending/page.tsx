@@ -2,13 +2,16 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
-  Search, Mail, Phone, MapPin, ExternalLink, Copy, Check, ChevronDown, ChevronUp,
+  Search, Mail, Phone, MapPin, ExternalLink, Copy, Check,
   Clock, Package, CheckCircle, Plus, X, Loader2, AlertTriangle,
-  Calendar, ArrowUpDown, ArrowUp, ArrowDown
+  Calendar, ArrowUpDown, ArrowUp, ArrowDown, Navigation
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { SEGMENT_LABELS, SEGMENT_COLORS } from '@/lib/types';
+
+const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
 // ── Types ──────────────────────────────────────────────────────
 
@@ -66,17 +69,16 @@ export default function PendingPage() {
   const [segmentFilter, setSegmentFilter] = useState('');
   const [sortBy, setSortBy] = useState<SortField>('drive_minutes');
   const [sortAsc, setSortAsc] = useState(true);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [contactForm, setContactForm] = useState<{ customerId: string; type: 'email' | 'phone'; value: string } | null>(null);
   const [contactSaving, setContactSaving] = useState(false);
   const [scheduledSearch, setScheduledSearch] = useState('');
   const [scheduledSearchInput, setScheduledSearchInput] = useState('');
   const [scheduledDayFilter, setScheduledDayFilter] = useState('');
-  const [scheduledExpanded, setScheduledExpanded] = useState<string | null>(null);
-  const [scheduledDetail, setScheduledDetail] = useState<PendingCustomer | null>(null);
-  const [scheduledDetailLoading, setScheduledDetailLoading] = useState(false);
-  const detailRef = useRef<HTMLDivElement>(null);
+  // Modal state — unified for both tabs
+  const [modalCustomer, setModalCustomer] = useState<PendingCustomer | null>(null);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalBooked, setModalBooked] = useState<{ day: string; time: string } | null>(null);
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/pending');
@@ -86,12 +88,15 @@ export default function PendingPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  // Scroll to detail panel when opened
+  // Lock body scroll when modal is open
   useEffect(() => {
-    if (expandedId && detailRef.current) {
-      setTimeout(() => detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    if (modalCustomer) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [expandedId]);
+    return () => { document.body.style.overflow = ''; };
+  }, [modalCustomer]);
 
   useEffect(() => {
     const timer = setTimeout(() => setSearch(searchInput), 300);
@@ -136,17 +141,26 @@ export default function PendingPage() {
     }
   };
 
-  const loadScheduledDetail = async (customerId: string) => {
-    if (scheduledExpanded === customerId) {
-      setScheduledExpanded(null);
-      setScheduledDetail(null);
-      return;
-    }
-    setScheduledExpanded(customerId);
-    setScheduledDetailLoading(true);
+  // Open modal — for pending customers we already have data, for scheduled we fetch
+  const openPendingModal = (customer: PendingCustomer) => {
+    setModalCustomer(customer);
+    setModalBooked(null);
+  };
+
+  const openScheduledModal = async (customerId: string, booking: { day: string; time: string } | null) => {
+    setModalLoading(true);
+    setModalBooked(booking);
+    setModalCustomer(null);
     const res = await fetch(`/api/pending/detail?id=${customerId}`);
-    if (res.ok) setScheduledDetail(await res.json());
-    setScheduledDetailLoading(false);
+    if (res.ok) setModalCustomer(await res.json());
+    setModalLoading(false);
+  };
+
+  const closeModal = () => {
+    setModalCustomer(null);
+    setModalLoading(false);
+    setModalBooked(null);
+    setContactForm(null);
   };
 
   if (loading || !data) {
@@ -266,8 +280,8 @@ export default function PendingPage() {
       {/* ── Tab Bar ── */}
       <div className="border-b border-border bg-card sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex">
-          <TabButton active={tab === 'pending'} onClick={() => { setTab('pending'); setExpandedId(null); }} label="Pending" count={data.totalUnbooked} accent="amber" />
-          <TabButton active={tab === 'scheduled'} onClick={() => { setTab('scheduled'); setScheduledExpanded(null); setScheduledDetail(null); }} label="Scheduled" count={data.totalBooked} accent="green" />
+          <TabButton active={tab === 'pending'} onClick={() => { setTab('pending'); closeModal(); }} label="Pending" count={data.totalUnbooked} accent="amber" />
+          <TabButton active={tab === 'scheduled'} onClick={() => { setTab('scheduled'); closeModal(); }} label="Scheduled" count={data.totalBooked} accent="green" />
         </div>
       </div>
 
@@ -324,7 +338,6 @@ export default function PendingPage() {
                       {search || segmentFilter ? 'No customers match your filters.' : 'Everyone has booked!'}
                     </td></tr>
                   ) : filtered.map(c => {
-                    const isExpanded = expandedId === c.id;
                     const driveHrs = Math.floor(c.drive_minutes / 60);
                     const driveMins = c.drive_minutes % 60;
                     const driveStr = driveHrs > 0 ? `${driveHrs}h ${driveMins}m` : `${driveMins}m`;
@@ -333,7 +346,7 @@ export default function PendingPage() {
                     const totalShipQty = c.shipItems.reduce((s, i) => s + i.qty, 0);
 
                     return (
-                      <tr key={c.id} className={`group cursor-pointer transition-colors ${isExpanded ? 'bg-primary/5 border-l-2 border-l-primary' : 'hover:bg-secondary/30'}`} onClick={() => setExpandedId(isExpanded ? null : c.id)}>
+                      <tr key={c.id} className="group cursor-pointer transition-colors hover:bg-secondary/30" onClick={() => openPendingModal(c)}>
                         <td className="px-4 py-3 cursor-pointer">
                           <div className="flex items-center gap-2">
                             <div>
@@ -418,37 +431,6 @@ export default function PendingPage() {
               </table>
             </div>
 
-            {/* ── Expanded Detail Panel ── */}
-            {expandedId && (() => {
-              const c = filtered.find(x => x.id === expandedId);
-              if (!c) return null;
-              return (
-                <div ref={detailRef} className="bg-card rounded-sm border-2 border-primary/20 shadow-lg overflow-hidden -mt-2 scroll-mt-16">
-                  <div className="flex items-center justify-between px-5 py-3 bg-primary/5 border-b border-border">
-                    <h3 className="font-serif font-bold text-lg flex items-center gap-2">
-                      {c.name}
-                      <span className={`text-xs px-2 py-0.5 rounded font-medium ${SEGMENT_COLORS[c.segment as keyof typeof SEGMENT_COLORS]}`}>
-                        Seg {c.segment}: {SEGMENT_LABELS[c.segment as keyof typeof SEGMENT_LABELS]}
-                      </span>
-                    </h3>
-                    <button onClick={() => setExpandedId(null)} className="p-1 hover:bg-secondary rounded-sm">
-                      <X className="w-5 h-5 text-muted-foreground" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:divide-x divide-border">
-                    {/* Left: Contact & Items */}
-                    <div className="lg:col-span-2 p-5 space-y-5">
-                      <ContactSection customer={c} copied={copied} onCopy={copyToClipboard} contactForm={contactForm} onContactFormChange={setContactForm} onAddContact={handleAddContact} contactSaving={contactSaving} />
-                      <ItemsSection customer={c} />
-                      <PickupLinkSection customer={c} copied={copied} onCopy={copyToClipboard} />
-                    </div>
-                    {/* Right: Outreach */}
-                    <OutreachSection outreach={c.outreach} />
-                  </div>
-                </div>
-              );
-            })()}
           </>
         ) : (
           <>
@@ -484,7 +466,7 @@ export default function PendingPage() {
                   <table className="w-full text-sm">
                     <tbody className="divide-y divide-border">
                       {scheduledByDay[day].map(c => (
-                        <tr key={c.id} className="group cursor-pointer hover:bg-secondary/30 transition-colors" onClick={() => loadScheduledDetail(c.id)}>
+                        <tr key={c.id} className="group cursor-pointer hover:bg-secondary/30 transition-colors" onClick={() => openScheduledModal(c.id, c.bookingDay && c.bookingTime ? { day: c.bookingDay, time: c.bookingTime } : null)}>
                           <td className="px-4 py-3 w-8">
                             <div className="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center">
                               <CheckCircle className="w-3.5 h-3.5 text-green-600" />
@@ -501,7 +483,7 @@ export default function PendingPage() {
                             <p className="text-xs text-muted-foreground">{c.bookingDay}</p>
                           </td>
                           <td className="px-4 py-3 w-8">
-                            {scheduledExpanded === c.id ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                            <ExternalLink className="w-4 h-4 text-muted-foreground" />
                           </td>
                         </tr>
                       ))}
@@ -509,32 +491,6 @@ export default function PendingPage() {
                   </table>
                 </div>
 
-                {/* Expanded scheduled detail */}
-                {scheduledByDay[day].some(c => scheduledExpanded === c.id) && (
-                  <div className="bg-card rounded-sm border-2 border-green-200 shadow-lg overflow-hidden">
-                    {scheduledDetailLoading ? (
-                      <div className="flex items-center justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-                    ) : scheduledDetail ? (
-                      <>
-                        <div className="flex items-center justify-between px-5 py-3 bg-green-50 border-b border-green-200">
-                          <h3 className="font-serif font-bold text-lg flex items-center gap-2">
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                            {scheduledDetail.name}
-                            <span className={`text-xs px-2 py-0.5 rounded font-medium ${SEGMENT_COLORS[scheduledDetail.segment as keyof typeof SEGMENT_COLORS]}`}>
-                              Seg {scheduledDetail.segment}
-                            </span>
-                          </h3>
-                          <button onClick={() => { setScheduledExpanded(null); setScheduledDetail(null); }} className="p-1 hover:bg-green-100 rounded-sm">
-                            <X className="w-5 h-5 text-muted-foreground" />
-                          </button>
-                        </div>
-                        <ScheduledDetailView customer={scheduledDetail} copied={copied} onCopy={copyToClipboard} />
-                      </>
-                    ) : (
-                      <p className="text-sm text-muted-foreground text-center py-6">Could not load details</p>
-                    )}
-                  </div>
-                )}
               </div>
             ))}
 
@@ -542,6 +498,33 @@ export default function PendingPage() {
               <EmptyState message={scheduledSearch || scheduledDayFilter ? 'No scheduled customers match your filters.' : 'No customers have booked yet.'} />
             )}
           </>
+        )}
+
+        {/* ── Detail Modal ── */}
+        {(modalCustomer || modalLoading) && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 sm:pt-16 px-4" onClick={closeModal}>
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+            <div className="relative bg-card rounded-sm border border-border shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+              {modalLoading && !modalCustomer ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : modalCustomer ? (
+                <CustomerModal
+                  customer={modalCustomer}
+                  booked={modalBooked}
+                  onClose={closeModal}
+                  copied={copied}
+                  onCopy={copyToClipboard}
+                  contactForm={contactForm}
+                  onContactFormChange={setContactForm}
+                  onAddContact={handleAddContact}
+                  contactSaving={contactSaving}
+                  showAddContact={!modalBooked}
+                />
+              ) : null}
+            </div>
+          </div>
         )}
 
         {/* Footer */}
@@ -593,90 +576,6 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-// ── Detail Panel Sections ──────────────────────────────────────
-
-function ContactSection({ customer: c, copied, onCopy, contactForm, onContactFormChange, onAddContact, contactSaving }: {
-  customer: PendingCustomer; copied: string | null; onCopy: (t: string, id: string) => void;
-  contactForm: { customerId: string; type: 'email' | 'phone'; value: string } | null;
-  onContactFormChange: (f: { customerId: string; type: 'email' | 'phone'; value: string } | null) => void;
-  onAddContact: () => void; contactSaving: boolean;
-}) {
-  const driveHrs = Math.floor(c.drive_minutes / 60);
-  const driveMins = c.drive_minutes % 60;
-  const driveStr = driveHrs > 0 ? `${driveHrs}h ${driveMins}m` : `${driveMins}m`;
-
-  return (
-    <div>
-      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Contact</h4>
-      <div className="space-y-2">
-        {c.email && (
-          <div className="flex items-center gap-2 text-sm">
-            <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-            <a href={`mailto:${c.email}`} className="text-primary hover:underline">{c.email}</a>
-            <CopyBtn text={c.email} id={`${c.id}-email`} copied={copied} onCopy={onCopy} />
-          </div>
-        )}
-        {c.phone && (
-          <div className="flex items-center gap-2 text-sm">
-            <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
-            <a href={`tel:${c.phone}`} className="text-primary hover:underline">{c.phone}</a>
-            <CopyBtn text={c.phone} id={`${c.id}-phone`} copied={copied} onCopy={onCopy} />
-          </div>
-        )}
-        {!c.email && !c.phone && (
-          <p className="text-sm text-amber-600 flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> No contact on file</p>
-        )}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="w-4 h-4 shrink-0" /> {c.city}, {c.state} &middot; {driveStr} drive
-        </div>
-      </div>
-
-      {c.altContacts.length > 0 && (
-        <div className="mt-3 space-y-1.5">
-          <p className="text-xs font-medium text-blue-700">Alternate Contacts (UNL)</p>
-          {c.altContacts.map((ac, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm bg-blue-50 rounded-sm px-3 py-1.5">
-              {ac.type === 'email' ? <Mail className="w-3.5 h-3.5 text-blue-600" /> : <Phone className="w-3.5 h-3.5 text-blue-600" />}
-              <span>{ac.value}</span>
-              <span className="text-xs text-muted-foreground ml-auto">via {ac.source}</span>
-              <CopyBtn text={ac.value} id={`${c.id}-alt-${i}`} copied={copied} onCopy={onCopy} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {contactForm?.customerId === c.id ? (
-        <div className="mt-3 flex items-center gap-2">
-          <select value={contactForm.type} onChange={e => onContactFormChange({ ...contactForm, type: e.target.value as 'email' | 'phone' })}
-            className="border border-border rounded-sm px-2 py-1.5 text-sm bg-background">
-            <option value="email">Email</option>
-            <option value="phone">Phone</option>
-          </select>
-          <input
-            type={contactForm.type === 'email' ? 'email' : 'tel'}
-            placeholder={contactForm.type === 'email' ? 'alternate@email.com' : '(402) 555-1234'}
-            value={contactForm.value}
-            onChange={e => onContactFormChange({ ...contactForm, value: e.target.value })}
-            onKeyDown={e => e.key === 'Enter' && onAddContact()}
-            className="flex-1 border border-border rounded-sm px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-            autoFocus
-          />
-          <button onClick={onAddContact} disabled={!contactForm.value.trim() || contactSaving}
-            className="px-3 py-1.5 bg-primary text-primary-foreground rounded-sm text-sm font-medium hover:bg-primary/90 disabled:opacity-50">
-            {contactSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
-          </button>
-          <button onClick={() => onContactFormChange(null)} className="p-1.5 text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
-        </div>
-      ) : (
-        <button onClick={() => onContactFormChange({ customerId: c.id, type: 'email', value: '' })}
-          className="mt-3 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-sm text-sm font-medium hover:bg-blue-700 shadow-sm transition-colors">
-          <Plus className="w-4 h-4" /> Add Alternate Contact Info
-        </button>
-      )}
-    </div>
-  );
-}
-
 function ItemsSection({ customer: c }: { customer: PendingCustomer }) {
   return (
     <div>
@@ -721,78 +620,204 @@ function PickupLinkSection({ customer: c, copied, onCopy }: { customer: PendingC
   );
 }
 
-function OutreachSection({ outreach }: { outreach: PendingCustomer['outreach'] }) {
-  return (
-    <div className="p-5 bg-secondary/20">
-      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Outreach History</h4>
-      {outreach.length === 0 ? (
-        <div className="text-center py-6">
-          <AlertTriangle className="w-5 h-5 text-amber-500 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">No outreach recorded yet</p>
-        </div>
-      ) : (
-        <div className="space-y-2.5 max-h-72 overflow-y-auto">
-          {outreach.map((entry, i) => (
-            <div key={i} className="flex gap-2 text-sm">
-              <div className="shrink-0 mt-1.5"><OutreachDot action={entry.action} /></div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium">{formatAction(entry.action)}</p>
-                {typeof entry.details.note === 'string' && entry.details.note && (
-                  <p className="text-muted-foreground text-xs mt-0.5">{String(entry.details.note)}</p>
-                )}
-                {entry.action === 'alt_contact_added' && (
-                  <p className="text-blue-600 text-xs mt-0.5">{String(entry.details.type)}: {String(entry.details.value)}</p>
-                )}
-                <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(entry.created_at).toLocaleString()}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+// ── Customer Modal (unified for pending + scheduled) ───────────
 
-// ── Scheduled Detail (read-only) ───────────────────────────────
-
-function ScheduledDetailView({ customer: c, copied, onCopy }: {
-  customer: PendingCustomer; copied: string | null; onCopy: (t: string, id: string) => void;
+function CustomerModal({ customer: c, booked, onClose, copied, onCopy, contactForm, onContactFormChange, onAddContact, contactSaving, showAddContact }: {
+  customer: PendingCustomer;
+  booked: { day: string; time: string } | null;
+  onClose: () => void;
+  copied: string | null;
+  onCopy: (t: string, id: string) => void;
+  contactForm: { customerId: string; type: 'email' | 'phone'; value: string } | null;
+  onContactFormChange: (f: { customerId: string; type: 'email' | 'phone'; value: string } | null) => void;
+  onAddContact: () => void;
+  contactSaving: boolean;
+  showAddContact: boolean;
 }) {
+  const [realDrive, setRealDrive] = useState<{ minutes: number; miles: number } | null>(null);
+  const [customerCoords, setCustomerCoords] = useState<{ lng: number; lat: number } | null>(null);
+
+  // Fetch real drive time
+  useEffect(() => {
+    if (!c.city) return;
+    fetch(`/api/admin/drivetime?city=${encodeURIComponent(c.city)}&state=${encodeURIComponent(c.state)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d) {
+          setRealDrive({ minutes: Math.round(d.duration_minutes), miles: Math.round(d.distance_miles) });
+          setCustomerCoords({ lng: d.lng, lat: d.lat });
+        }
+      })
+      .catch(() => {});
+  }, [c.city, c.state]);
+
   const driveHrs = Math.floor(c.drive_minutes / 60);
   const driveMins = c.drive_minutes % 60;
-  const driveStr = driveHrs > 0 ? `${driveHrs}h ${driveMins}m` : `${driveMins}m`;
+  const estDriveStr = driveHrs > 0 ? `${driveHrs}h ${driveMins}m` : `${driveMins}m`;
+  const realDriveStr = realDrive ? (
+    Math.floor(realDrive.minutes / 60) > 0
+      ? `${Math.floor(realDrive.minutes / 60)}h ${realDrive.minutes % 60}m`
+      : `${realDrive.minutes}m`
+  ) : null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:divide-x divide-border">
-      <div className="lg:col-span-2 p-5 space-y-4">
+    <>
+      {/* Modal header */}
+      <div className={`flex items-center justify-between px-5 py-4 border-b border-border ${booked ? 'bg-green-50' : 'bg-primary/5'}`}>
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Contact</h4>
-          <div className="space-y-1.5 text-sm">
-            {c.email && <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground" /><span>{c.email}</span><CopyBtn text={c.email} id={`s-${c.id}-e`} copied={copied} onCopy={onCopy} /></div>}
-            {c.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /><span>{c.phone}</span><CopyBtn text={c.phone} id={`s-${c.id}-p`} copied={copied} onCopy={onCopy} /></div>}
-            <div className="flex items-center gap-2 text-muted-foreground"><MapPin className="w-4 h-4" /> {c.city}, {c.state} &middot; {driveStr}</div>
-          </div>
+          <h2 className="font-serif font-bold text-xl flex items-center gap-2 flex-wrap">
+            {booked && <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />}
+            {c.name}
+            <span className={`text-xs px-2 py-0.5 rounded font-medium ${SEGMENT_COLORS[c.segment as keyof typeof SEGMENT_COLORS]}`}>
+              Seg {c.segment}: {SEGMENT_LABELS[c.segment as keyof typeof SEGMENT_LABELS]}
+            </span>
+          </h2>
+          {booked && (
+            <p className="text-sm text-green-700 mt-0.5 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5" /> Booked: {booked.day}, {booked.time}
+            </p>
+          )}
         </div>
+        <button onClick={onClose} className="p-2 hover:bg-secondary rounded-sm shrink-0">
+          <X className="w-5 h-5 text-muted-foreground" />
+        </button>
+      </div>
+
+      {/* Map */}
+      {customerCoords && (
+        <div className="border-b border-border">
+          <MapView
+            markers={[{
+              lng: customerCoords.lng,
+              lat: customerCoords.lat,
+              label: c.segment,
+              color: '#1a1a1a',
+              popup: `<strong>${c.name}</strong><br>${c.city}, ${c.state}`,
+            }]}
+            showWarehouse
+            showRoute
+            routeFrom={customerCoords}
+            className="w-full h-48"
+          />
+        </div>
+      )}
+
+      <div className="p-5 space-y-5">
+        {/* Contact + Drive info */}
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Items</h4>
-          {c.pickupItems.map((item, i) => (
-            <div key={i} className="text-sm px-3 py-1.5 bg-green-50 rounded-sm mb-1 flex justify-between">
-              <span>{item.qty}x {item.name}</span>
-              {item.price > 0 && <span className="text-muted-foreground">${(item.price * item.qty).toLocaleString()}</span>}
+          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Contact & Location</h4>
+          <div className="space-y-2">
+            {c.email && (
+              <div className="flex items-center gap-2 text-sm">
+                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
+                <a href={`mailto:${c.email}`} className="text-primary hover:underline">{c.email}</a>
+                <CopyBtn text={c.email} id={`m-${c.id}-email`} copied={copied} onCopy={onCopy} />
+              </div>
+            )}
+            {c.phone && (
+              <div className="flex items-center gap-2 text-sm">
+                <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
+                <a href={`tel:${c.phone}`} className="text-primary hover:underline">{c.phone}</a>
+                <CopyBtn text={c.phone} id={`m-${c.id}-phone`} copied={copied} onCopy={onCopy} />
+              </div>
+            )}
+            {!c.email && !c.phone && (
+              <p className="text-sm text-amber-600 flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> No contact on file</p>
+            )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="w-4 h-4 shrink-0" /> {c.city}, {c.state}
             </div>
-          ))}
-          {c.shipItems.map((item, i) => (
-            <div key={i} className="text-sm px-3 py-1.5 bg-secondary/50 rounded-sm mb-1">{item.qty}x {item.name} <span className="text-xs text-muted-foreground">(shipping)</span></div>
-          ))}
-          <p className="mt-1 text-xs text-muted-foreground font-mono">{c.orders.join(', ')}</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Navigation className="w-4 h-4 shrink-0" />
+              {realDriveStr ? (
+                <span>{realDriveStr} drive ({realDrive!.miles} mi)</span>
+              ) : (
+                <span className="italic">~{estDriveStr} (est)</span>
+              )}
+            </div>
+          </div>
+
+          {/* Alt contacts */}
+          {c.altContacts.length > 0 && (
+            <div className="mt-3 space-y-1.5">
+              <p className="text-xs font-medium text-blue-700">Alternate Contacts (UNL)</p>
+              {c.altContacts.map((ac, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm bg-blue-50 rounded-sm px-3 py-1.5">
+                  {ac.type === 'email' ? <Mail className="w-3.5 h-3.5 text-blue-600" /> : <Phone className="w-3.5 h-3.5 text-blue-600" />}
+                  <span>{ac.value}</span>
+                  <span className="text-xs text-muted-foreground ml-auto">via {ac.source}</span>
+                  <CopyBtn text={ac.value} id={`m-${c.id}-alt-${i}`} copied={copied} onCopy={onCopy} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Add contact (only for pending, not scheduled) */}
+          {showAddContact && (
+            contactForm?.customerId === c.id ? (
+              <div className="mt-3 flex items-center gap-2">
+                <select value={contactForm.type} onChange={e => onContactFormChange({ ...contactForm, type: e.target.value as 'email' | 'phone' })}
+                  className="border border-border rounded-sm px-2 py-1.5 text-sm bg-background">
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                </select>
+                <input
+                  type={contactForm.type === 'email' ? 'email' : 'tel'}
+                  placeholder={contactForm.type === 'email' ? 'alternate@email.com' : '(402) 555-1234'}
+                  value={contactForm.value}
+                  onChange={e => onContactFormChange({ ...contactForm, value: e.target.value })}
+                  onKeyDown={e => e.key === 'Enter' && onAddContact()}
+                  className="flex-1 border border-border rounded-sm px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                  autoFocus
+                />
+                <button onClick={onAddContact} disabled={!contactForm.value.trim() || contactSaving}
+                  className="px-3 py-1.5 bg-primary text-primary-foreground rounded-sm text-sm font-medium hover:bg-primary/90 disabled:opacity-50">
+                  {contactSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
+                </button>
+                <button onClick={() => onContactFormChange(null)} className="p-1.5 text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
+              </div>
+            ) : (
+              <button onClick={() => onContactFormChange({ customerId: c.id, type: 'email', value: '' })}
+                className="mt-3 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-sm text-sm font-medium hover:bg-blue-700 shadow-sm transition-colors">
+                <Plus className="w-4 h-4" /> Add Alternate Contact Info
+              </button>
+            )
+          )}
         </div>
-        <div className="flex items-center gap-3">
-          <a href={c.pickupLink} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1.5 font-medium"><ExternalLink className="w-3.5 h-3.5" /> View Pickup Page</a>
-          <CopyBtn text={c.pickupLink} id={`s-${c.id}-l`} copied={copied} onCopy={onCopy} label="Copy Link" />
+
+        {/* Items */}
+        <ItemsSection customer={c} />
+
+        {/* Pickup link */}
+        <PickupLinkSection customer={c} copied={copied} onCopy={onCopy} />
+
+        {/* Outreach history */}
+        <div>
+          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Outreach History</h4>
+          {c.outreach.length === 0 ? (
+            <p className="text-sm text-muted-foreground flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-500" /> No outreach recorded yet</p>
+          ) : (
+            <div className="space-y-2.5 max-h-48 overflow-y-auto">
+              {c.outreach.map((entry, i) => (
+                <div key={i} className="flex gap-2 text-sm">
+                  <div className="shrink-0 mt-1.5"><OutreachDot action={entry.action} /></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium">{formatAction(entry.action)}</p>
+                    {typeof entry.details.note === 'string' && entry.details.note && (
+                      <p className="text-muted-foreground text-xs mt-0.5">{String(entry.details.note)}</p>
+                    )}
+                    {entry.action === 'alt_contact_added' && (
+                      <p className="text-blue-600 text-xs mt-0.5">{String(entry.details.type)}: {String(entry.details.value)}</p>
+                    )}
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(entry.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-      <OutreachSection outreach={c.outreach} />
-    </div>
+    </>
   );
 }
 
