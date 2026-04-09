@@ -398,7 +398,7 @@ export default function PendingPage() {
                           {(() => {
                             const texted = c.outreach.some(o => o.action === 'sms_sent');
                             const called = c.outreach.some(o => o.action === 'phone_called');
-                            const emailed = c.outreach.some(o => o.action === 'email_sent');
+                            const emailed = c.outreach.some(o => o.action === 'email_sent' || o.action === 'admin_email_sent');
                             if (!texted && !called && !emailed) {
                               return <span className="text-xs text-amber-600 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> None</span>;
                             }
@@ -836,11 +836,11 @@ function CopyBtn({ text, id, copied, onCopy, label }: {
 }
 
 function OutreachDot({ action }: { action: string }) {
-  const colors: Record<string, string> = { sms_sent: 'bg-blue-500', phone_called: 'bg-purple-500', email_sent: 'bg-green-500', email_opened: 'bg-green-300', email_clicked: 'bg-green-600', alt_contact_added: 'bg-blue-400', note_added: 'bg-gray-400', outreach_note: 'bg-gray-400' };
+  const colors: Record<string, string> = { sms_sent: 'bg-blue-500', phone_called: 'bg-purple-500', email_sent: 'bg-green-500', admin_email_sent: 'bg-green-500', email_opened: 'bg-green-300', email_clicked: 'bg-green-600', email_bounced: 'bg-red-500', alt_contact_added: 'bg-blue-400', note_added: 'bg-gray-400', outreach_note: 'bg-gray-400' };
   return <div className={`w-2.5 h-2.5 rounded-full mt-1 ${colors[action] || 'bg-gray-300'}`} />;
 }
 
 function formatAction(action: string): string {
-  const labels: Record<string, string> = { sms_sent: 'SMS Sent', phone_called: 'Phone Call', email_sent: 'Email Sent', email_opened: 'Email Opened', email_clicked: 'Email Link Clicked', outreach_note: 'Outreach Note', note_added: 'Note Added', alt_contact_added: 'Alternate Contact Added' };
+  const labels: Record<string, string> = { sms_sent: 'SMS Sent', phone_called: 'Phone Call', email_sent: 'Email Sent', admin_email_sent: 'Email Sent (Admin)', email_opened: 'Email Opened', email_clicked: 'Email Link Clicked', email_bounced: 'Email Bounced', outreach_note: 'Outreach Note', note_added: 'Note Added', alt_contact_added: 'Alternate Contact Added' };
   return labels[action] || action.replace(/_/g, ' ');
 }

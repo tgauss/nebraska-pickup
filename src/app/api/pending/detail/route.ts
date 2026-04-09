@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     }));
 
   const outreach = logs
-    .filter(l => ['sms_sent', 'phone_called', 'outreach_note', 'note_added', 'email_sent', 'email_opened', 'email_clicked', 'alt_contact_added'].includes(l.action))
+    .filter(l => ['sms_sent', 'phone_called', 'outreach_note', 'note_added', 'email_sent', 'admin_email_sent', 'email_opened', 'email_clicked', 'email_bounced', 'alt_contact_added'].includes(l.action))
     .map(l => ({
       action: l.action,
       details: l.details,

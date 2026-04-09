@@ -344,7 +344,7 @@ function hydrateFromSupabase() {
       const { data: sbActivity } = await sb.from('activity_log')
         .select('*, customers(token)')
         .order('created_at', { ascending: false })
-        .limit(500);
+        .limit(5000);
 
       if (sbActivity && sbActivity.length > 0) {
         for (const sbA of sbActivity) {
