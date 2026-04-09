@@ -6,7 +6,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft, Mail, Phone, MapPin, Clock, Calendar, Truck, CheckCircle,
-  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode, Navigation, Eye
+  UserCheck, XCircle, Loader2, Send, AlertTriangle, ExternalLink, Package, QrCode, Navigation, Eye,
+  Pencil, Check, X as XIcon
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -64,6 +65,9 @@ export default function CustomerDetailPage() {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingResult, setBookingResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [editingContact, setEditingContact] = useState<'email' | 'phone' | null>(null);
+  const [editContactValue, setEditContactValue] = useState('');
+  const [contactSaving, setContactSaving] = useState(false);
 
   const fetchData = useCallback(async () => {
     const [custRes, notesRes] = await Promise.all([
@@ -116,6 +120,22 @@ export default function CustomerDetailPage() {
       body: JSON.stringify({ note: newNote.trim() }),
     });
     setNewNote('');
+    await fetchData();
+  };
+
+  const handleSaveContact = async () => {
+    if (!editingContact) return;
+    setContactSaving(true);
+    const body: Record<string, string> = {};
+    body[editingContact] = editContactValue.trim();
+    await fetch(`/api/admin/customers/${customerId}/contact`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    setEditingContact(null);
+    setEditContactValue('');
+    setContactSaving(false);
     await fetchData();
   };
 
@@ -456,13 +476,70 @@ export default function CustomerDetailPage() {
           <div className="bg-card rounded-sm border border-border p-4 space-y-3">
             <h3 className="font-serif font-bold">Contact</h3>
             <div className="space-y-2 text-sm">
-              <a href={`mailto:${customer.email}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
-                <Mail className="w-4 h-4 shrink-0" /> {customer.email}
-              </a>
-              {customer.phone && (
-                <a href={`tel:${customer.phone}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
-                  <Phone className="w-4 h-4 shrink-0" /> {customer.phone}
-                </a>
+              {/* Email — editable */}
+              {editingContact === 'email' ? (
+                <div className="flex items-center gap-1.5">
+                  <Mail className="w-4 h-4 shrink-0 text-muted-foreground" />
+                  <input
+                    type="email"
+                    value={editContactValue}
+                    onChange={e => setEditContactValue(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSaveContact()}
+                    className="flex-1 border border-border rounded-sm px-2 py-1 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    autoFocus
+                  />
+                  <button onClick={handleSaveContact} disabled={contactSaving} className="p-1 text-green-600 hover:bg-green-50 rounded-sm">
+                    {contactSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => setEditingContact(null)} className="p-1 text-muted-foreground hover:bg-secondary rounded-sm">
+                    <XIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 group">
+                  <a href={`mailto:${customer.email}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground flex-1">
+                    <Mail className="w-4 h-4 shrink-0" /> {customer.email}
+                  </a>
+                  <button onClick={() => { setEditingContact('email'); setEditContactValue(customer.email); }} className="p-1 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+              {/* Phone — editable */}
+              {editingContact === 'phone' ? (
+                <div className="flex items-center gap-1.5">
+                  <Phone className="w-4 h-4 shrink-0 text-muted-foreground" />
+                  <input
+                    type="tel"
+                    value={editContactValue}
+                    onChange={e => setEditContactValue(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSaveContact()}
+                    placeholder="(402) 555-1234"
+                    className="flex-1 border border-border rounded-sm px-2 py-1 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    autoFocus
+                  />
+                  <button onClick={handleSaveContact} disabled={contactSaving} className="p-1 text-green-600 hover:bg-green-50 rounded-sm">
+                    {contactSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => setEditingContact(null)} className="p-1 text-muted-foreground hover:bg-secondary rounded-sm">
+                    <XIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 group">
+                  {customer.phone ? (
+                    <a href={`tel:${customer.phone}`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground flex-1">
+                      <Phone className="w-4 h-4 shrink-0" /> {customer.phone}
+                    </a>
+                  ) : (
+                    <span className="flex items-center gap-2 text-muted-foreground flex-1">
+                      <Phone className="w-4 h-4 shrink-0" /> <span className="italic">No phone</span>
+                    </span>
+                  )}
+                  <button onClick={() => { setEditingContact('phone'); setEditContactValue(customer.phone || ''); }} className="p-1 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               )}
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="w-4 h-4 shrink-0" /> {customer.city}{customer.state ? `, ${customer.state}` : ''}

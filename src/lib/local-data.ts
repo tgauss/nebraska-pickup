@@ -649,6 +649,22 @@ export function updateLineItemsStatus(customerId: string, filter: Partial<DBLine
   });
 }
 
+export function updateCustomerContact(customerId: string, fields: { email?: string; phone?: string }): void {
+  loadData();
+  const customer = customers.find(c => c.id === customerId);
+  if (!customer) return;
+  if (fields.email !== undefined) customer.email = fields.email;
+  if (fields.phone !== undefined) customer.phone = fields.phone || null;
+  sbWrite(async (sb) => {
+    const { data: sbCust } = await sb!.from('customers').select('id').eq('token', customer.token).single();
+    if (!sbCust) return;
+    const updates: Record<string, string | null> = {};
+    if (fields.email !== undefined) updates.email = fields.email;
+    if (fields.phone !== undefined) updates.phone = fields.phone || null;
+    await sb!.from('customers').update(updates).eq('id', sbCust.id);
+  });
+}
+
 export function addActivityLog(customerId: string | null, action: string, details: Record<string, unknown> = {}): void {
   loadData();
   const logEntry = {
