@@ -1401,6 +1401,227 @@ export async function sendPickupEmail(recipient: EmailRecipient, template: Email
 }
 
 /**
+ * Send a calendar invite email for a confirmed pickup booking.
+ * Uses METHOD:REQUEST so it appears as a real calendar invite in Gmail/Outlook/Apple Mail.
+ * Each customer gets their own individual invite (not a group event).
+ */
+export interface CalendarInviteRecipient {
+  name: string;
+  email: string;
+  token: string;
+  day: string;
+  time: string;
+  pickupItems: Array<{ name: string; qty: number }>;
+  vehicleRec: string;
+  label?: string;
+  bookingId: string;
+}
+
+export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  // Import ICS helpers inline to avoid circular deps
+  const { getSlotDate, getSlotEndDate, ROCA_ADDRESS, ROCA_MAPS_URL, ROCA_GEO } = await import('./ics');
+
+  const firstName = r.name.split(' ')[0];
+  const dateMap: Record<string, string> = { Thursday: 'Thursday, April 16', Friday: 'Friday, April 17', Saturday: 'Saturday, April 18', May2: 'Saturday, May 2' };
+  const displayDate = dateMap[r.day] || r.day;
+
+  const startDate = getSlotDate(r.day, r.time);
+  const endDate = getSlotEndDate(r.day, r.time);
+  const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const now = formatDate(new Date());
+  const uid = `${r.bookingId}@devaney-pickup`;
+  const organizerEmail = 'support@raregoods.com';
+
+  const itemList = r.pickupItems.map(i => `${i.qty}x ${i.name}`).join('\\n');
+  const description = [
+    `DEVANEY PICKUP — ${displayDate} at ${r.time}`,
+    '',
+    `Customer: ${r.name}`,
+    r.label ? `Label: ${r.label}` : '',
+    '',
+    'ITEMS:',
+    ...r.pickupItems.map(i => `  ${i.qty}x ${i.name}`),
+    '',
+    `VEHICLE: ${r.vehicleRec}`,
+    '',
+    `LOCATION:`,
+    ROCA_ADDRESS,
+    '',
+    `DIRECTIONS: ${ROCA_MAPS_URL}`,
+    '',
+    `Your pickup page: ${APP_URL}/pickup/${r.token}`,
+    '',
+    'Show the QR code on your pickup page when you arrive.',
+  ].filter(Boolean).join('\\n');
+
+  // Build ICS with METHOD:REQUEST for proper calendar invite
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Nebraska Rare Goods//Devaney Pickup//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:REQUEST',
+    'BEGIN:VEVENT',
+    `DTSTART:${formatDate(startDate)}`,
+    `DTEND:${formatDate(endDate)}`,
+    `SUMMARY:Devaney Pickup — ${r.name}`,
+    `DESCRIPTION:${description}`,
+    `LOCATION:${ROCA_ADDRESS.replace(/,/g, '\\,')}`,
+    `GEO:${ROCA_GEO.lat};${ROCA_GEO.lng}`,
+    `URL:${ROCA_MAPS_URL}`,
+    `ORGANIZER;CN=Nebraska Rare Goods:mailto:${organizerEmail}`,
+    `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=${r.name.replace(/,/g, '')}:mailto:${r.email}`,
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `CREATED:${now}`,
+    `LAST-MODIFIED:${now}`,
+    `SEQUENCE:0`,
+    'STATUS:CONFIRMED',
+    'TRANSP:OPAQUE',
+    // 1 hour reminder
+    'BEGIN:VALARM',
+    'TRIGGER:-PT1H',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Your Devaney pickup is in 1 hour!',
+    'END:VALARM',
+    // Morning-of reminder
+    'BEGIN:VALARM',
+    'TRIGGER:-PT3H',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Reminder: Devaney pickup today. Don\'t forget your vehicle!',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+
+  const icsBase64 = Buffer.from(icsContent).toString('base64');
+
+  const subject = `${firstName}, your Devaney pickup is on your calendar — ${displayDate} at ${r.time}`;
+
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
+<div style="display:none;max-height:0;overflow:hidden;">We just added your Devaney pickup to your calendar — ${displayDate} at ${r.time}. See you in Roca!</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
+<tr><td align="center" style="padding:24px 16px;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="560" style="max-width:560px;width:100%;">
+
+<tr><td style="background-color:#d00000;padding:20px 24px;border-radius:8px 8px 0 0;text-align:center;">
+  <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" width="40" style="display:inline-block;width:40px;height:auto;margin-bottom:6px;" />
+  <p style="margin:0;font-family:'Trebuchet MS',sans-serif;font-size:11px;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:2px;">Nebraska Rare Goods</p>
+</td></tr>
+
+<tr><td style="background-color:#ffffff;padding:36px 32px 28px;">
+  <h1 style="margin:0 0 8px;font-family:'Trebuchet MS',sans-serif;font-size:24px;color:#1a1a1a;">You're all set, ${firstName}!</h1>
+  <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">We just dropped your Devaney pickup right onto your calendar — one less thing to remember. We're getting everything ready for you and can't wait to see you out in Roca!</p>
+
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#faf8f3;border:1px solid #e8e4da;border-radius:8px;margin-bottom:24px;">
+    <tr><td style="padding:24px 28px;">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+          <td style="vertical-align:top;width:50%;">
+            <p style="margin:0 0 4px;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1.5px;font-family:'Trebuchet MS',sans-serif;">When</p>
+            <p style="margin:0 0 0;font-size:20px;font-weight:bold;color:#1a1a1a;font-family:'Trebuchet MS',sans-serif;">${displayDate}</p>
+            <p style="margin:2px 0 0;font-size:20px;font-weight:bold;color:#d00000;font-family:'Trebuchet MS',sans-serif;">${r.time}</p>
+          </td>
+          <td style="vertical-align:top;width:50%;">
+            <p style="margin:0 0 4px;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1.5px;font-family:'Trebuchet MS',sans-serif;">Where</p>
+            <p style="margin:0 0 2px;font-size:14px;color:#1a1a1a;font-weight:600;">Roca Warehouse</p>
+            <p style="margin:0;font-size:13px;color:#666;">2410 Production Dr, Unit 4</p>
+            <p style="margin:0;font-size:13px;color:#666;">Roca, NE 68430</p>
+          </td>
+        </tr>
+      </table>
+
+      <div style="border-top:1px solid #e8e4da;margin:18px 0 14px;"></div>
+
+      <p style="margin:0 0 8px;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1.5px;font-family:'Trebuchet MS',sans-serif;">Your Items</p>
+      ${r.pickupItems.map(i => `<p style="margin:0 0 4px;font-size:14px;color:#1a1a1a;"><strong>${i.qty}x</strong> ${i.name}</p>`).join('')}
+      ${r.label ? `
+      <div style="border-top:1px solid #e8e4da;margin:14px 0;"></div>
+      <p style="margin:0;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1.5px;font-family:'Trebuchet MS',sans-serif;">Your Pickup Label</p>
+      <p style="margin:4px 0 0;font-family:'Courier New',monospace;font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:2px;">${r.label}</p>` : ''}
+    </td></tr>
+  </table>
+
+  <p style="margin:0 0 10px;font-size:14px;color:#555;line-height:1.5;">🚗 <strong>Vehicle tip:</strong> ${r.vehicleRec}</p>
+  <p style="margin:0 0 24px;font-size:14px;color:#555;line-height:1.5;">📱 When you arrive, pull up your <a href="${APP_URL}/pickup/${r.token}" style="color:#d00000;font-weight:600;">pickup page</a> and show us the QR code. You can also send a friend or family member with your receipt if needed.</p>
+
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td align="center" style="padding:4px 0 8px;">
+        <a href="${ROCA_MAPS_URL}" style="display:inline-block;background-color:#d00000;color:#ffffff;padding:14px 32px;border-radius:6px;text-decoration:none;font-family:'Trebuchet MS',sans-serif;font-size:15px;font-weight:bold;">Get Directions to Roca</a>
+      </td>
+    </tr>
+  </table>
+</td></tr>
+
+<tr><td style="background-color:#1a1a1a;padding:20px 28px;border-radius:0 0 8px 8px;text-align:center;">
+  <p style="margin:0 0 4px;font-size:13px;color:#ccc;">This event should appear on your calendar automatically.</p>
+  <p style="margin:0 0 10px;font-size:12px;color:#888;">If you don't see it, check the attached .ics file in this email.</p>
+  <p style="margin:0;font-size:11px;color:#666;">Go Big Red! &mdash; Nebraska Rare Goods</p>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  const text = `You're all set, ${firstName}!
+
+We just dropped your Devaney pickup right onto your calendar — one less thing to remember!
+
+WHEN: ${displayDate} at ${r.time}
+WHERE: 2410 Production Drive, Unit 4, Roca, NE 68430
+
+YOUR ITEMS:
+${r.pickupItems.map(i => `  ${i.qty}x ${i.name}`).join('\n')}
+${r.label ? `\nPICKUP LABEL: ${r.label}` : ''}
+
+VEHICLE TIP: ${r.vehicleRec}
+
+When you arrive, pull up your pickup page and show us the QR code:
+${APP_URL}/pickup/${r.token}
+
+Directions: ${ROCA_MAPS_URL}
+
+You can also send a friend or family member with your receipt if needed.
+
+We're getting everything ready and can't wait to see you out in Roca!
+
+Go Big Red!
+- Nebraska Rare Goods`;
+
+  try {
+    const pm = getClient();
+    const result = await pm.sendEmail({
+      From: FROM_EMAIL,
+      To: r.email,
+      Subject: subject,
+      HtmlBody: html,
+      TextBody: text,
+      TrackOpens: true,
+      TrackLinks: Models.LinkTrackingOptions.HtmlAndText,
+      Tag: 'calendar-invite',
+      Metadata: { customer_token: r.token, customer_name: r.name },
+      MessageStream: 'outbound',
+      Attachments: [{
+        Name: 'pickup-invite.ics',
+        Content: icsBase64,
+        ContentType: 'text/calendar; method=REQUEST',
+        ContentID: '',
+      }],
+    });
+    return { success: true, messageId: result.MessageID };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+/**
  * Get email delivery stats from Postmark
  */
 export async function getEmailStats(): Promise<{ sent: number; opened: number; clicked: number; bounced: number } | null> {
