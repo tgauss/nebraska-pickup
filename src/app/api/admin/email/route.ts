@@ -155,7 +155,7 @@ export async function POST(request: Request) {
   await ensureHydrated();
   const body = await request.json();
   const { action, customerIds, testEmail, template: templateName } = body;
-  const templateMap: Record<string, EmailTemplate> = { reminder: 'reminder', confirmation: 'confirmation', seg_c: 'seg_c', alternate: 'alternate', urgent_reminder: 'urgent_reminder', urgent_seg_c: 'urgent_seg_c', alternate_reminder: 'alternate_reminder' };
+  const templateMap: Record<string, EmailTemplate> = { reminder: 'reminder', confirmation: 'confirmation', seg_c: 'seg_c', alternate: 'alternate', urgent_reminder: 'urgent_reminder', urgent_seg_c: 'urgent_seg_c', alternate_reminder: 'alternate_reminder', final_notice: 'final_notice' };
   const template: EmailTemplate = templateMap[templateName as string] || 'initial';
 
   // Preview: return HTML for a specific customer
