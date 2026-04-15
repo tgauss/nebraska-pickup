@@ -1515,7 +1515,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
 <tr><td style="background-color:#ffffff;padding:36px 32px 28px;">
   <h1 style="margin:0 0 8px;font-family:'Trebuchet MS',sans-serif;font-size:24px;color:#1a1a1a;">You're all set, ${firstName}!</h1>
-  <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">We just dropped your Nebraska Seats pickup right onto your calendar — one less thing to remember. We're getting everything ready for you and can't wait to see you!</p>
+  <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">We added your pickup timeslot and info for your Nebraska Seats order right onto your calendar — one less thing to remember. We're getting everything ready for you and can't wait to see you!</p>
 
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#faf8f3;border:1px solid #e8e4da;border-radius:8px;margin-bottom:24px;">
     <tr><td style="padding:24px 28px;">
@@ -1577,7 +1577,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
   const text = `You're all set, ${firstName}!
 
-We just dropped your Nebraska Seats pickup right onto your calendar — one less thing to remember!
+We added your pickup timeslot and info for your Nebraska Seats order right onto your calendar — one less thing to remember!
 
 WHEN: ${displayDate} at ${r.time}
 WHERE: 2410 Production Drive, Unit 4, Roca, NE 68430
