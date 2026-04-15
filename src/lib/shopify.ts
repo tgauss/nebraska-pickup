@@ -219,6 +219,130 @@ export async function addTagToOrder(orderNumber: string, tag: string): Promise<{
   return { success: true };
 }
 
+// ── Shipping Labels ────────────────────────────────────────────
+
+export interface ShippingRate {
+  serviceId: string;
+  serviceName: string;
+  price: number;
+  currency: string;
+  deliveryDays: string | null;
+}
+
+/**
+ * Get available shipping rates for a fulfillment order.
+ */
+export async function getShippingRates(fulfillmentOrderId: string): Promise<ShippingRate[]> {
+  if (!SHOPIFY_TOKEN) return [];
+
+  const data = await shopifyGraphQL(`{
+    fulfillmentOrder(id: "${fulfillmentOrderId}") {
+      id
+      deliveryMethod { methodType }
+      fulfillmentOrderMerchantRequest: merchantRequests(first: 1) { edges { node { message } } }
+    }
+  }`);
+
+  // Use the REST API for shipping rates since GraphQL shipping label support is limited
+  // For now, we'll use Shopify's calculated rates from the order
+  return [];
+}
+
+/**
+ * Fulfill an order with tracking info (after label is purchased externally or via Shopify).
+ */
+export async function fulfillOrder(orderNumber: string, tracking?: { number: string; company: string; url?: string }): Promise<{ success: boolean; error?: string }> {
+  if (!SHOPIFY_TOKEN) return { success: false, error: 'Shopify not configured' };
+
+  const searchData = await shopifyGraphQL(`{
+    orders(first: 1, query: "name:#${orderNumber}") {
+      edges { node {
+        id displayFulfillmentStatus
+        fulfillmentOrders(first: 10) { edges { node { id status } } }
+      } }
+    }
+  }`);
+
+  const order = searchData?.orders?.edges?.[0]?.node;
+  if (!order) return { success: false, error: 'Order not found' };
+  if (order.displayFulfillmentStatus === 'FULFILLED') return { success: true };
+
+  const openFOs = order.fulfillmentOrders.edges
+    .filter((e: { node: { status: string } }) => e.node.status === 'OPEN' || e.node.status === 'IN_PROGRESS')
+    .map((e: { node: { id: string } }) => e.node.id);
+
+  if (openFOs.length === 0) return { success: true };
+
+  for (const foId of openFOs) {
+    const trackingInfo = tracking
+      ? `trackingInfo: { company: "${tracking.company}", number: "${tracking.number}"${tracking.url ? `, url: "${tracking.url}"` : ''} }`
+      : `trackingInfo: { company: "Shipping", number: "" }`;
+
+    const result = await shopifyGraphQL(`
+      mutation {
+        fulfillmentCreateV2(fulfillment: {
+          lineItemsByFulfillmentOrder: [{ fulfillmentOrderId: "${foId}" }]
+          notifyCustomer: true
+          ${trackingInfo}
+        }) {
+          fulfillment { id status }
+          userErrors { message field }
+        }
+      }
+    `);
+
+    const errors = result?.fulfillmentCreateV2?.userErrors;
+    if (errors && errors.length > 0) {
+      return { success: false, error: errors[0].message };
+    }
+  }
+
+  return { success: true };
+}
+
+/**
+ * Get shipping address for an order from Shopify.
+ */
+export async function getOrderShippingAddress(orderNumber: string): Promise<{
+  address1: string; address2?: string; city: string; province: string; zip: string; country: string;
+} | null> {
+  const data = await shopifyGraphQL(`{
+    orders(first: 1, query: "name:#${orderNumber}") {
+      edges { node {
+        shippingAddress { address1 address2 city provinceCode zip countryCode }
+      } }
+    }
+  }`);
+
+  const addr = data?.orders?.edges?.[0]?.node?.shippingAddress;
+  if (!addr) return null;
+  return {
+    address1: addr.address1 || '',
+    address2: addr.address2 || undefined,
+    city: addr.city || '',
+    province: addr.provinceCode || '',
+    zip: addr.zip || '',
+    country: addr.countryCode || 'US',
+  };
+}
+
+/**
+ * Get fulfillment status and Shopify tags for an order.
+ */
+export async function getOrderFulfillmentInfo(orderNumber: string): Promise<{
+  status: string; tags: string[];
+} | null> {
+  const data = await shopifyGraphQL(`{
+    orders(first: 1, query: "name:#${orderNumber}") {
+      edges { node { displayFulfillmentStatus tags } }
+    }
+  }`);
+
+  const node = data?.orders?.edges?.[0]?.node;
+  if (!node) return null;
+  return { status: node.displayFulfillmentStatus, tags: node.tags };
+}
+
 // ── Utility ────────────────────────────────────────────────────
 
 export function isShopifyConfigured(): boolean {

@@ -11,6 +11,7 @@ export type FulfillmentStatus =
   | 'staged'
   | 'picked_up'
   | 'ship_queued'
+  | 'packed'
   | 'shipped'
   | 'no_show';
 
@@ -161,6 +162,7 @@ export const STATUS_COLORS: Record<FulfillmentStatus, string> = {
   staged: 'bg-indigo-100 text-indigo-800',
   picked_up: 'bg-green-100 text-green-800',
   ship_queued: 'bg-orange-100 text-orange-800',
+  packed: 'bg-cyan-100 text-cyan-800',
   shipped: 'bg-green-100 text-green-700',
   no_show: 'bg-red-100 text-red-800',
 };
