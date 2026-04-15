@@ -1496,7 +1496,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
   const icsBase64 = Buffer.from(icsContent).toString('base64');
 
-  const subject = `${firstName}, your Devaney pickup is on your calendar — ${displayDate} at ${r.time}`;
+  const subject = `${firstName}, your Nebraska Seats pickup is coming soon — ${displayDate}`;
 
   const html = `
 <!DOCTYPE html>
@@ -1552,7 +1552,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td align="center" style="padding:4px 0 8px;">
-        <a href="${ROCA_MAPS_URL}" style="display:inline-block;background-color:#d00000;color:#ffffff;padding:14px 32px;border-radius:6px;text-decoration:none;font-family:'Trebuchet MS',sans-serif;font-size:15px;font-weight:bold;">Get Directions to Roca</a>
+        <a href="${ROCA_MAPS_URL}" style="display:inline-block;background-color:#d00000;color:#ffffff;padding:14px 32px;border-radius:6px;text-decoration:none;font-family:'Trebuchet MS',sans-serif;font-size:15px;font-weight:bold;">Get Directions to Pickup</a>
       </td>
     </tr>
   </table>
