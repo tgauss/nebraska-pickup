@@ -1434,7 +1434,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
   const itemList = r.pickupItems.map(i => `${i.qty}x ${i.name}`).join('\\n');
   const description = [
-    `DEVANEY PICKUP — ${displayDate} at ${r.time}`,
+    `NEBRASKA SEATS PICKUP — ${displayDate} at ${r.time}`,
     '',
     `Customer: ${r.name}`,
     r.label ? `Label: ${r.label}` : '',
@@ -1458,13 +1458,13 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
   const icsContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Nebraska Rare Goods//Devaney Pickup//EN',
+    'PRODID:-//Nebraska Rare Goods//Nebraska Seats Pickup//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:REQUEST',
     'BEGIN:VEVENT',
     `DTSTART:${formatDate(startDate)}`,
     `DTEND:${formatDate(endDate)}`,
-    `SUMMARY:Devaney Pickup — ${r.name}`,
+    `SUMMARY:Nebraska Seats Pickup — ${r.name}`,
     `DESCRIPTION:${description}`,
     `LOCATION:${ROCA_ADDRESS.replace(/,/g, '\\,')}`,
     `GEO:${ROCA_GEO.lat};${ROCA_GEO.lng}`,
@@ -1482,13 +1482,13 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
     'BEGIN:VALARM',
     'TRIGGER:-PT1H',
     'ACTION:DISPLAY',
-    'DESCRIPTION:Your Devaney pickup is in 1 hour!',
+    'DESCRIPTION:Your Nebraska Seats pickup is in 1 hour!',
     'END:VALARM',
     // Morning-of reminder
     'BEGIN:VALARM',
     'TRIGGER:-PT3H',
     'ACTION:DISPLAY',
-    'DESCRIPTION:Reminder: Devaney pickup today. Don\'t forget your vehicle!',
+    'DESCRIPTION:Reminder: Nebraska Seats pickup today. Don\'t forget your vehicle!',
     'END:VALARM',
     'END:VEVENT',
     'END:VCALENDAR',
@@ -1503,7 +1503,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background-color:#f5f1e7;font-family:Georgia,serif;">
-<div style="display:none;max-height:0;overflow:hidden;">We just added your Devaney pickup to your calendar — ${displayDate} at ${r.time}. See you in Roca!</div>
+<div style="display:none;max-height:0;overflow:hidden;">We just added your Nebraska Seats pickup to your calendar — ${displayDate} at ${r.time}. See you there!</div>
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f1e7;">
 <tr><td align="center" style="padding:24px 16px;">
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="560" style="max-width:560px;width:100%;">
@@ -1515,7 +1515,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
 <tr><td style="background-color:#ffffff;padding:36px 32px 28px;">
   <h1 style="margin:0 0 8px;font-family:'Trebuchet MS',sans-serif;font-size:24px;color:#1a1a1a;">You're all set, ${firstName}!</h1>
-  <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">We just dropped your Devaney pickup right onto your calendar — one less thing to remember. We're getting everything ready for you and can't wait to see you out in Roca!</p>
+  <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">We just dropped your Nebraska Seats pickup right onto your calendar — one less thing to remember. We're getting everything ready for you and can't wait to see you!</p>
 
   <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#faf8f3;border:1px solid #e8e4da;border-radius:8px;margin-bottom:24px;">
     <tr><td style="padding:24px 28px;">
@@ -1577,7 +1577,7 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
 
   const text = `You're all set, ${firstName}!
 
-We just dropped your Devaney pickup right onto your calendar — one less thing to remember!
+We just dropped your Nebraska Seats pickup right onto your calendar — one less thing to remember!
 
 WHEN: ${displayDate} at ${r.time}
 WHERE: 2410 Production Drive, Unit 4, Roca, NE 68430
