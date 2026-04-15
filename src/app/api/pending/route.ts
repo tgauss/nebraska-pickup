@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated } from '@/lib/local-data';
 import { getProductInfo } from '@/lib/products';
+import { getOrderValues } from '@/lib/shopify';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +23,10 @@ export async function GET() {
   const totalBooked = booked.length;
   const unbookedCustomers = pickupRequired.filter(c => !bookedMap.has(c.id));
 
+  // Fetch real order values from Shopify
+  const allOrderNums = [...unbookedCustomers, ...booked].flatMap(c => db.getOrdersByCustomer(c.id).map(o => o.shopify_order_number));
+  const shopifyValues = await getOrderValues(allOrderNums);
+
   // Build unbooked customer list with full details
   const unbookedList = unbookedCustomers.map(c => {
     const items = db.getLineItemsByCustomer(c.id);
@@ -31,11 +36,24 @@ export async function GET() {
     const pickupItems = items.filter(i => i.item_type === 'pickup' || i.fulfillment_preference === 'pickup');
     const shipItems = items.filter(i => i.fulfillment_preference === 'ship' && i.item_type === 'ship');
 
-    // Calculate estimated order value from product prices
+    // Use real Shopify order values when available, fall back to product catalog estimates
     let orderValue = 0;
-    for (const item of items) {
-      const product = getProductInfo(item.item_name);
-      if (product) orderValue += product.price * item.qty;
+    for (const o of orders) {
+      const shopifyVal = shopifyValues.get(`#${o.shopify_order_number}`);
+      if (shopifyVal) { orderValue += shopifyVal; continue; }
+      // Fallback: estimate from product catalog
+      const orderItems = items.filter(i => i.order_id === o.id);
+      for (const item of orderItems) {
+        const product = getProductInfo(item.item_name);
+        if (product) orderValue += product.price * item.qty;
+      }
+    }
+    if (orderValue === 0) {
+      // Final fallback: estimate all items
+      for (const item of items) {
+        const product = getProductInfo(item.item_name);
+        if (product) orderValue += product.price * item.qty;
+      }
     }
 
     // Get alternate contacts from activity log

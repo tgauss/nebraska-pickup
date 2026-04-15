@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated } from '@/lib/local-data';
+import { addNoteToOrder } from '@/lib/shopify';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,12 @@ export async function POST(
     note: note.trim(),
     added_at: new Date().toISOString(),
   });
+
+  // Sync note to Shopify order(s)
+  const orders = db.getOrdersByCustomer(customerId);
+  for (const order of orders) {
+    addNoteToOrder(order.shopify_order_number, note.trim());
+  }
 
   return NextResponse.json({ success: true });
 }
