@@ -1555,6 +1555,11 @@ export async function sendCalendarInvite(r: CalendarInviteRecipient): Promise<{ 
         <a href="${ROCA_MAPS_URL}" style="display:inline-block;background-color:#d00000;color:#ffffff;padding:14px 32px;border-radius:6px;text-decoration:none;font-family:'Trebuchet MS',sans-serif;font-size:15px;font-weight:bold;">Get Directions to Pickup</a>
       </td>
     </tr>
+    <tr>
+      <td align="center" style="padding:8px 0 0;">
+        <a href="${APP_URL}/pickup/${r.token}" style="display:inline-block;background-color:#1a1a1a;color:#ffffff;padding:14px 32px;border-radius:6px;text-decoration:none;font-family:'Trebuchet MS',sans-serif;font-size:15px;font-weight:bold;">View Your Pickup Page</a>
+      </td>
+    </tr>
   </table>
 </td></tr>
 
