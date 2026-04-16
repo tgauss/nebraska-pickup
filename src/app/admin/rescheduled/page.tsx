@@ -114,8 +114,8 @@ export default function RescheduledPage() {
                         }`}>
                           <p className="font-medium">{actionLabel}</p>
                           {day && time && <p className="flex items-center gap-1 mt-0.5"><Calendar className="w-3 h-3" /> {day} {time}</p>}
-                          <p className="text-[10px] opacity-60 mt-0.5 flex items-center gap-1">
-                            <Clock className="w-2.5 h-2.5" /> {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <p className="text-[11px] text-gray-500 mt-1 flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at {date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
                           </p>
                         </div>
                         {!isLast && <ArrowRight className="w-3.5 h-3.5 text-gray-300 shrink-0" />}
