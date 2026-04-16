@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut, ClipboardList, Mail, MessageCircle, MapPin, Menu, X, Phone, List, Tag, Package, Boxes } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck, MapIcon, Loader2, LogOut, ClipboardList, Mail, MessageCircle, MapPin, Menu, X, Phone, List, Tag, Package, Boxes, RefreshCw } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
@@ -85,10 +85,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/chat', label: 'Chat', icon: MessageCircle },
     { href: '/admin/outreach', label: 'Outreach', icon: Phone },
     { href: '/admin/distant', label: 'Distant', icon: MapPin },
+    { href: '/admin/rescheduled', label: 'Rescheduled', icon: RefreshCw },
   ];
 
   const navSections = [
-    { label: 'Overview', items: navItems.filter(i => ['/admin', '/admin/customers', '/admin/bookings', '/admin/map'].includes(i.href)) },
+    { label: 'Overview', items: navItems.filter(i => ['/admin', '/admin/customers', '/admin/bookings', '/admin/rescheduled', '/admin/map'].includes(i.href)) },
     { label: 'Pickup Day', items: navItems.filter(i => ['/admin/day-of', '/admin/staging', '/admin/labels'].includes(i.href)) },
     { label: 'Shipping', items: navItems.filter(i => ['/admin/packing'].includes(i.href)) },
     { label: 'Outreach', items: navItems.filter(i => ['/admin/email', '/admin/chat', '/admin/outreach', '/admin/distant'].includes(i.href)) },
