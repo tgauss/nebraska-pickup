@@ -52,15 +52,57 @@ export default function PackingPage() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const doAction = async (action: string, params: Record<string, string>) => {
-    const key = `${action}-${params.lineItemId || params.customerId || params.orderNumber}`;
-    setActionLoading(key);
-    await fetch('/api/admin/packing', {
+    // Optimistic update — instantly toggle the UI
+    if (data && (action === 'pack_item' || action === 'unpack_item')) {
+      setData(prev => {
+        if (!prev) return prev;
+        const newOrders = prev.orders.map(o => ({
+          ...o,
+          items: o.items.map(i => {
+            if (i.lineItemId === params.lineItemId) {
+              return { ...i, status: action === 'pack_item' ? 'packed' : 'ship_queued' };
+            }
+            return i;
+          }),
+        })).map(o => ({
+          ...o,
+          allPacked: o.items.every(i => i.status === 'packed' || i.status === 'shipped'),
+        }));
+        const packed = newOrders.filter(o => o.allPacked && !o.shipped).length;
+        const shipped = newOrders.filter(o => o.shipped).length;
+        return {
+          ...prev,
+          orders: newOrders,
+          stats: { ...prev.stats, packedOrders: packed, unpackedOrders: prev.stats.totalOrders - packed - shipped },
+        };
+      });
+    }
+    if (data && action === 'pack_all') {
+      setData(prev => {
+        if (!prev) return prev;
+        const newOrders = prev.orders.map(o => {
+          if (o.customerId === params.customerId) {
+            const newItems = o.items.map(i => i.status !== 'shipped' ? { ...i, status: 'packed' } : i);
+            return { ...o, items: newItems, allPacked: true };
+          }
+          return o;
+        });
+        const packed = newOrders.filter(o => o.allPacked && !o.shipped).length;
+        const shipped = newOrders.filter(o => o.shipped).length;
+        return {
+          ...prev,
+          orders: newOrders,
+          stats: { ...prev.stats, packedOrders: packed, unpackedOrders: prev.stats.totalOrders - packed - shipped },
+        };
+      });
+    }
+
+    // Fire and forget — don't wait for response to update UI
+    fetch('/api/admin/packing', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, ...params }),
     });
-    await fetchData();
-    setActionLoading(null);
   };
 
   const handleShip = async (order: PackingOrder) => {

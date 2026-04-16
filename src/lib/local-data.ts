@@ -368,7 +368,7 @@ function hydrateFromSupabase() {
       // Load line item status updates from Supabase
       const { data: sbItems } = await sb.from('line_items')
         .select('item_name, qty, fulfillment_preference, fulfillment_status, customers(token)')
-        .in('fulfillment_status', ['confirmed', 'staged', 'picked_up', 'shipped']);
+        .in('fulfillment_status', ['confirmed', 'staged', 'packed', 'picked_up', 'shipped']);
 
       if (sbItems && sbItems.length > 0) {
         for (const sbI of sbItems) {

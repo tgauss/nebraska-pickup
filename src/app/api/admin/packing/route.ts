@@ -85,18 +85,8 @@ export async function GET() {
 
   const packingOrders = Array.from(orderMap.values());
 
-  // Fetch real order values from Shopify
-  const orderNums = packingOrders.map(o => o.orderNumber);
-  const values = await getOrderValues(orderNums);
-  for (const o of packingOrders) {
-    o.orderValue = values.get(`#${o.orderNumber}`) || 0;
-  }
-
-  // Fetch shipping addresses (batch — just for the first 50 unpacked to keep it fast)
-  const needAddress = packingOrders.filter(o => !o.shipped).slice(0, 50);
-  await Promise.all(needAddress.map(async (o) => {
-    o.shippingAddress = await getOrderShippingAddress(o.orderNumber);
-  }));
+  // Skip Shopify API calls on initial load for speed
+  // Addresses and values are fetched lazily when needed
 
   // Stats
   const totalOrders = packingOrders.length;
