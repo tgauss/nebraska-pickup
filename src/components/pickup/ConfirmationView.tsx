@@ -287,21 +287,24 @@ export default function ConfirmationView({
         </div>
       )}
 
-      {/* Reschedule / contact */}
-      <div className="text-center space-y-2 pt-4 border-t border-border">
-        {canReschedule ? (
-          <button
-            onClick={onReschedule}
-            className="text-sm text-primary hover:underline font-medium"
-          >
-            Need to change your time?
-          </button>
-        ) : (
-          <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-            <Mail className="w-3 h-3" />
-            Need to change? Email the team for help.
+      {/* Pickup window notice */}
+      <div className="pt-4 border-t border-border space-y-3">
+        <div className="bg-amber-50 border border-amber-200 rounded-sm p-4 text-center">
+          <p className="text-sm font-medium text-amber-800 mb-1">Your time is locked in!</p>
+          <p className="text-xs text-amber-700 leading-relaxed">
+            We&rsquo;ve staged your items and everything is ready for you. If your scheduled time doesn&rsquo;t work,
+            don&rsquo;t worry &mdash; just come by during any of our pickup windows and we&rsquo;ll take care of you:
           </p>
-        )}
+          <div className="mt-2 text-xs text-amber-800 font-medium space-y-0.5">
+            <p>Thursday, April 16 &middot; 5:00pm &ndash; 8:00pm</p>
+            <p>Friday, April 17 &middot; 10:00am &ndash; 8:00pm</p>
+            <p>Saturday, April 18 &middot; 10:00am &ndash; 6:30pm</p>
+          </div>
+          <p className="text-xs text-amber-700 mt-2 leading-relaxed">
+            Please email <a href="mailto:support@raregoods.com" className="text-primary font-medium hover:underline">support@raregoods.com</a> to
+            let us know if you&rsquo;ll be coming at a different time so we can have your items ready.
+          </p>
+        </div>
       </div>
     </div>
   );

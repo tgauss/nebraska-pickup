@@ -21,6 +21,8 @@
  */
 
 import * as db from './local-data';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 export interface CustomerLabel {
   customerId: string;
@@ -42,90 +44,64 @@ const STAGING_ZONES: Record<Prefix, string> = {
   X: 'Floor — General',
 };
 
-// Priority order for determining primary item type
-const PREFIX_PRIORITY: Prefix[] = ['B', 'E', 'S', 'W', 'I', 'C'];
+/**
+ * Labels are FROZEN as of 2026-04-14 (print night).
+ * They are loaded from data/frozen-labels.json and never recomputed.
+ * This prevents label numbers from shifting when customers are
+ * added, removed, or change segments.
+ */
 
-function getItemPrefix(itemName: string): Prefix {
-  const lower = itemName.toLowerCase();
-  if (lower.includes('bench')) return 'B';
-  if (lower.includes('end') && lower.includes('row') && lower.includes('seat')) return 'E';
-  if (lower.includes('premium') && lower.includes('end')) return 'E';
-  if (lower.includes('wall mount')) return 'W';
-  if (lower.includes('arena seat') || lower.includes('standard') && lower.includes('seat')) return 'S';
-  if (lower.includes('iron') || lower.includes('side piece')) return 'I';
-  if (lower.includes('chair back') || lower.includes('chairback')) return 'C';
-  return 'X';
-}
-
-function getCustomerPrefix(customerId: string): Prefix {
-  const items = db.getLineItemsByCustomer(customerId);
-  const pickupItems = items.filter(i => i.fulfillment_preference === 'pickup' || i.item_type === 'pickup');
-
-  if (pickupItems.length === 0) return 'X';
-
-  // Find the highest-priority (heaviest) item type
-  const prefixes = pickupItems.map(i => getItemPrefix(i.item_name));
-  for (const p of PREFIX_PRIORITY) {
-    if (prefixes.includes(p)) return p;
-  }
-  return prefixes[0] || 'X';
-}
-
-// Cache for labels (computed once)
+// Cache for labels (loaded once from frozen file)
 let _labels: Map<string, CustomerLabel> | null = null;
 
-function computeLabels(): Map<string, CustomerLabel> {
+function loadFrozenLabels(): Map<string, CustomerLabel> {
   if (_labels) return _labels;
 
-  const customers = db.getAllCustomers();
-  // Only label customers who need pickup (Seg A, B, or C who convert)
-  const pickupCustomers = customers.filter(c =>
-    c.segment === 'A' || c.segment === 'B' || c.segment === 'C'
-  );
-
-  // Group by prefix
-  const byPrefix = new Map<Prefix, string[]>();
-  for (const c of pickupCustomers) {
-    const prefix = getCustomerPrefix(c.id);
-    if (!byPrefix.has(prefix)) byPrefix.set(prefix, []);
-    byPrefix.get(prefix)!.push(c.id);
-  }
-
-  // Assign sequential numbers within each prefix
   _labels = new Map();
-  for (const [prefix, customerIds] of byPrefix) {
-    // Sort by customer name for consistent ordering
-    const sorted = customerIds.sort((a, b) => {
-      const ca = db.getCustomerById(a);
-      const cb = db.getCustomerById(b);
-      return (ca?.name || '').localeCompare(cb?.name || '');
-    });
 
-    sorted.forEach((custId, index) => {
-      const number = index + 1;
-      const label = `${prefix}${String(number).padStart(2, '0')}`;
-      _labels!.set(custId, {
-        customerId: custId,
-        label,
-        prefix,
-        number,
-        stagingZone: STAGING_ZONES[prefix],
-      });
+  const possiblePaths = [
+    resolve(process.cwd(), 'data/frozen-labels.json'),
+    resolve(process.cwd(), '../data/frozen-labels.json'),
+  ];
+
+  let raw = '';
+  for (const p of possiblePaths) {
+    try { raw = readFileSync(p, 'utf-8'); break; } catch { /* try next */ }
+  }
+
+  if (!raw) {
+    console.error('[labels] frozen-labels.json not found — labels will be empty');
+    return _labels;
+  }
+
+  const frozen = JSON.parse(raw);
+  for (const entry of frozen.labels) {
+    // Map token-based customer ID to the in-memory stable ID
+    const customer = db.getCustomerByToken(entry.customerToken);
+    const customerId = customer?.id || entry.customerId;
+
+    _labels.set(customerId, {
+      customerId,
+      label: entry.label,
+      prefix: entry.prefix,
+      number: entry.number,
+      stagingZone: STAGING_ZONES[entry.prefix as Prefix] || 'Floor — General',
     });
   }
 
+  console.log(`[labels] Loaded ${_labels.size} frozen labels`);
   return _labels;
 }
 
 /** Get the warehouse label for a customer */
 export function getCustomerLabel(customerId: string): CustomerLabel | null {
-  const labels = computeLabels();
+  const labels = loadFrozenLabels();
   return labels.get(customerId) || null;
 }
 
 /** Get all labels, optionally filtered by prefix */
 export function getAllLabels(prefix?: string): CustomerLabel[] {
-  const labels = computeLabels();
+  const labels = loadFrozenLabels();
   const all = Array.from(labels.values());
   if (prefix) return all.filter(l => l.prefix === prefix);
   return all.sort((a, b) => {

@@ -166,26 +166,16 @@ export async function POST(
   const sbBookingInfo = await getSupabaseBooking(token);
   const existingBooking = db.getBookingByCustomer(customer.id);
 
-  // Determine if this is a reschedule
-  const isReschedule = !!(sbBookingInfo?.exists || existingBooking);
-  const currentRescheduleCount = sbBookingInfo?.rescheduleCount ?? existingBooking?.reschedule_count ?? 0;
-
-  if (isReschedule && currentRescheduleCount >= 2) {
+  // LOCKDOWN: Rescheduling disabled as of 2026-04-16 (pickup day)
+  const isRescheduleAttempt = !!(sbBookingInfo?.exists || existingBooking);
+  if (isRescheduleAttempt) {
     return NextResponse.json({
-      error: 'Maximum reschedules reached. Please email the team to change your slot.',
+      error: 'Your pickup time is locked in and your items are staged. If you need to come at a different time, just show up during any of our pickup windows (Thu 5-8pm, Fri 10am-8pm, Sat 10am-6:30pm) and email support@raregoods.com to let us know.',
     }, { status: 400 });
   }
 
-  // Handle reschedule: remove old booking
-  if (isReschedule) {
-    if (sbBookingInfo?.exists && sbBookingInfo.sbCustomerId && sbBookingInfo.sbSlotId) {
-      await deleteSupabaseBooking(sbBookingInfo.sbCustomerId, sbBookingInfo.sbSlotId);
-    }
-    if (existingBooking) {
-      db.decrementSlotBooking(existingBooking.time_slot_id);
-      db.deleteBooking(existingBooking.id);
-    }
-  }
+  // Rescheduling is disabled — the lockdown above catches all reschedule attempts.
+  // Below this point, we're only handling NEW bookings (customers who haven't booked yet).
 
   // ATOMIC SLOT RESERVATION — Supabase is the source of truth
   const reservation = await reserveSlotInSupabase(body.time_slot_id);
@@ -213,7 +203,7 @@ export async function POST(
   const booking = db.createBooking(
     customer.id,
     body.time_slot_id,
-    isReschedule ? currentRescheduleCount + 1 : 0
+    0
   );
 
   // Create booking in Supabase directly (don't rely on write-through for this critical path)
@@ -221,7 +211,7 @@ export async function POST(
     await createSupabaseBooking(
       sbBookingInfo.sbCustomerId,
       reservation.sbSlotId,
-      isReschedule ? currentRescheduleCount + 1 : 0
+      0
     );
   }
 
@@ -250,7 +240,7 @@ export async function POST(
     }
   }
 
-  db.addActivityLog(customer.id, isReschedule ? 'rescheduled' : 'booking_confirmed', {
+  db.addActivityLog(customer.id, 'booking_confirmed', {
     time_slot_id: body.time_slot_id,
     day: slot.day,
     time: slot.time,
@@ -288,13 +278,13 @@ export async function POST(
       time: slot.time,
       label: label?.label || '',
       pickupPageUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://huskerpickup.raregoods.com'}/pickup/${token}`,
-      isReschedule,
+      isReschedule: false,
     }).catch(err => console.error('Confirmation email error:', err));
   }
 
   return NextResponse.json({
     success: true,
     booking,
-    action: isReschedule ? 'rescheduled' : 'confirmed',
+    action: 'confirmed',
   });
 }
