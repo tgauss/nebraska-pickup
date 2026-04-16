@@ -33,6 +33,20 @@ interface PackingData {
 }
 
 type Filter = 'all' | 'unpacked' | 'packed' | 'shipped';
+type PackingTab = 'all' | 'iron';
+
+interface IronCustomer {
+  customerId: string;
+  customerName: string;
+  customerEmail: string;
+  orderNumbers: string[];
+  qty: number;
+  boxes: number;
+  boxBreakdown: number[]; // e.g. [2, 2, 1] for 5 pieces
+  packed: boolean;
+  shipped: boolean;
+  items: PackingItem[];
+}
 
 export default function PackingPage() {
   const [data, setData] = useState<PackingData | null>(null);
@@ -42,6 +56,7 @@ export default function PackingPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [confirmShip, setConfirmShip] = useState<string | null>(null);
+  const [packingTab, setPackingTab] = useState<PackingTab>('all');
 
   const fetchData = useCallback(async () => {
     const res = await fetch('/api/admin/packing');
@@ -122,6 +137,53 @@ export default function PackingPage() {
   }
 
   const { stats } = data;
+
+  // Build iron box breakdown from all orders
+  const ironByCustomer = new Map<string, IronCustomer>();
+  for (const order of data.orders) {
+    const ironItems = order.items.filter(i => i.name.toLowerCase().includes('iron') || i.name.toLowerCase().includes('side piece'));
+    if (ironItems.length === 0) continue;
+
+    const key = order.customerId;
+    if (!ironByCustomer.has(key)) {
+      ironByCustomer.set(key, {
+        customerId: order.customerId,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        orderNumbers: [],
+        qty: 0,
+        boxes: 0,
+        boxBreakdown: [],
+        packed: true,
+        shipped: false,
+        items: [],
+      });
+    }
+    const ic = ironByCustomer.get(key)!;
+    if (!ic.orderNumbers.includes(order.orderNumber)) ic.orderNumbers.push(order.orderNumber);
+    for (const item of ironItems) {
+      ic.qty += item.qty;
+      ic.items.push(item);
+      if (item.status !== 'packed' && item.status !== 'shipped') ic.packed = false;
+      if (item.status === 'shipped') ic.shipped = true;
+    }
+  }
+  // Calculate boxes (max 2 per box)
+  for (const ic of ironByCustomer.values()) {
+    ic.boxes = Math.ceil(ic.qty / 2);
+    ic.boxBreakdown = [];
+    let remaining = ic.qty;
+    while (remaining > 0) {
+      const inBox = Math.min(remaining, 2);
+      ic.boxBreakdown.push(inBox);
+      remaining -= inBox;
+    }
+  }
+  const ironCustomers = [...ironByCustomer.values()].sort((a, b) => b.qty - a.qty);
+  const ironTotalPieces = ironCustomers.reduce((s, c) => s + c.qty, 0);
+  const ironTotalBoxes = ironCustomers.reduce((s, c) => s + c.boxes, 0);
+  const ironPacked = ironCustomers.filter(c => c.packed).length;
+
   let filtered = data.orders;
 
   if (search) {
@@ -146,6 +208,144 @@ export default function PackingPage() {
         </h1>
         <p className="text-sm text-muted-foreground mt-1">Pack items, then ship when ready. Shopify stays in sync.</p>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 border-b">
+        <button onClick={() => setPackingTab('all')}
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${packingTab === 'all' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
+          All Orders
+        </button>
+        <button onClick={() => setPackingTab('iron')}
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${packingTab === 'iron' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
+          Iron Pieces
+          <span className={`text-xs px-1.5 py-0.5 rounded-full ${packingTab === 'iron' ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500'}`}>
+            {ironCustomers.length}
+          </span>
+        </button>
+      </div>
+
+      {packingTab === 'iron' ? (
+        /* ── Iron Boxes Tab ── */
+        <div className="space-y-5">
+          {/* Iron stats */}
+          <div className="grid grid-cols-4 gap-3">
+            <div className="bg-white rounded-xl border p-4">
+              <p className="text-xs font-medium text-gray-500">Customers</p>
+              <p className="text-2xl font-bold">{ironCustomers.length}</p>
+            </div>
+            <div className="bg-white rounded-xl border p-4">
+              <p className="text-xs font-medium text-gray-500">Total Iron Pieces</p>
+              <p className="text-2xl font-bold">{ironTotalPieces}</p>
+            </div>
+            <div className="bg-white rounded-xl border p-4">
+              <p className="text-xs font-medium text-gray-500">Boxes to Pack</p>
+              <p className="text-2xl font-bold text-amber-600">{ironTotalBoxes}</p>
+              <p className="text-[10px] text-gray-400">max 2 per box</p>
+            </div>
+            <div className="bg-white rounded-xl border p-4">
+              <p className="text-xs font-medium text-gray-500">Packed</p>
+              <p className="text-2xl font-bold text-green-600">{ironPacked}/{ironCustomers.length}</p>
+              <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-green-500 rounded-full" style={{ width: `${ironCustomers.length > 0 ? (ironPacked / ironCustomers.length * 100) : 0}%` }} />
+              </div>
+            </div>
+          </div>
+
+          {/* Box summary by quantity */}
+          <div className="bg-white rounded-xl border p-4">
+            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Box Breakdown</p>
+            <div className="flex flex-wrap gap-3">
+              {[1, 2, 3, 4, 5, 6].map(qty => {
+                const count = ironCustomers.filter(c => c.qty === qty).length;
+                if (count === 0) return null;
+                const boxes = Math.ceil(qty / 2);
+                return (
+                  <div key={qty} className="bg-gray-50 rounded-lg px-4 py-3 text-center">
+                    <p className="text-lg font-bold">{count}</p>
+                    <p className="text-xs text-gray-500">customer{count !== 1 ? 's' : ''} with {qty} piece{qty !== 1 ? 's' : ''}</p>
+                    <p className="text-xs text-amber-600 font-medium">{boxes} box{boxes !== 1 ? 'es' : ''} each</p>
+                    <p className="text-[10px] text-gray-400">{count * boxes} boxes total</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input type="text" placeholder="Search by name or order #..."
+              value={search} onChange={e => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+
+          {/* Iron customer list */}
+          <div className="bg-white rounded-xl border overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="text-left px-4 py-3 font-medium text-gray-600">Customer</th>
+                  <th className="text-left px-4 py-3 font-medium text-gray-600">Orders</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Iron Pieces</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Boxes Needed</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Box Layout</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Status</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {ironCustomers
+                  .filter(c => !search || c.customerName.toLowerCase().includes(search.toLowerCase()) || c.orderNumbers.some(o => o.toLowerCase().includes(search.toLowerCase())))
+                  .map(c => (
+                  <tr key={c.customerId} className={`${c.shipped ? 'opacity-50' : c.packed ? 'bg-green-50/30' : ''}`}>
+                    <td className="px-4 py-3">
+                      <p className="font-medium">{c.customerName}</p>
+                      <p className="text-xs text-gray-400">{c.customerEmail}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="text-xs font-mono text-gray-500">{c.orderNumbers.join(', ')}</p>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className="text-lg font-bold">{c.qty}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className="text-lg font-bold text-amber-600">{c.boxes}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        {c.boxBreakdown.map((count, i) => (
+                          <div key={i} className="flex items-center gap-0.5 bg-gray-100 rounded px-2 py-1">
+                            <Box className="w-3.5 h-3.5 text-gray-500" />
+                            <span className="text-xs font-medium">{count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {c.shipped ? (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-medium">Shipped</span>
+                      ) : c.packed ? (
+                        <span className="text-xs bg-cyan-100 text-cyan-700 px-2 py-1 rounded font-medium">Packed</span>
+                      ) : (
+                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded font-medium">Needs packing</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {!c.packed && !c.shipped && (
+                        <button onClick={() => doAction('pack_all', { customerId: c.customerId })}
+                          className="px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-medium hover:bg-cyan-700">
+                          Pack All
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+      <>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3">
@@ -331,6 +531,8 @@ export default function PackingPage() {
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
           <p className="text-lg font-bold">{filter === 'unpacked' ? 'All packed!' : filter === 'packed' ? 'Nothing packed yet' : 'No orders match'}</p>
         </div>
+      )}
+      </>
       )}
     </div>
   );
