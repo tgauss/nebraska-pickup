@@ -135,8 +135,46 @@ export async function GET() {
   const stagedItems = zones.reduce((s, z) => s + z.stagedItems, 0);
   const totalCustomers = zones.reduce((s, z) => s + z.customers.length, 0);
 
+  // Also build a by-timeslot view
+  const allCustomers = Array.from(customerMap.values());
+  const dayOrder: Record<string, number> = { Thursday: 0, Friday: 1, Saturday: 2, May2: 3 };
+
+  // Group by day
+  const byDay: Record<string, { customers: StagingCustomer[]; totalItems: number; stagedItems: number }> = {};
+  for (const day of ['Thursday', 'Friday', 'Saturday', 'May2']) {
+    const dayCusts = allCustomers.filter(c => c.bookingDay === day);
+    // Sort by time
+    dayCusts.sort((a, b) => {
+      const toMin = (t: string | null) => {
+        if (!t) return 9999;
+        const m = t.match(/^(\d+):(\d+)(am|pm)$/i);
+        if (!m) return 9999;
+        let h = parseInt(m[1]);
+        if (m[3].toLowerCase() === 'pm' && h !== 12) h += 12;
+        if (m[3].toLowerCase() === 'am' && h === 12) h = 0;
+        return h * 60 + parseInt(m[2]);
+      };
+      return toMin(a.bookingTime) - toMin(b.bookingTime);
+    });
+    let total = 0, staged = 0;
+    for (const c of dayCusts) {
+      for (const item of c.items) {
+        total += item.qty;
+        if (item.status === 'staged' || item.status === 'picked_up') staged += item.qty;
+      }
+    }
+    if (dayCusts.length > 0) {
+      byDay[day] = { customers: dayCusts, totalItems: total, stagedItems: staged };
+    }
+  }
+
+  // Unbooked customers
+  const unbooked = allCustomers.filter(c => !c.bookingDay);
+
   return NextResponse.json({
     zones,
+    byDay,
+    unbooked,
     stats: { totalItems, stagedItems, totalCustomers, totalZones: zones.length },
   });
 }
