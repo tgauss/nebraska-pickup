@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as db from '@/lib/local-data';
 import { ensureHydrated, flushWrites } from '@/lib/local-data';
+import { createAdminClient } from '@/lib/supabase';
 import { getProductInfo } from '@/lib/products';
 import { getCustomerLabel, PREFIX_INFO } from '@/lib/labels';
 
@@ -45,6 +46,27 @@ export async function GET() {
   const customers = db.getAllCustomers();
   const allItems = db.getAllLineItems();
 
+  // Fetch bookings directly from Supabase (reliable, not dependent on hydration)
+  const bookingMap = new Map<string, { day: string; time: string }>();
+  const sb = createAdminClient();
+  if (sb) {
+    const { data: sbBookings } = await sb.from('bookings')
+      .select('status, customers(token), time_slots(day, time)')
+      .eq('status', 'confirmed');
+    if (sbBookings) {
+      for (const b of sbBookings) {
+        const token = (b.customers as unknown as { token: string } | { token: string }[] | null);
+        const t = Array.isArray(token) ? token[0]?.token : token?.token;
+        const slot = (b.time_slots as unknown as { day: string; time: string } | { day: string; time: string }[] | null);
+        const s = Array.isArray(slot) ? slot[0] : slot;
+        if (t && s) {
+          const cust = customers.find(c => c.token === t);
+          if (cust) bookingMap.set(cust.id, { day: s.day, time: s.time });
+        }
+      }
+    }
+  }
+
   // Find all pickup items (item_type=pickup OR fulfillment_preference=pickup)
   const pickupItems = allItems.filter(i => i.item_type === 'pickup' || i.fulfillment_preference === 'pickup');
 
@@ -57,7 +79,7 @@ export async function GET() {
 
     if (!customerMap.has(customer.id)) {
       const label = getCustomerLabel(customer.id);
-      const booking = db.getBookingByCustomer(customer.id);
+      const booking = bookingMap.get(customer.id);
 
       customerMap.set(customer.id, {
         customerId: customer.id,
@@ -65,8 +87,8 @@ export async function GET() {
         label: label?.label || null,
         prefix: label?.prefix || null,
         stagingZone: label?.stagingZone || null,
-        bookingDay: booking?.time_slots?.day || null,
-        bookingTime: booking?.time_slots?.time || null,
+        bookingDay: booking?.day || null,
+        bookingTime: booking?.time || null,
         items: [],
         allStaged: true,
       });
