@@ -156,6 +156,19 @@ export default function StagingPage() {
 
   const dayPct = dayTotal > 0 ? Math.round((dayStaged / dayTotal) * 100) : 0;
 
+  // Compute item type totals for current day (before search filter)
+  const allDayCustomers = dayTab === 'unbooked' ? data.unbooked : (data.byDay[dayTab]?.customers || []);
+  const itemTotals = new Map<string, { qty: number; staged: number }>();
+  for (const c of allDayCustomers) {
+    for (const item of c.items) {
+      if (!itemTotals.has(item.name)) itemTotals.set(item.name, { qty: 0, staged: 0 });
+      const t = itemTotals.get(item.name)!;
+      t.qty += item.qty;
+      if (item.status === 'staged' || item.status === 'picked_up') t.staged += item.qty;
+    }
+  }
+  const sortedItemTotals = [...itemTotals.entries()].sort((a, b) => b[1].qty - a[1].qty);
+
   // Group by timeslot for display
   const bySlot = new Map<string, StagingCustomer[]>();
   for (const c of currentCustomers) {
@@ -219,6 +232,28 @@ export default function StagingPage() {
             <div className={`h-full rounded-full transition-all ${dayPct === 100 ? 'bg-green-500' : 'bg-primary'}`} style={{ width: `${dayPct}%` }} />
           </div>
           <span className="font-medium">{dayStaged}/{dayTotal} items ({dayPct}%)</span>
+        </div>
+      )}
+
+      {/* Item totals for this day */}
+      {sortedItemTotals.length > 0 && (
+        <div className="bg-white rounded-xl border p-4">
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+            {dayTab === 'unbooked' ? 'Unbooked' : dayTab === 'May2' ? 'May 2' : dayTab} — Items Summary
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {sortedItemTotals.map(([name, { qty, staged }]) => (
+              <div key={name} className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
+                <span className="text-sm font-medium">{qty}x</span>
+                <span className="text-sm text-gray-600">{name}</span>
+                {staged > 0 && (
+                  <span className={`text-xs px-1.5 py-0.5 rounded ${staged === qty ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {staged}/{qty} staged
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
