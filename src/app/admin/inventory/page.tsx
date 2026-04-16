@@ -22,6 +22,9 @@ export default function InventoryPage() {
     if (!res.ok) return;
     const data = await res.json();
 
+    // Cancelled orders to exclude
+    const cancelledEmails = new Set(['michael@obeng.net', 'jjg19742@gmail.com', 'joe@perksocial.com']);
+
     const totals = new Map<string, ItemSummary>();
 
     const shortNames: Record<string, string> = {
@@ -49,6 +52,7 @@ export default function InventoryPage() {
     };
 
     for (const c of data.customers) {
+      if (cancelledEmails.has(c.email?.toLowerCase())) continue;
       const seen = new Set<string>();
       for (const item of (c.line_items || [])) {
         const name = item.item_name;
