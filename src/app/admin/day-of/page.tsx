@@ -57,65 +57,106 @@ export default function DayOfPage() {
   }>>([]);
   const [walkInSearching, setWalkInSearching] = useState(false);
 
+  // Track local overrides so refreshes don't revert optimistic updates
+  const localOverrides = useRef<Map<string, { status: string; timestamp: number }>>(new Map());
+
+  const applyOverrides = useCallback((groups: StagingGroup[]): StagingGroup[] => {
+    const now = Date.now();
+    // Clean up overrides older than 5 minutes (server should be caught up by then)
+    for (const [id, override] of localOverrides.current) {
+      if (now - override.timestamp > 5 * 60 * 1000) localOverrides.current.delete(id);
+    }
+    if (localOverrides.current.size === 0) return groups;
+    return groups.map(g => ({
+      ...g,
+      bookings: g.bookings.map(b => {
+        const override = localOverrides.current.get(b.customer.id);
+        if (!override) return b;
+        return {
+          ...b,
+          booking: { ...b.booking, status: override.status },
+          items: override.status === 'completed' ? b.items.map(i => ({ ...i, fulfillment_status: 'picked_up' })) : b.items,
+        };
+      }),
+    }));
+  }, []);
+
   const fetchStaging = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     const res = await fetch(`/api/admin/staging/${selectedDay}`);
     const data = await res.json();
-    setStagingGroups(data.staging_groups || []);
+    setStagingGroups(applyOverrides(data.staging_groups || []));
     if (!silent) setLoading(false);
-  }, [selectedDay]);
+  }, [selectedDay, applyOverrides]);
 
   useEffect(() => { fetchStaging(); }, [fetchStaging]);
 
-  // Silent refresh every 60 seconds — doesn't reset scroll or loading state
+  // Silent refresh every 2 minutes — doesn't reset scroll or loading state
   useEffect(() => {
-    const interval = setInterval(() => fetchStaging(true), 60000);
+    const interval = setInterval(() => fetchStaging(true), 120000);
     return () => clearInterval(interval);
   }, [fetchStaging]);
 
   const handleCheckIn = async (customerId: string) => {
     setActionLoading(customerId);
+    // Optimistic update immediately
+    localOverrides.current.set(customerId, { status: 'checked_in', timestamp: Date.now() });
+    setStagingGroups(prev => prev.map(g => ({
+      ...g,
+      bookings: g.bookings.map(b =>
+        b.customer.id === customerId
+          ? { ...b, booking: { ...b.booking, status: 'checked_in', checked_in_at: new Date().toISOString() } }
+          : b
+      ),
+    })));
+    setActionLoading(null);
+
+    // Fire API in background
     try {
       const res = await fetch(`/api/admin/checkin/${customerId}`, { method: 'POST' });
-      if (!res.ok) throw new Error('Check-in failed');
-      // Optimistic update
-      setStagingGroups(prev => prev.map(g => ({
-        ...g,
-        bookings: g.bookings.map(b =>
-          b.customer.id === customerId
-            ? { ...b, booking: { ...b.booking, status: 'checked_in', checked_in_at: new Date().toISOString() } }
-            : b
-        ),
-      })));
+      if (!res.ok) {
+        // Revert on failure
+        localOverrides.current.delete(customerId);
+        alert('Check-in failed — please try again');
+        await fetchStaging(true);
+      }
     } catch {
-      alert('Check-in failed');
-    } finally {
-      setActionLoading(null);
+      localOverrides.current.delete(customerId);
+      alert('Check-in failed — please try again');
+      await fetchStaging(true);
     }
   };
 
   const handleComplete = async (customerId: string) => {
     setActionLoading(customerId);
+    // Optimistic update immediately
+    localOverrides.current.set(customerId, { status: 'completed', timestamp: Date.now() });
+    setStagingGroups(prev => prev.map(g => ({
+      ...g,
+      bookings: g.bookings.map(b =>
+        b.customer.id === customerId
+          ? {
+              ...b,
+              booking: { ...b.booking, status: 'completed', completed_at: new Date().toISOString() },
+              items: b.items.map(i => ({ ...i, fulfillment_status: 'picked_up' })),
+            }
+          : b
+      ),
+    })));
+    setActionLoading(null);
+
+    // Fire API in background
     try {
       const res = await fetch(`/api/admin/complete/${customerId}`, { method: 'POST' });
-      if (!res.ok) throw new Error('Failed');
-      // Optimistic update
-      setStagingGroups(prev => prev.map(g => ({
-        ...g,
-        bookings: g.bookings.map(b =>
-          b.customer.id === customerId
-            ? {
-                ...b,
-                booking: { ...b.booking, status: 'completed', completed_at: new Date().toISOString() },
-                items: b.items.map(i => ({ ...i, fulfillment_status: 'picked_up' })),
-              }
-            : b
-        ),
-      })));
+      if (!res.ok) {
+        localOverrides.current.delete(customerId);
+        alert('Complete failed — please try again');
+        await fetchStaging(true);
+      }
     } catch {
-      alert('Failed to mark complete');
-    } finally {
-      setActionLoading(null);
+      localOverrides.current.delete(customerId);
+      alert('Complete failed — please try again');
+      await fetchStaging(true);
     }
   };
 
