@@ -1,0 +1,72 @@
+{
+  "generated": "2026-04-19",
+  "event": {
+    "name": "Nebraska Devaney Seats",
+    "venue": "Bob Devaney Sports Center",
+    "venueYears": "1976-2023",
+    "yearsOfHistory": 47,
+    "pickupDates": "April 16-18, 2026",
+    "pickupLocation": "Roca, NE",
+    "overflowDate": "May 2, 2026"
+  },
+  "scale": {
+    "totalCustomers": 377,
+    "totalItemsSold": 576,
+    "estimatedRevenue": 149294,
+    "totalWeightLbs": 14921,
+    "totalWeightTons": 7.5
+  },
+  "items": {
+    "legacyBenches": { "qty": 95, "seatsPerUnit": 2, "totalSeats": 190, "weightEach": 80, "description": "Two authentic seats rebuilt as a collectible bench" },
+    "standardSeats": { "qty": 79, "seatsPerUnit": 1, "totalSeats": 79, "weightEach": 25, "description": "Individual game-used arena seats" },
+    "premiumEndRow": { "qty": 23, "seatsPerUnit": 2, "totalSeats": 46, "weightEach": 50, "description": "Premium end-of-row pairs featuring the Nebraska N" },
+    "wallMountPairs": { "qty": 16, "seatsPerUnit": 2, "totalSeats": 32, "weightEach": 30, "description": "Wall-mountable seat pairs" },
+    "ironSidePieces": { "qty": 230, "seatsPerUnit": 0, "totalSeats": 0, "weightEach": 15, "description": "Solid iron end-of-row pieces with Nebraska N" },
+    "chairBacks": { "qty": 133, "seatsPerUnit": 0, "totalSeats": 0, "weightEach": 2, "description": "Individually numbered chair backs" }
+  },
+  "rescued": {
+    "totalSeats": 347,
+    "totalIronPieces": 230,
+    "totalChairBacks": 133,
+    "totalPiecesRescued": 710,
+    "headline": "347 seats. 230 iron end pieces. 133 numbered chair backs. 710 pieces of Devaney, rescued."
+  },
+  "pickupEvent": {
+    "totalPickupsCompleted": 148,
+    "thursday": 39,
+    "friday": 61,
+    "saturday": 48,
+    "may2": 0,
+    "stillPending": 10,
+    "noShows": 0,
+    "successRate": 100,
+    "avgPickupMinutes": 4,
+    "reschedulesHandled": 27
+  },
+  "community": {
+    "uniqueCities": 187,
+    "statesRepresented": 28,
+    "totalMilesDriven": 36645,
+    "farthestCustomer": {
+      "city": "Shoreline",
+      "state": "WA",
+      "driveHours": 26.8
+    },
+    "top5Farthest": [
+      { "city": "Shoreline", "state": "WA", "driveHours": 26.8 },
+      { "city": "Portsmouth", "state": "RI", "driveHours": 24.7 },
+      { "city": "Pinellas Park", "state": "FL", "driveHours": 22.3 },
+      { "city": "Alexandria", "state": "VA", "driveHours": 19.2 },
+      { "city": "Gaithersburg", "state": "MD", "driveHours": 19.6 }
+    ]
+  },
+  "communications": {
+    "emailsSent": 1908,
+    "emailOpens": 3273,
+    "emailClicks": 432,
+    "smsSent": 28,
+    "phoneCalls": 6,
+    "calendarInvites": 140,
+    "bookingRate": 93
+  }
+}

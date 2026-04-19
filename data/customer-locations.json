@@ -1,0 +1,1243 @@
+{
+  "generated": "2026-04-19T20:39:35.190Z",
+  "note": "Anonymized - city/state only, no names or addresses",
+  "totalLocations": 187,
+  "locations": [
+    {
+      "city": "Lincoln",
+      "state": "NE",
+      "count": 55,
+      "items": 82
+    },
+    {
+      "city": "Omaha",
+      "state": "NE",
+      "count": 51,
+      "items": 83
+    },
+    {
+      "city": "Elkhorn",
+      "state": "NE",
+      "count": 10,
+      "items": 17
+    },
+    {
+      "city": "Fremont",
+      "state": "NE",
+      "count": 8,
+      "items": 11
+    },
+    {
+      "city": "Kearney",
+      "state": "NE",
+      "count": 7,
+      "items": 10
+    },
+    {
+      "city": "Kansas City",
+      "state": "MO",
+      "count": 6,
+      "items": 6
+    },
+    {
+      "city": "Columbus",
+      "state": "NE",
+      "count": 6,
+      "items": 10
+    },
+    {
+      "city": "Hastings",
+      "state": "NE",
+      "count": 5,
+      "items": 13
+    },
+    {
+      "city": "Bennington",
+      "state": "NE",
+      "count": 5,
+      "items": 7
+    },
+    {
+      "city": "Grand Island",
+      "state": "NE",
+      "count": 5,
+      "items": 5
+    },
+    {
+      "city": "Papillion",
+      "state": "NE",
+      "count": 4,
+      "items": 4
+    },
+    {
+      "city": "Seward",
+      "state": "NE",
+      "count": 4,
+      "items": 4
+    },
+    {
+      "city": "La Vista",
+      "state": "NE",
+      "count": 4,
+      "items": 5
+    },
+    {
+      "city": "Blair",
+      "state": "NE",
+      "count": 3,
+      "items": 5
+    },
+    {
+      "city": "Gretna",
+      "state": "NE",
+      "count": 3,
+      "items": 3
+    },
+    {
+      "city": "Holdrege",
+      "state": "NE",
+      "count": 3,
+      "items": 6
+    },
+    {
+      "city": "Bellevue",
+      "state": "NE",
+      "count": 3,
+      "items": 8
+    },
+    {
+      "city": "North Platte",
+      "state": "NE",
+      "count": 3,
+      "items": 8
+    },
+    {
+      "city": "Norfolk",
+      "state": "NE",
+      "count": 3,
+      "items": 5
+    },
+    {
+      "city": "Hickman",
+      "state": "NE",
+      "count": 3,
+      "items": 3
+    },
+    {
+      "city": "Beatrice",
+      "state": "NE",
+      "count": 3,
+      "items": 5
+    },
+    {
+      "city": "Bird Island",
+      "state": "MN",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Osmond",
+      "state": "NE",
+      "count": 2,
+      "items": 4
+    },
+    {
+      "city": "Gering",
+      "state": "NE",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Cozad",
+      "state": "NE",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Sioux City",
+      "state": "IA",
+      "count": 2,
+      "items": 2
+    },
+    {
+      "city": "Ord",
+      "state": "NE",
+      "count": 2,
+      "items": 2
+    },
+    {
+      "city": "Syracuse",
+      "state": "NE",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Cedar Bluffs",
+      "state": "NE",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Nebraska City",
+      "state": "NE",
+      "count": 2,
+      "items": 2
+    },
+    {
+      "city": "Albion",
+      "state": "NE",
+      "count": 2,
+      "items": 8
+    },
+    {
+      "city": "Shawnee",
+      "state": "KS",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Wahoo",
+      "state": "NE",
+      "count": 2,
+      "items": 4
+    },
+    {
+      "city": "LINCOLN",
+      "state": "NE",
+      "count": 2,
+      "items": 2
+    },
+    {
+      "city": "Cairo",
+      "state": "NE",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "OMAHA",
+      "state": "NE",
+      "count": 2,
+      "items": 5
+    },
+    {
+      "city": "Littleton",
+      "state": "CO",
+      "count": 2,
+      "items": 3
+    },
+    {
+      "city": "Dallas",
+      "state": "TX",
+      "count": 2,
+      "items": 2
+    },
+    {
+      "city": "Galva",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Glendale",
+      "state": "AZ",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Pierre",
+      "state": "SD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Newport News",
+      "state": "VA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Seattle",
+      "state": "WA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "TRYON",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Ayr",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Milford",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "UNION",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Centennial",
+      "state": "CO",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Van Buren",
+      "state": "AR",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "York",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Friend",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Macon",
+      "state": "IL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Tilden",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Pinellas Park",
+      "state": "FL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Ceresco",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "BELLEVUE",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Medicine Lodge",
+      "state": "KS",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Plattsmouth",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Ash Grove",
+      "state": "MO",
+      "count": 1,
+      "items": 4
+    },
+    {
+      "city": "Mccordsvillle",
+      "state": "IN",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Trophy Club",
+      "state": "TX",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Pierce",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Donnelly",
+      "state": "ID",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Parker",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Eudora",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Ashland",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Minden",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Brule",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Merna",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Tekamah",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Gothenburg",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Sac City",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Alcester",
+      "state": "SD",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Hamilton",
+      "state": "OH",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "COZAD",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Sergeant Bluff",
+      "state": "IA",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "YORK",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Cedar Rapids",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Dakota Dunes",
+      "state": "SD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Polk",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Lakewood",
+      "state": "OH",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Gold Beach",
+      "state": "OR",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Mission",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "West Fargo",
+      "state": "ND",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Phillipsburg",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Groesbeck",
+      "state": "TX",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Newcastle",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Gettysburg",
+      "state": "PA",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Milwaukee",
+      "state": "WI",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Brookings",
+      "state": "SD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Panama City",
+      "state": "FL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Burley",
+      "state": "ID",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Portsmouth",
+      "state": "RI",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Lake City",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Grafton",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Benedict",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Salina",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Nebr City",
+      "state": "NE",
+      "count": 1,
+      "items": 5
+    },
+    {
+      "city": "Swink",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Campbell",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Chadron",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Yutan",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Erie",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Fairfield",
+      "state": "CA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Gibbon",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Vermillion",
+      "state": "SD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Doniphan",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Cortland",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Cornwall",
+      "state": "NY",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Chicago",
+      "state": "IL",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Anna",
+      "state": "TX",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Overland Park",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "ONeill",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Phillips",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "NORFOLK",
+      "state": "NE",
+      "count": 1,
+      "items": 6
+    },
+    {
+      "city": "Fordyce",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Council Bluffs",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Moline",
+      "state": "IL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Longmont",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Nicholasville",
+      "state": "KY",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Howells",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Evans",
+      "state": "GA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Clarkson",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "ELKHORN",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Spencer",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Salinas",
+      "state": "CA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Primghar",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Springfield",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "STRASBURG",
+      "state": "CO",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Canistota",
+      "state": "SD",
+      "count": 1,
+      "items": 4
+    },
+    {
+      "city": "Valparaiso",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Central City",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Arroyo Grande",
+      "state": "CA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Henderson",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Chanhassen",
+      "state": "MN",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Laurel",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Raymond",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Saint Joseph",
+      "state": "MO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Reston",
+      "state": "VA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Burlington",
+      "state": "VT",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Parkston",
+      "state": "SD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "County road J",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Castle Pines",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Pleasant Hill",
+      "state": "MO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "BENNINGTON",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Perrysburg",
+      "state": "OH",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Fairborn",
+      "state": "OH",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Bennet",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Champaign",
+      "state": "IL",
+      "count": 1,
+      "items": 8
+    },
+    {
+      "city": "Algonquin",
+      "state": "IL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Red Oak",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Humphrey",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Blawnox",
+      "state": "PA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Shoreline",
+      "state": "WA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Hood River",
+      "state": "OR",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Lansing",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Denver",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Ralston",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Alexandria",
+      "state": "VA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Butte",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Homer",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Gaithersburg",
+      "state": "MD",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Elm Creek",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Goodland",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Pender",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Aurora",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Holt",
+      "state": "MO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Great Bend",
+      "state": "KS",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Falls City",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Portland",
+      "state": "OR",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "CLARENCE",
+      "state": "IA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Jacksonville",
+      "state": "FL",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Superior",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "Anacortes",
+      "state": "WA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Highlands Ranch",
+      "state": "CO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Chapman",
+      "state": "NE",
+      "count": 1,
+      "items": 4
+    },
+    {
+      "city": "Nelson",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "O'Fallon",
+      "state": "MO",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Leawood",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Sutton",
+      "state": "NE",
+      "count": 1,
+      "items": 3
+    },
+    {
+      "city": "Belleville",
+      "state": "KS",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Culbertson",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Hebron",
+      "state": "NE",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Phoenix",
+      "state": "AZ",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Republican City",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    },
+    {
+      "city": "San Diego",
+      "state": "CA",
+      "count": 1,
+      "items": 1
+    },
+    {
+      "city": "Petersburg",
+      "state": "NE",
+      "count": 1,
+      "items": 2
+    }
+  ],
+  "byState": [
+    {
+      "state": "NE",
+      "count": 275
+    },
+    {
+      "state": "KS",
+      "count": 14
+    },
+    {
+      "state": "MO",
+      "count": 11
+    },
+    {
+      "state": "CO",
+      "count": 11
+    },
+    {
+      "state": "IA",
+      "count": 10
+    },
+    {
+      "state": "SD",
+      "count": 7
+    },
+    {
+      "state": "IL",
+      "count": 5
+    },
+    {
+      "state": "TX",
+      "count": 5
+    },
+    {
+      "state": "OH",
+      "count": 4
+    },
+    {
+      "state": "CA",
+      "count": 4
+    },
+    {
+      "state": "VA",
+      "count": 3
+    },
+    {
+      "state": "MN",
+      "count": 3
+    },
+    {
+      "state": "WA",
+      "count": 3
+    },
+    {
+      "state": "FL",
+      "count": 3
+    },
+    {
+      "state": "OR",
+      "count": 3
+    },
+    {
+      "state": "AZ",
+      "count": 2
+    },
+    {
+      "state": "ID",
+      "count": 2
+    },
+    {
+      "state": "PA",
+      "count": 2
+    },
+    {
+      "state": "AR",
+      "count": 1
+    },
+    {
+      "state": "IN",
+      "count": 1
+    },
+    {
+      "state": "ND",
+      "count": 1
+    },
+    {
+      "state": "WI",
+      "count": 1
+    },
+    {
+      "state": "RI",
+      "count": 1
+    },
+    {
+      "state": "NY",
+      "count": 1
+    },
+    {
+      "state": "KY",
+      "count": 1
+    },
+    {
+      "state": "GA",
+      "count": 1
+    },
+    {
+      "state": "VT",
+      "count": 1
+    },
+    {
+      "state": "MD",
+      "count": 1
+    }
+  ]
+}
