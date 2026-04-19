@@ -197,7 +197,7 @@ export default function ChatWidget() {
   };
 
   // Hide chat on internal coordination pages
-  if (pathname?.startsWith('/pending')) return null;
+  if (pathname?.startsWith('/pending') || pathname?.startsWith('/success')) return null;
 
   return (
     <>
