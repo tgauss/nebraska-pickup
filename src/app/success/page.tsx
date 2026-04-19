@@ -7,23 +7,28 @@ import dynamic from 'next/dynamic';
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false });
 
-// ── Animated Section — triggers counters when scrolled into view ──
-function AnimatedSection({ children, className }: { children: ReactNode; className?: string }) {
+// ── Animated Section ──
+function AnimatedSection({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.2 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (delay) setTimeout(() => setVisible(true), delay);
+          else setVisible(true);
+        }
+      },
+      { threshold: 0.15 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, []);
+  }, [delay]);
 
   return (
-    <div ref={ref} className={className}>
-      {visible ? children : <div style={{ minHeight: 100 }} />}
+    <div ref={ref} className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className || ''}`}>
+      {visible ? children : <div style={{ minHeight: 80 }} />}
     </div>
   );
 }
@@ -50,27 +55,7 @@ function Counter({ end, duration = 2000, prefix = '', suffix = '' }: { end: numb
   return <>{prefix}{value.toLocaleString()}{suffix}</>;
 }
 
-// ── Stats ──
-const STATS = {
-  customers: 377,
-  totalPieces: 710,
-  totalSeats: 213, // 95 benches (2-seat) + 79 standard + 23 end-row pairs + 16 wall mount pairs = counted as seat units
-  seatbacks: 133,
-  ironPieces: 230,
-  revenue: 149294,
-  weightLbs: 14921,
-  weightTons: 7.5,
-  cities: 187,
-  states: 28,
-  milesDriven: 36645,
-  pickupsCompleted: 148,
-  successRate: 98,
-  avgMinutes: 4,
-  emailsSent: 1908,
-  calendarInvites: 140,
-  yearsHistory: 47,
-};
-
+// ── Data ──
 const TOP_STATES = [
   { state: 'NE', count: 275 }, { state: 'KS', count: 14 }, { state: 'MO', count: 11 },
   { state: 'CO', count: 11 }, { state: 'IA', count: 10 }, { state: 'SD', count: 7 },
@@ -88,225 +73,260 @@ const FARTHEST = [
 
 export default function SuccessPage() {
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-white">
+    <div className="min-h-screen bg-[#0d0d0d] text-white overflow-x-hidden">
       {/* ── Hero ── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#d00000]/20 via-[#1a1a1a] to-[#1a1a1a]" />
-        <div className="relative text-center px-6 py-20 max-w-4xl mx-auto">
-          <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-20 w-auto mx-auto mb-8 drop-shadow-2xl" />
-          <h1 className="font-serif text-5xl sm:text-7xl font-bold tracking-tight mb-4">
+      <section className="relative min-h-screen flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#d00000]/15 via-transparent to-[#0d0d0d]" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+        <div className="relative text-center px-6 py-24 max-w-4xl mx-auto">
+          <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-20 w-auto mx-auto mb-10 drop-shadow-2xl" />
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] mb-6">
             Husker Nation<br /><span className="text-[#d00000]">Showed Up.</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-white/60 font-serif max-w-2xl mx-auto leading-relaxed">
-            47 years of history. 710 pieces rescued from demolition.<br className="hidden sm:block" />
-            377 fans across 28 states brought Devaney home.
+          <p className="text-lg sm:text-xl text-white/50 font-serif max-w-2xl mx-auto leading-relaxed mt-6">
+            When the University of Nebraska upgraded the Bob Devaney Sports Center, 47 years of historic arena seats were set to be removed. We gave fans across America the chance to bring a piece of Devaney home.
           </p>
-          <div className="mt-12 flex items-center justify-center gap-2 text-white/30 text-sm animate-bounce">
-            <span>Scroll to explore</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7" /></svg>
+          <p className="text-base text-white/30 font-serif max-w-xl mx-auto mt-4">
+            They didn&rsquo;t just show up. They showed out.
+          </p>
+          <div className="mt-16 flex items-center justify-center gap-2 text-white/20 text-sm animate-bounce">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7" /></svg>
           </div>
         </div>
       </section>
 
-      {/* ── By the Numbers ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4">By the Numbers</h2>
-          <p className="text-white/50 text-center mb-16 max-w-xl mx-auto">When the University of Nebraska announced the demolition of the Bob Devaney Sports Center, we asked: what happens to the seats?</p>
-          <AnimatedSection className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
-            <BigStat><Counter end={377} /></BigStat><BigLabel>Fans Served</BigLabel>
-            <BigStat><Counter end={710} /></BigStat><BigLabel>Pieces Rescued</BigLabel>
-            <BigStat><Counter end={28} /></BigStat><BigLabel>States</BigLabel>
-            <BigStat><Counter end={187} /></BigStat><BigLabel>Cities</BigLabel>
+      {/* ── The Impact ── */}
+      <section className="py-24 px-6 relative">
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d00000]/30 to-transparent" />
+        <div className="max-w-6xl mx-auto">
+          <AnimatedSection>
+            <p className="text-center text-sm text-[#d00000] uppercase tracking-[0.3em] font-medium mb-4">The Impact</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-center mb-20">Every number tells a story.</h2>
           </AnimatedSection>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8">
+            <AnimatedSection className="text-center" delay={0}>
+              <p className="text-5xl sm:text-7xl font-black font-serif text-white leading-none"><Counter end={377} /></p>
+              <div className="w-8 h-0.5 bg-[#d00000] mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Fans Served</p>
+            </AnimatedSection>
+            <AnimatedSection className="text-center" delay={150}>
+              <p className="text-5xl sm:text-7xl font-black font-serif text-white leading-none"><Counter end={710} /></p>
+              <div className="w-8 h-0.5 bg-[#d00000] mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Pieces Rescued</p>
+            </AnimatedSection>
+            <AnimatedSection className="text-center" delay={300}>
+              <p className="text-5xl sm:text-7xl font-black font-serif text-[#d00000] leading-none"><Counter end={28} /></p>
+              <div className="w-8 h-0.5 bg-white/20 mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">States</p>
+            </AnimatedSection>
+            <AnimatedSection className="text-center" delay={450}>
+              <p className="text-5xl sm:text-7xl font-black font-serif text-[#d00000] leading-none"><Counter end={187} /></p>
+              <div className="w-8 h-0.5 bg-white/20 mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Cities</p>
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 
       {/* ── What Was Saved ── */}
-      <section className="py-20 px-6 bg-gradient-to-b from-[#1a1a1a] to-[#111]">
+      <section className="py-24 px-6 bg-[#111]">
         <div className="max-w-5xl mx-auto">
           <AnimatedSection>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4">
-              <span className="text-[#d00000]"><Counter end={710} /></span> Pieces of History
+            <p className="text-center text-sm text-[#d00000] uppercase tracking-[0.3em] font-medium mb-4">Rescued from Removal</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-center mb-6">
+              <span className="text-[#d00000]">710</span> Pieces of History
             </h2>
-            <p className="text-white/50 text-center mb-16 max-w-xl mx-auto">Every piece was headed for the landfill. Husker fans had other plans.</p>
+            <p className="text-white/40 text-center mb-16 max-w-lg mx-auto">These seats witnessed championships, heartbreaks, and 47 years of Husker basketball. Now they live on.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <ItemCard number={213} label="Seats" detail="Benches, arena seats, end-rows, and wall mounts — every style that filled Devaney for 47 years" color="blue" />
-            <ItemCard number={230} label="Iron N Collectibles" detail="Solid iron end-of-row pieces stamped with the Nebraska N — 15 lbs of pure Devaney" color="gray" />
-            <ItemCard number={133} label="Numbered Seat Backs" detail="Individually numbered chair backs — each one a unique piece of arena history" color="red" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <AnimatedSection delay={0}>
+              <div className="relative bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.08] rounded-2xl p-8 text-center hover:border-[#d00000]/30 transition-colors">
+                <p className="text-6xl font-black font-serif text-white">213</p>
+                <p className="text-lg font-medium text-white/80 mt-2">Seats</p>
+                <p className="text-sm text-white/35 mt-3 leading-relaxed">Benches, arena seats, end-rows, and wall mounts &mdash; every style that filled Devaney for 47 years</p>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={200}>
+              <div className="relative bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.08] rounded-2xl p-8 text-center hover:border-[#d00000]/30 transition-colors">
+                <p className="text-6xl font-black font-serif text-white">230</p>
+                <p className="text-lg font-medium text-white/80 mt-2">Iron N Collectibles</p>
+                <p className="text-sm text-white/35 mt-3 leading-relaxed">Solid iron end-of-row pieces stamped with the Nebraska N &mdash; 15 lbs of pure Devaney</p>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={400}>
+              <div className="relative bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/[0.08] rounded-2xl p-8 text-center hover:border-[#d00000]/30 transition-colors">
+                <p className="text-6xl font-black font-serif text-white">133</p>
+                <p className="text-lg font-medium text-white/80 mt-2">Numbered Seat Backs</p>
+                <p className="text-sm text-white/35 mt-3 leading-relaxed">Individually numbered chair backs &mdash; each one a unique piece of arena history</p>
+              </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
 
       {/* ── The Weight ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <AnimatedSection>
-            <p className="text-6xl sm:text-8xl font-black font-serif text-[#d00000]"><Counter end={14921} duration={2500} /></p>
-            <p className="text-xl text-white/60 mt-2">pounds of Husker history</p>
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-white/40 text-sm">
-              <span>= 7.5 tons</span>
-              <span>= 3 fully loaded pickup trucks</span>
-            </div>
-          </AnimatedSection>
-        </div>
+      <section className="py-28 px-6">
+        <AnimatedSection className="max-w-4xl mx-auto text-center">
+          <p className="text-7xl sm:text-9xl font-black font-serif text-[#d00000] leading-none"><Counter end={14921} duration={2500} /></p>
+          <p className="text-xl sm:text-2xl text-white/50 mt-3 font-serif">pounds of Husker history</p>
+          <div className="mt-6 flex flex-wrap justify-center gap-8 text-white/25 text-sm tracking-wide">
+            <span>7.5 tons</span>
+            <span>&middot;</span>
+            <span>3 fully loaded pickup trucks</span>
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* ── Map ── */}
-      <section className="py-20 px-6 bg-[#111]">
+      <section className="py-24 px-6 bg-[#111]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4">From Coast to Coast</h2>
           <AnimatedSection>
-            <p className="text-white/50 text-center mb-12 max-w-xl mx-auto">
-              Fans drove a combined <span className="text-white font-bold"><Counter end={36645} duration={2500} /> miles</span> to bring Devaney home.
+            <p className="text-center text-sm text-[#d00000] uppercase tracking-[0.3em] font-medium mb-4">Literally &amp; Figuratively</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-center mb-4">From Coast to Coast</h2>
+            <p className="text-white/40 text-center mb-14 max-w-lg mx-auto">
+              Fans drove a combined <span className="text-white font-semibold">36,645 miles</span> to pick up their piece of Devaney.
             </p>
           </AnimatedSection>
 
-          <div className="rounded-xl overflow-hidden border border-white/10 h-[400px] sm:h-[500px]">
+          <div className="rounded-2xl overflow-hidden border border-white/10 h-[400px] sm:h-[500px]">
             <CustomerMap />
           </div>
 
-          <div className="mt-12">
-            <h3 className="font-serif text-xl font-bold text-center mb-6 text-white/80">The Farthest Fans</h3>
+          {/* Farthest fans */}
+          <AnimatedSection className="mt-14">
+            <h3 className="font-serif text-xl font-bold text-center mb-8 text-white/70">The Farthest Fans</h3>
             <div className="flex flex-wrap justify-center gap-4">
               {FARTHEST.map((f, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-lg px-5 py-3 text-center">
-                  <p className="text-2xl font-bold text-[#d00000]">{Math.round(f.hours)}h</p>
-                  <p className="text-sm text-white/60">{f.city}, {f.state}</p>
+                <div key={i} className="bg-white/[0.04] border border-white/[0.08] rounded-xl px-6 py-4 text-center hover:border-[#d00000]/30 transition-colors">
+                  <p className="text-3xl font-black text-[#d00000] font-serif">{Math.round(f.hours)}h</p>
+                  <p className="text-sm text-white/50 mt-1">{f.city}, {f.state}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </AnimatedSection>
 
-          <div className="mt-12 max-w-2xl mx-auto">
-            <h3 className="font-serif text-xl font-bold text-center mb-6 text-white/80">Top States</h3>
-            <div className="space-y-2">
+          {/* State breakdown */}
+          <AnimatedSection className="mt-14 max-w-2xl mx-auto">
+            <h3 className="font-serif text-xl font-bold text-center mb-8 text-white/70">Top States</h3>
+            <div className="space-y-2.5">
               {TOP_STATES.map((s, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <span className="text-sm text-white/50 w-8 text-right font-mono">{s.state}</span>
-                  <div className="flex-1 h-6 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-[#d00000] to-[#ff4444] rounded-full transition-all duration-1000" style={{ width: `${(s.count / TOP_STATES[0].count) * 100}%` }} />
+                  <span className="text-sm text-white/40 w-8 text-right font-mono">{s.state}</span>
+                  <div className="flex-1 h-7 bg-white/[0.04] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-[#d00000] to-[#ff3333] rounded-full" style={{ width: `${(s.count / TOP_STATES[0].count) * 100}%`, transition: 'width 1.5s ease-out' }} />
                   </div>
-                  <span className="text-sm font-bold w-8">{s.count}</span>
+                  <span className="text-sm font-bold w-10 text-right tabular-nums">{s.count}</span>
                 </div>
               ))}
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
-      {/* ── The Shopping Experience ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4">A Seamless Experience</h2>
-          <p className="text-white/50 text-center mb-16 max-w-xl mx-auto">From browsing to pickup, every step was designed for the best fans in America.</p>
+      {/* ── The Experience ── */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <AnimatedSection>
+            <p className="text-center text-sm text-[#d00000] uppercase tracking-[0.3em] font-medium mb-4">The Experience</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-center mb-6">Built for the Best Fans in America</h2>
+            <p className="text-white/40 text-center mb-16 max-w-lg mx-auto">Every touchpoint was designed to make this effortless and fun.</p>
+          </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <FeatureCard
-              title="Shopify-Powered Store"
-              description="A custom microsite that made shopping fast, seamless, and clear. Fans could browse every piece, see detailed photos, and check out in minutes."
-            />
-            <FeatureCard
-              title="AI-Powered Husker Bot"
-              description="A fully autonomous support bot that helped fans with scheduling, rescheduling, order questions, and everything in between — making the experience fun and frictionless."
-            />
-            <FeatureCard
-              title="Smart Pickup Platform"
-              description="Fans easily set pickup times, got directions, received calendar invites, and stayed up to date on their orders. Automated follow-ups ensured no one was left behind."
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <AnimatedSection delay={0}>
+              <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-7 hover:border-[#d00000]/30 transition-colors h-full">
+                <p className="text-3xl mb-4">🛒</p>
+                <h3 className="font-serif font-bold text-lg mb-2">Shopify-Powered Store</h3>
+                <p className="text-sm text-white/40 leading-relaxed">A custom microsite that made shopping fast, seamless, and clear. Fans could browse every piece, see detailed photos, and check out in minutes.</p>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={200}>
+              <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-7 hover:border-[#d00000]/30 transition-colors h-full">
+                <p className="text-3xl mb-4">🤖</p>
+                <h3 className="font-serif font-bold text-lg mb-2">AI-Powered Husker Bot</h3>
+                <p className="text-sm text-white/40 leading-relaxed">A fully autonomous support bot that helped fans with scheduling, rescheduling, order questions, and everything in between &mdash; making it fun and frictionless.</p>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={400}>
+              <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-7 hover:border-[#d00000]/30 transition-colors h-full">
+                <p className="text-3xl mb-4">📦</p>
+                <h3 className="font-serif font-bold text-lg mb-2">Smart Pickup Platform</h3>
+                <p className="text-sm text-white/40 leading-relaxed">Fans easily set pickup times, got directions, received calendar invites, and stayed up to date. Automated follow-ups ensured no one was left behind.</p>
+              </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
 
       {/* ── Pickup Event ── */}
-      <section className="py-20 px-6 bg-[#111]">
+      <section className="py-24 px-6 bg-[#111]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4">3 Days in Roca</h2>
-          <p className="text-white/50 text-center mb-16 max-w-xl mx-auto">April 16&ndash;18, 2026. A warehouse outside Lincoln became Husker central.</p>
-
-          <AnimatedSection className="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-12">
-            <BigStat accent><Counter end={148} /></BigStat><BigLabel>Pickups Completed</BigLabel>
-            <BigStat accent><Counter end={98} suffix="%" /></BigStat><BigLabel>Success Rate</BigLabel>
-            <BigStat><Counter end={4} suffix=" min" /></BigStat><BigLabel>Avg Pickup Time</BigLabel>
+          <AnimatedSection>
+            <p className="text-center text-sm text-[#d00000] uppercase tracking-[0.3em] font-medium mb-4">The Activation</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold text-center mb-6">3 Days in Roca</h2>
+            <p className="text-white/40 text-center mb-16 max-w-lg mx-auto">April 16&ndash;18, 2026. A warehouse outside Lincoln, Nebraska became Husker central for three unforgettable days.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto">
-            <DayCard day="Thursday" date="Apr 16" count={39} />
-            <DayCard day="Friday" date="Apr 17" count={61} />
-            <DayCard day="Saturday" date="Apr 18" count={48} />
-          </div>
+          <AnimatedSection className="grid grid-cols-3 gap-6 sm:gap-10 mb-16">
+            <div className="text-center">
+              <p className="text-5xl sm:text-7xl font-black font-serif text-[#d00000] leading-none"><Counter end={148} /></p>
+              <div className="w-8 h-0.5 bg-[#d00000] mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Pickups</p>
+            </div>
+            <div className="text-center">
+              <p className="text-5xl sm:text-7xl font-black font-serif text-white leading-none"><Counter end={98} suffix="%" /></p>
+              <div className="w-8 h-0.5 bg-white/20 mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Success Rate</p>
+            </div>
+            <div className="text-center">
+              <p className="text-5xl sm:text-7xl font-black font-serif text-white leading-none"><Counter end={4} /></p>
+              <div className="w-8 h-0.5 bg-white/20 mx-auto my-3" />
+              <p className="text-sm text-white/40 uppercase tracking-widest">Min Avg Pickup</p>
+            </div>
+          </AnimatedSection>
+
+          <AnimatedSection className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+            {[
+              { day: 'Thursday', date: 'Apr 16', count: 39 },
+              { day: 'Friday', date: 'Apr 17', count: 61 },
+              { day: 'Saturday', date: 'Apr 18', count: 48 },
+            ].map(d => (
+              <div key={d.day} className="bg-white/[0.04] border border-white/[0.08] rounded-xl p-5 text-center">
+                <p className="text-xs text-white/30 uppercase tracking-wider">{d.day}</p>
+                <p className="text-[10px] text-white/20">{d.date}</p>
+                <p className="text-3xl font-black font-serif text-[#d00000] mt-2">{d.count}</p>
+              </div>
+            ))}
+          </AnimatedSection>
         </div>
       </section>
 
       {/* ── Revenue ── */}
-      <section className="py-20 px-6">
+      <section className="py-28 px-6">
         <AnimatedSection className="max-w-4xl mx-auto text-center">
-          <p className="text-white/40 text-sm uppercase tracking-widest mb-2">Total Revenue</p>
-          <p className="text-6xl sm:text-8xl font-black font-serif text-white">$<Counter end={149294} duration={2500} /></p>
-          <p className="text-xl text-white/50 mt-4">from pieces of a building that was about to be torn down</p>
+          <p className="text-white/25 text-sm uppercase tracking-[0.3em] mb-4">Total Revenue Generated</p>
+          <p className="text-6xl sm:text-9xl font-black font-serif text-white leading-none">$<Counter end={149294} duration={2500} /></p>
+          <p className="text-lg text-white/40 mt-4 font-serif">from pieces of a building being upgraded</p>
         </AnimatedSection>
       </section>
 
       {/* ── Closing ── */}
-      <section className="py-32 px-6 text-center bg-gradient-to-b from-[#1a1a1a] to-[#111]">
-        <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-16 w-auto mx-auto mb-8 opacity-30" />
-        <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-4">
+      <section className="py-32 px-6 text-center bg-[#111] relative">
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d00000]/30 to-transparent" />
+        <img src="https://nebraska-seats.raregoods.com/images/nebraska-n-logo.png" alt="Nebraska N" className="h-16 w-auto mx-auto mb-10 opacity-20" />
+        <h2 className="font-serif text-4xl sm:text-6xl font-bold leading-tight">
           47 years of memories.<br />
           <span className="text-[#d00000]">Now in 377 homes.</span>
         </h2>
-        <p className="text-white/40 mt-12 text-sm">Nebraska Rare Goods &middot; Go Big Red</p>
+        <p className="text-white/30 mt-16 text-sm tracking-wide">Nebraska Rare Goods &middot; Go Big Red</p>
       </section>
     </div>
   );
 }
 
-// ── Components ──
-
-function BigStat({ children, accent }: { children: ReactNode; accent?: boolean }) {
-  return <p className={`text-4xl sm:text-5xl font-black font-serif ${accent ? 'text-[#d00000]' : 'text-white'}`}>{children}</p>;
-}
-
-function BigLabel({ children }: { children: ReactNode }) {
-  return <p className="text-sm text-white/50 -mt-4 sm:-mt-6 mb-4">{children}</p>;
-}
-
-function ItemCard({ number, label, detail, color }: { number: number; label: string; detail: string; color: string }) {
-  const colors: Record<string, string> = {
-    blue: 'from-blue-900/30 to-blue-900/10 border-blue-800/30',
-    gray: 'from-gray-800/30 to-gray-800/10 border-gray-700/30',
-    red: 'from-red-900/30 to-red-900/10 border-red-800/30',
-  };
-  return (
-    <div className={`bg-gradient-to-b ${colors[color]} border rounded-xl p-6 text-center`}>
-      <p className="text-4xl font-black font-serif text-white">{number}</p>
-      <p className="text-lg font-medium text-white/80 mt-1">{label}</p>
-      <p className="text-sm text-white/40 mt-2 leading-relaxed">{detail}</p>
-    </div>
-  );
-}
-
-function FeatureCard({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-      <h3 className="font-serif font-bold text-lg mb-2">{title}</h3>
-      <p className="text-sm text-white/50 leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-function DayCard({ day, date, count }: { day: string; date: string; count: number }) {
-  return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-5 text-center">
-      <p className="text-sm text-white/50">{day}</p>
-      <p className="text-xs text-white/30">{date}</p>
-      <p className="text-3xl font-black font-serif text-[#d00000] mt-2">{count}</p>
-      <p className="text-xs text-white/40">pickups</p>
-    </div>
-  );
-}
-
+// ── Map ──
 function CustomerMap() {
   const cityPins = [
     { city: 'Lincoln', state: 'NE', count: 55, lat: 40.8136, lng: -96.7026 },
